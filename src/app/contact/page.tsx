@@ -47,7 +47,7 @@ export default function Contact() {
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold text-primary mb-1">Our Location</h3>
-                      <p className="text-gray-500 font-light">123 Tech Valley<br />Dhaka, Bangladesh</p>
+                      <p className="text-gray-500 font-light">Afroza Tawar , 4th Floor,<br /> Uposhohor New Market , Rajshahi, <br /> Bangladesh</p>
                     </div>
                   </div>
                   
@@ -57,7 +57,7 @@ export default function Contact() {
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold text-primary mb-1">Phone Number</h3>
-                      <p className="text-gray-500 font-light">+88 01711301250</p>
+                      <p className="text-gray-500 font-light">+88 01724-958474</p>
                     </div>
                   </div>
 
