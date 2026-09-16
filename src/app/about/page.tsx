@@ -14,7 +14,7 @@ const About = () => {
             About <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-red-400">MaxIT Solution</span>
           </h1>
           <p className="text-xl md:text-2xl text-gray-500 font-light max-w-3xl mx-auto leading-relaxed">
-            16 years of pushing the boundaries in advanced engineering, sustainable energy, and automated technical support.
+            10 years of pushing the boundaries in advanced engineering, sustainable energy, and automated technical support.
           </p>
         </div>
       </section>

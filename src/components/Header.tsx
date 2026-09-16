@@ -37,7 +37,7 @@ const Header = () => {
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center bg-white/40 backdrop-blur-sm rounded-2xl px-6 py-3 shadow-[0_4px_30px_rgba(0,0,0,0.03)] border border-white/50">
+        <div className="flex justify-between items-center bg-white/90 backdrop-blur-md rounded-2xl px-6 py-3 shadow-[0_4px_30px_rgba(0,0,0,0.03)] border border-white/50">
           <Link href="/" className="flex items-center space-x-3 group relative">
             <div className="absolute -inset-2 bg-accent/10 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition duration-500"></div>
             <img src="/logo.png" alt="MaxIT Solution Logo" className="w-9 h-9 relative z-10" />

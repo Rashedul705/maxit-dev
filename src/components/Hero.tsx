@@ -61,7 +61,7 @@ const Hero = () => {
               <div className="text-sm text-gray-500 font-medium uppercase tracking-wider">Clients</div>
             </div>
             <div className="text-center p-6 bg-white/60 backdrop-blur-md rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-              <div className="text-4xl font-bold text-primary mb-2 font-heading">5<span className="text-accent">+</span></div>
+              <div className="text-4xl font-bold text-primary mb-2 font-heading">10<span className="text-accent">+</span></div>
               <div className="text-sm text-gray-500 font-medium uppercase tracking-wider">Years Exp</div>
             </div>
             <div className="text-center p-6 bg-white/60 backdrop-blur-md rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">

@@ -49,7 +49,7 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col overflow-x-hidden w-full max-w-[100vw]"><main className="flex-1 pt-16 animate-slide-up overflow-hidden w-full">
+    <div className="min-h-screen flex flex-col overflow-x-hidden w-full max-w-[100vw]"><main className="flex-1 animate-slide-up overflow-hidden w-full">
       <Hero />
       <SolarInnovation />
 
