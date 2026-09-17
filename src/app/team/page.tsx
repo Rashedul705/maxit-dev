@@ -33,7 +33,8 @@ const Team = () => {
       role: "Software Engineer",
       description: "BSc in Computer Science and Engineering. Dedicated to building scalable and robust software solutions.",
       image: rashedulImg,
-      linkedin: "#"
+      email: "rashedul.afl@gmail.com",
+      linkedin: "https://www.linkedin.com/in/rislam05/"
     },
     {
       name: "Tauhidur Rahman Rony",
@@ -99,9 +100,13 @@ const Team = () => {
               United by a shared vision of innovation, technological excellence, and sustainable development.
             </p>
           </div>
+        </div>
+      </section>
 
-          {/* CEO Message */}
-          <div className="relative bg-primary/5 p-8 md:p-16 rounded-3xl mb-16 shadow-xl shadow-primary/5 border-2 border-accent/40 overflow-hidden group hover:shadow-2xl hover:shadow-primary/10 transition-all duration-700">
+      {/* CEO Message Section */}
+      <section className="py-16 bg-white relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="relative bg-primary/5 p-8 md:p-16 rounded-3xl shadow-xl shadow-primary/5 border-2 border-accent/40 overflow-hidden group hover:shadow-2xl hover:shadow-primary/10 transition-all duration-700">
             <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 rounded-full blur-[80px] pointer-events-none group-hover:bg-accent/10 transition-colors duration-700" />
             
             <div className="flex flex-col lg:flex-row items-center gap-12 relative z-10">
