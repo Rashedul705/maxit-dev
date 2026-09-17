@@ -8,6 +8,7 @@ import touhidurImg from "@/assets/team/touhidur.jpg";
 import priyankaImg from "@/assets/team/priyanka.jpg";
 import emonImg from "@/assets/team/emon-ali.jpg";
 import moznuImg from "@/assets/team/moznu.jpg";
+import rashedulImg from "@/assets/team/rashedul.jpg";
 
 const Team = () => {
   const teamMembers = [
@@ -25,6 +26,13 @@ const Team = () => {
       description: "Expert software engineer developing robust and scalable digital solutions.",
       image: shohidImg,
       email: "shohid@m4xit.com",
+      linkedin: "#"
+    },
+    {
+      name: "Rashedul Islam",
+      role: "Software Engineer",
+      description: "BSc in Computer Science and Engineering. Dedicated to building scalable and robust software solutions.",
+      image: rashedulImg,
       linkedin: "#"
     },
     {
