@@ -2,28 +2,73 @@ import Hero from '../components/Hero';
 import SolarInnovation from '../components/SolarInnovation';
 import ServiceCard from '../components/ServiceCard';
 import TestimonialCard from '../components/TestimonialCard';
-import { Settings, ArrowRight, Sun, Sprout, Zap, Leaf, Cpu, Headphones, TrendingDown } from 'lucide-react';
+import { Settings, ArrowRight, Sun, Sprout, Zap, Leaf, Cpu, Headphones, TrendingDown, Wifi, Cctv, Droplets, RadioTower, Lightbulb } from 'lucide-react';
 import Link from "next/link";
 
 const Index = () => {
   const services = [
     {
+      title: "Solar Home Systems (SHS)",
+      description: "Complete solar energy solutions for residential use, reducing grid dependency and promoting green energy throughout the community.",
       icon: <Sun className="w-8 h-8" />,
-      title: "Solar Energy",
-      description: "Sustainable power solutions including Solar Home Systems (SHS) and rooftop installations.",
-      features: ["Solar Home Systems", "Rooftop Solar", "Energy Efficiency", "Green Power"]
+      features: ["Rooftop Installation", "Battery Storage", "Grid Independence"],
+      image: "/images/slides/hybrid_inverter_slide_1789677816112.jpg"
     },
     {
+      title: "Solar Pump & Smart Irrigation",
+      description: "Advanced solar-powered pumping systems integrated with smart irrigation technology for efficient water management in agriculture.",
       icon: <Sprout className="w-8 h-8" />,
-      title: "Smart Irrigation & Agro Tech",
-      description: "Advanced agricultural technology and solar-powered irrigation for modern farming.",
-      features: ["Solar Pumps", "Smart Irrigation", "Agro Technology", "Water Management"]
+      features: ["Automated Watering", "Solar Powered", "High Efficiency"],
+      image: "/images/slides/agro_solar_slide_1789677870674.jpg"
     },
     {
-      icon: <Zap className="w-8 h-8" />,
-      title: "Electric Automation",
-      description: "Industrial and home automation solutions for efficiency and control.",
-      features: ["Industrial Automation", "Smart Home Control", "Electric Systems", "IoT Solutions"]
+      title: "Agro Technology",
+      description: "Innovative agricultural tech solutions including IoT monitoring, soil sensors, and automated climate control for greenhouses.",
+      icon: <Leaf className="w-8 h-8" />,
+      features: ["IoT Monitoring", "Soil Sensors", "Climate Control"],
+      image: "/images/slides/agro_tech_service_1789678968707.jpg"
+    },
+    {
+      title: "Industrial & Home Automation",
+      description: "Smart control systems for industries and homes, improving efficiency, safety, and convenience through electric automation.",
+      icon: <Cpu className="w-8 h-8" />,
+      features: ["Smart Controls", "IoT Integration", "Energy Tracking"],
+      image: "/images/slides/iot_smart_home_slide_1789677856585.jpg"
+    },
+    {
+      title: "Networking & Internet Services",
+      description: "Robust network infrastructure design and reliable high-speed internet connectivity for businesses and rural areas.",
+      icon: <Wifi className="w-8 h-8" />,
+      features: ["High-speed Setup", "Network Security", "Infrastructure Design"],
+      image: "/images/slides/networking_service_1789678979212.jpg"
+    },
+    {
+      title: "CCTV Security Systems",
+      description: "Professional installation of IP camera systems and surveillance solutions for 24/7 security monitoring.",
+      icon: <Cctv className="w-8 h-8" />,
+      features: ["24/7 Monitoring", "IP Cameras", "Cloud Storage"],
+      image: "/images/slides/cctv_service_1789678989455.jpg"
+    },
+    {
+      title: "Water Treatment Solutions",
+      description: "Comprehensive water treatment plants ensuring clean and safe water for communities and industries.",
+      icon: <Droplets className="w-8 h-8" />,
+      features: ["Purification Plants", "Filtration", "Quality Monitoring"],
+      image: "/images/slides/water_treatment_service_1789679001434.jpg"
+    },
+    {
+      title: "Communication Infrastructure",
+      description: "Construction and maintenance of radio communication towers and related infrastructure.",
+      icon: <RadioTower className="w-8 h-8" />,
+      features: ["Radio Towers", "Maintenance", "Signal Optimization"],
+      image: "/images/slides/solar_automation_slide_1789677805531.jpg"
+    },
+    {
+      title: "Building Electrical Engineering",
+      description: "Expert electrical planning and wiring services for commercial and residential construction projects.",
+      icon: <Lightbulb className="w-8 h-8" />,
+      features: ["Wiring Planning", "Safety Compliance", "Commercial Projects"],
+      image: "/images/slides/commercial_rooftop_slide_1789677880098.jpg"
     }
   ];
 
@@ -150,7 +195,7 @@ const Index = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-            {services.map((service, index) => (
+            {services.slice(0, 3).map((service, index) => (
               <ServiceCard key={index} {...service} />
             ))}
           </div>
