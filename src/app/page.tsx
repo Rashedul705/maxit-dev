@@ -2,7 +2,7 @@ import Hero from '../components/Hero';
 import SolarInnovation from '../components/SolarInnovation';
 import ServiceCard from '../components/ServiceCard';
 import TestimonialCard from '../components/TestimonialCard';
-import { Settings, ArrowRight, Sun, Sprout, Zap, Leaf } from 'lucide-react';
+import { Settings, ArrowRight, Sun, Sprout, Zap, Leaf, Cpu, Headphones, TrendingDown } from 'lucide-react';
 import Link from "next/link";
 
 const Index = () => {
@@ -48,6 +48,45 @@ const Index = () => {
     }
   ];
 
+  const reasons = [
+    {
+      title: "Sustainable Energy",
+      description: "Harnessing the power of the sun for a greener, cost-effective, and highly efficient future.",
+      icon: <Sun className="w-8 h-8" />,
+      gradient: "from-amber-400 to-orange-500",
+    },
+    {
+      title: "Technical Expertise",
+      description: "Reliable technical solutions backed by years of robust experience in automation and precise engineering.",
+      icon: <Settings className="w-8 h-8" />,
+      gradient: "from-blue-400 to-indigo-500",
+    },
+    {
+      title: "Agro Innovation",
+      description: "Modernizing agriculture with smart irrigation and cutting-edge technology-driven solutions.",
+      icon: <Leaf className="w-8 h-8" />,
+      gradient: "from-green-400 to-emerald-500",
+    },
+    {
+      title: "Smart Automation",
+      description: "Seamlessly connect and control industrial and home environments with intelligent IoT systems.",
+      icon: <Cpu className="w-8 h-8" />,
+      gradient: "from-purple-400 to-pink-500",
+    },
+    {
+      title: "24/7 Premium Support",
+      description: "Our dedicated support team ensures your systems run flawlessly around the clock without interruption.",
+      icon: <Headphones className="w-8 h-8" />,
+      gradient: "from-rose-400 to-red-500",
+    },
+    {
+      title: "Cost Efficiency",
+      description: "Optimized energy and automation systems designed to significantly lower your operational expenses.",
+      icon: <TrendingDown className="w-8 h-8" />,
+      gradient: "from-teal-400 to-cyan-500",
+    }
+  ];
+
   return (
     <div className="min-h-screen flex flex-col overflow-x-hidden w-full max-w-[100vw]"><main className="flex-1 animate-slide-up overflow-hidden w-full">
       <Hero />
@@ -68,28 +107,22 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
-            <div className="text-center group">
-              <div className="w-24 h-24 bg-gradient-to-br from-accent/10 to-accent/5 rounded-3xl flex items-center justify-center mx-auto mb-8 transform group-hover:-translate-y-2 transition-all duration-300 shadow-sm border border-accent/10">
-                <Sun className="w-12 h-12 text-accent group-hover:scale-110 transition-transform duration-300" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 xl:gap-10 mb-16">
+            {reasons.map((reason, index) => (
+              <div 
+                key={index} 
+                className="group relative bg-white rounded-3xl p-8 border border-gray-100 shadow-xl shadow-primary/5 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 transform hover:-translate-y-2 overflow-hidden"
+              >
+                <div className={`absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br ${reason.gradient} opacity-10 rounded-full group-hover:scale-150 transition-transform duration-700 ease-out`} />
+                
+                <div className={`relative z-10 w-16 h-16 rounded-2xl bg-gradient-to-br ${reason.gradient} flex items-center justify-center text-white mb-6 shadow-md transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
+                  {reason.icon}
+                </div>
+                
+                <h3 className="relative z-10 text-2xl font-bold font-heading text-primary mb-3">{reason.title}</h3>
+                <p className="relative z-10 text-gray-500 leading-relaxed font-light">{reason.description}</p>
               </div>
-              <h3 className="text-2xl font-bold font-heading text-primary mb-4">Sustainable Energy</h3>
-              <p className="text-gray-500 px-4 leading-relaxed">Harnessing the power of the sun for a greener, cost-effective, and highly efficient future.</p>
-            </div>
-            <div className="text-center group">
-              <div className="w-24 h-24 bg-gradient-to-br from-primary/10 to-primary/5 rounded-3xl flex items-center justify-center mx-auto mb-8 transform group-hover:-translate-y-2 transition-all duration-300 shadow-sm border border-primary/10 mt-0 lg:mt-8">
-                <Settings className="w-12 h-12 text-primary group-hover:rotate-90 transition-transform duration-500" />
-              </div>
-              <h3 className="text-2xl font-bold font-heading text-primary mb-4">Technical Expertise</h3>
-              <p className="text-gray-500 px-4 leading-relaxed">Reliable technical solutions backed by years of robust experience in automation and precise engineering.</p>
-            </div>
-            <div className="text-center group">
-              <div className="w-24 h-24 bg-gradient-to-br from-accent/10 to-accent/5 rounded-3xl flex items-center justify-center mx-auto mb-8 transform group-hover:-translate-y-2 transition-all duration-300 shadow-sm border border-accent/10">
-                <Leaf className="w-12 h-12 text-accent group-hover:scale-110 transition-transform duration-300" />
-              </div>
-              <h3 className="text-2xl font-bold font-heading text-primary mb-4">Agro Innovation</h3>
-              <p className="text-gray-500 px-4 leading-relaxed">Modernizing agriculture with smart irrigation and cutting-edge technology-driven solutions.</p>
-            </div>
+            ))}
           </div>
 
           <div className="text-center">
