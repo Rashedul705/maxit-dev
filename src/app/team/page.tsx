@@ -85,8 +85,8 @@ const Team = () => {
             </p>
           </div>
 
-          {/* CEO Message with Glassmorphism Effect */}
-          <div className="relative bg-white/60 backdrop-blur-xl p-8 md:p-16 rounded-3xl mb-16 shadow-xl shadow-primary/5 border border-white/80 overflow-hidden group hover:shadow-2xl hover:shadow-primary/10 transition-all duration-700">
+          {/* CEO Message */}
+          <div className="relative bg-primary/5 p-8 md:p-16 rounded-3xl mb-16 shadow-xl shadow-primary/5 border-2 border-accent/40 overflow-hidden group hover:shadow-2xl hover:shadow-primary/10 transition-all duration-700">
             <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 rounded-full blur-[80px] pointer-events-none group-hover:bg-accent/10 transition-colors duration-700" />
             
             <div className="flex flex-col lg:flex-row items-center gap-12 relative z-10">
@@ -142,18 +142,18 @@ const Team = () => {
             {teamMembers.map((member, index) => (
               <div 
                 key={index} 
-                className="group relative bg-white rounded-3xl flex flex-col h-full shadow-sm hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 overflow-hidden transform hover:-translate-y-2 border border-gray-100"
+                className="group relative bg-white rounded-3xl flex flex-col h-full shadow-md hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 overflow-hidden transform hover:-translate-y-2 border-2 border-gray-200 hover:border-accent/40"
               >
                 <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                 
                 {/* Image Wrapper */}
-                <div className="relative w-full aspect-square overflow-hidden bg-white p-4 flex items-center justify-center">
+                <div className="relative w-48 h-48 mx-auto mt-8 overflow-hidden rounded-full border-4 border-gray-100 shadow-sm group-hover:border-accent/30 transition-colors duration-500 z-10 flex items-center justify-center bg-gray-50">
                   <img
                     src={member.image.src}
                     alt={member.name}
-                    className="w-full h-full object-contain object-bottom filter grayscale-[20%] group-hover:grayscale-0 transform group-hover:scale-110 transition-all duration-700 ease-in-out"
+                    className="w-full h-full object-cover filter grayscale-[20%] group-hover:grayscale-0 transform group-hover:scale-110 transition-all duration-700 ease-in-out"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-primary/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                 </div>
 
                 {/* Content Block */}
