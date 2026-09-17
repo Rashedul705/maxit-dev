@@ -27,40 +27,57 @@ const SolarInnovation = () => {
 
   const slides = [
     {
-      title: "Next-Gen Solar Panels",
-      description: "High-efficiency monocrystalline panels that generate more power per square foot, even in low-light conditions.",
-      image: "https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2072&auto=format&fit=crop"
+      title: "Solar Energy Automation",
+      description: "High-tech robotic automation managing large-scale solar farms for maximum efficiency and precision.",
+      image: "/images/slides/solar_automation_slide_1789677805531.jpg"
     },
     {
-      title: "Smart Grid Integration",
-      description: "Seamlessly connect your solar system to the smart grid, enabling intelligent energy distribution and storage.",
-      image: "https://images.unsplash.com/photo-1497440001374-f26997328c1b?q=80&w=2232&auto=format&fit=crop"
+      title: "Hybrid Inverters",
+      description: "State-of-the-art hybrid inverter systems combining grid and battery storage for uninterrupted power.",
+      image: "/images/slides/hybrid_inverter_slide_1789677816112.jpg"
+    },
+    {
+      title: "Central Solar Inverters",
+      description: "Robust central inverters for commercial and industrial plants, engineered for heavy-duty power conversion.",
+      image: "/images/slides/central_inverter_slide_1789677826849.jpg"
+    },
+    {
+      title: "Net Metering Technology",
+      description: "Advanced net metering integration allowing you to seamlessly sell surplus energy back to the national grid.",
+      image: "/images/slides/net_metering_slide_1789677836790.jpg"
+    },
+    {
+      title: "On-Grid Solar Systems",
+      description: "Sleek, high-performance on-grid solar inverters perfectly synced with your local utility grid.",
+      image: "/images/slides/on_grid_inverter_slide_1789677846524.jpg"
+    },
+    {
+      title: "IoT & Smart Homes",
+      description: "Control your entire energy ecosystem from a futuristic dashboard right at your fingertips.",
+      image: "/images/slides/iot_smart_home_slide_1789677856585.jpg"
     },
     {
       title: "Agro-Photovoltaics",
-      description: "Dual-use technology combining agriculture and solar energy production on the exact same land.",
-      image: "https://images.unsplash.com/photo-1592833159057-6df1ddbd9eea?q=80&w=2070&auto=format&fit=crop"
+      description: "Dual-use technology combining precision agriculture and solar energy production on the exact same land.",
+      image: "/images/slides/agro_solar_slide_1789677870674.jpg"
+    },
+    {
+      title: "Commercial Rooftop Solar",
+      description: "Massive commercial rooftop installations powering industrial parks with clean, renewable energy.",
+      image: "/images/slides/commercial_rooftop_slide_1789677880098.jpg"
     }
   ];
 
   return (
-    <section className="py-24 bg-primary relative overflow-hidden">
-      {/* Dynamic Background Effect (Faking video motion) */}
+    <section className="pt-12 pb-24 bg-primary relative overflow-hidden">
+      {/* Dynamic Background Effect */}
       <div className="absolute inset-0 bg-[#1a2040]">
-        <div className="absolute inset-0 opacity-20 bg-[url('https://images.unsplash.com/photo-1497440001374-f26997328c1b?q=80&w=2232&auto=format&fit=crop')] bg-cover bg-center mix-blend-overlay animate-[pulse_10s_ease-in-out_infinite]" />
         <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-accent/20 rounded-full blur-[150px] animate-[spin_20s_linear_infinite] transform-origin-center pointer-events-none" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center space-x-2 bg-accent/10 text-accent px-4 py-2 rounded-full mb-6 border border-accent/20">
-              <span className="relative flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-accent"></span>
-              </span>
-              <span className="text-sm font-semibold uppercase tracking-wider">Live Innovations</span>
-            </div>
             <h2 className="text-4xl md:text-6xl font-bold font-heading text-white mb-6">
               Pioneering the <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-orange-300">
