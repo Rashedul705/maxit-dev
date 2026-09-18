@@ -47,7 +47,7 @@ export default function Contact() {
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold text-primary mb-1">Our Location</h3>
-                      <p className="text-gray-500 font-light">Afroza Tawar , 4th Floor,<br /> Uposhohor New Market , Rajshahi, <br /> Bangladesh</p>
+                      <p className="text-gray-500 font-light">2nd Floor, Afroza Tower,<br /> Uposhohor Newmarket, <br /> Rajshahi-6000</p>
                     </div>
                   </div>
                   

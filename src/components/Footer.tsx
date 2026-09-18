@@ -41,14 +41,19 @@ const Footer = () => {
           <div className="flex flex-col items-center md:items-start">
             <h3 className="text-lg font-semibold font-heading mb-6 tracking-wide uppercase text-gray-300">Quick Links</h3>
             <ul className="space-y-3 w-full">
-              {['About Us', 'Services', 'Our Team'].map((link, index) => (
+              {[
+                { name: 'About Us', path: '/about' },
+                { name: 'Services', path: '/services' },
+                { name: 'Our Team', path: '/team' },
+                { name: 'Contact', path: '/contact' }
+              ].map((link, index) => (
                 <li key={index} className="flex justify-center md:justify-start">
                   <Link 
-                    href={`/${link.toLowerCase().replace(' ', '-')}`} 
+                    href={link.path} 
                     className="flex items-center text-gray-400 hover:text-accent transition-colors group"
                   >
                     <ArrowRight size={14} className="mr-2 opacity-0 -ml-4 group-hover:opacity-100 group-hover:ml-0 transition-all duration-300 hidden md:block" />
-                    <span>{link}</span>
+                    <span>{link.name}</span>
                   </Link>
                 </li>
               ))}
@@ -76,7 +81,7 @@ const Footer = () => {
                   <MapPin size={16} className="text-accent" />
                 </div>
                 <span className="text-gray-400 text-sm leading-relaxed group-hover:text-white transition-colors">
-                  4th Floor, Afroza Tower,<br className="hidden md:block" />
+                  2nd Floor, Afroza Tower,<br className="hidden md:block" />
                   <span className="md:hidden"> </span>Uposhohor Newmarket,<br className="hidden md:block" />
                   <span className="md:hidden"> </span>Rajshahi-6000
                 </span>
