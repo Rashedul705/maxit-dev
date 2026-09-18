@@ -1,27 +1,29 @@
-import { MessageSquareQuote } from 'lucide-react';
+import { Quote } from 'lucide-react';
 
 interface TestimonialCardProps {
   name: string;
   company: string;
   testimonial: string;
   rating: number;
+  image: string;
 }
 
-const TestimonialCard = ({ name, company, testimonial, rating }: TestimonialCardProps) => {
+const TestimonialCard = ({ name, company, testimonial, rating, image }: TestimonialCardProps) => {
   return (
-    <div className="group bg-white p-8 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100 relative overflow-hidden transform hover:-translate-y-1">
-      {/* Decorative gradient */}
-      <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 rounded-full blur-[50px] group-hover:bg-accent/10 transition-colors duration-500 pointer-events-none translate-x-1/2 -translate-y-1/2" />
+    <div className="group relative bg-[#1E293B] p-10 rounded-3xl transition-all duration-500 border border-white/10 hover:border-accent/50 transform hover:-translate-y-2 overflow-hidden shadow-2xl flex flex-col h-full">
+      {/* Decorative Glow */}
+      <div className="absolute top-0 right-0 w-48 h-48 bg-accent/10 rounded-full blur-[60px] group-hover:bg-accent/20 transition-colors duration-500 pointer-events-none translate-x-1/3 -translate-y-1/3" />
       
-      <div className="absolute top-6 right-6 text-accent/10 group-hover:text-accent/20 transition-colors duration-500">
-        <MessageSquareQuote size={48} />
+      {/* Background Quote */}
+      <div className="absolute -top-4 -left-4 text-white/5 group-hover:text-accent/10 transition-colors duration-500 transform -scale-x-100">
+        <Quote size={120} />
       </div>
 
-      <div className="flex items-center mb-6 relative z-10">
+      <div className="flex items-center mb-8 relative z-10">
         {[...Array(5)].map((_, i) => (
           <svg
             key={i}
-            className={`w-4 h-4 mr-1 ${i < rating ? 'text-[#F59E0B] drop-shadow-sm' : 'text-gray-200'}`}
+            className={`w-5 h-5 mr-1.5 ${i < rating ? 'text-[#F59E0B] drop-shadow-[0_0_8px_rgba(245,158,11,0.5)]' : 'text-gray-600'}`}
             fill="currentColor"
             viewBox="0 0 20 20"
           >
@@ -30,17 +32,17 @@ const TestimonialCard = ({ name, company, testimonial, rating }: TestimonialCard
         ))}
       </div>
       
-      <p className="text-gray-600 mb-8 leading-relaxed font-light relative z-10 min-h-[80px]">
+      <p className="text-gray-300 mb-10 leading-relaxed font-light text-lg relative z-10 flex-grow italic">
         "{testimonial}"
       </p>
       
-      <div className="flex items-center space-x-4 relative z-10">
-        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-accent/80 flex items-center justify-center text-white font-bold font-heading text-lg shadow-inner">
-          {name.charAt(0)}
+      <div className="flex items-center space-x-4 relative z-10 pt-6 border-t border-white/10 mt-auto">
+        <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-accent/20 group-hover:border-accent transition-colors duration-300 shadow-lg">
+          <img src={image} alt={name} className="w-full h-full object-cover" />
         </div>
         <div>
-          <div className="font-bold font-heading text-primary">{name}</div>
-          <div className="text-sm text-gray-500 font-medium">{company}</div>
+          <div className="font-bold font-heading text-white text-lg">{name}</div>
+          <div className="text-sm text-accent font-medium tracking-wide uppercase">{company}</div>
         </div>
       </div>
     </div>

@@ -77,19 +77,22 @@ const Index = () => {
       name: "Sarah Ahmed",
       company: "Green Farms Ltd",
       testimonial: "MaxIT Solution's solar irrigation system transformed our farming efficiency. Highly professional and reliable implementation.",
-      rating: 5
+      rating: 5,
+      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=600&auto=format&fit=crop"
     },
     {
       name: "Mohammad Rahman",
       company: "Industrial Complex",
       testimonial: "Their automation solutions have significantly reduced our operational costs. Excellent technical expertise.",
-      rating: 5
+      rating: 5,
+      image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=600&auto=format&fit=crop"
     },
     {
       name: "Fatima Khan",
       company: "Eco Home Owner",
       testimonial: "The solar home system installation was smooth and the team was very knowledgeable. Great service!",
-      rating: 5
+      rating: 5,
+      image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=600&auto=format&fit=crop"
     }
   ];
 
@@ -213,14 +216,18 @@ const Index = () => {
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-5xl font-bold font-heading text-primary mb-6">
-              Client Success Stories
+      <section className="py-32 bg-[#0F172A] relative overflow-hidden">
+        {/* Dynamic Background */}
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-accent/5 rounded-full blur-[150px] pointer-events-none transform translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-primary/20 rounded-full blur-[120px] pointer-events-none transform -translate-x-1/2 translate-y-1/2" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-24">
+            <h2 className="text-4xl md:text-5xl font-bold font-heading text-white mb-6">
+              Client Success <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-orange-400">Stories</span>
             </h2>
-            <p className="text-xl text-gray-500 font-light max-w-2xl mx-auto">
-              Don't just take our word for it - hear from the clients who have experienced the MaxIT difference.
+            <p className="text-xl text-gray-400 font-light max-w-2xl mx-auto">
+              Don't just take our word for it — hear from the visionaries who have experienced the MaxIT difference firsthand.
             </p>
           </div>
 
@@ -233,32 +240,41 @@ const Index = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-primary relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5 mix-blend-overlay"></div>
-        <div className="absolute top-0 right-0 w-96 h-96 bg-accent/20 rounded-full blur-[120px] pointer-events-none transform translate-x-1/2 -translate-y-1/2"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-accent/20 rounded-full blur-[120px] pointer-events-none transform -translate-x-1/2 translate-y-1/2"></div>
+      <section className="py-32 relative overflow-hidden flex items-center justify-center min-h-[600px] bg-[#0F172A]">
+        {/* Background Image with Parallax-like effect */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-[url('/images/slides/commercial_rooftop_slide_1789677880098.jpg')] bg-cover bg-center opacity-20 mix-blend-luminosity" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A] via-[#0F172A]/80 to-transparent" />
+        </div>
+
+        {/* Dynamic Glowing Orbs */}
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/40 rounded-full blur-[120px] animate-[pulse_8s_ease-in-out_infinite]" />
+        <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-primary/60 rounded-full blur-[150px] animate-[pulse_12s_ease-in-out_infinite]" />
         
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <h2 className="text-4xl md:text-5xl font-bold font-heading text-white mb-8">
-            Ready to Power Your Future?
-          </h2>
-          <p className="text-xl text-primary-foreground/80 mb-12 max-w-2xl mx-auto font-light leading-relaxed">
-            Let's work together to implement sustainable and intelligent solutions that scale with your ambitions. Get in touch with us today!
-          </p>
-          <div className="flex flex-col sm:flex-row gap-5 justify-center">
-            <Link
-              href="/contact"
-              className="group inline-flex items-center justify-center px-8 py-4 bg-accent text-white font-bold rounded-2xl hover:bg-accent/90 transition-all duration-300 shadow-lg shadow-accent/20 transform hover:-translate-y-1"
-            >
-              Get Started Today
-              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Link>
-            <Link
-              href="/services"
-              className="inline-flex items-center justify-center px-8 py-4 border border-white/30 bg-white/5 text-white font-semibold rounded-2xl hover:bg-white/10 hover:border-white/50 transition-all duration-300 backdrop-blur-sm transform hover:-translate-y-1"
-            >
-              View Our Work
-            </Link>
+        {/* Glassmorphism Container */}
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+          <div className="bg-white/5 backdrop-blur-2xl border border-white/10 p-12 md:p-20 rounded-[3rem] shadow-2xl text-center transform transition-all duration-700 hover:border-white/20 hover:bg-white/10">
+            <h2 className="text-4xl md:text-6xl font-bold font-heading text-white mb-8 tracking-tight">
+              Ready to Power Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-orange-400">Future?</span>
+            </h2>
+            <p className="text-xl text-gray-300 mb-12 max-w-2xl mx-auto font-light leading-relaxed">
+              Let's work together to implement sustainable and intelligent solutions that scale with your ambitions. Get in touch with us today!
+            </p>
+            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+              <Link
+                href="/contact"
+                className="group relative inline-flex items-center justify-center px-10 py-5 bg-gradient-to-r from-accent to-orange-500 text-white font-bold rounded-2xl transition-all duration-300 shadow-[0_0_40px_rgba(249,115,22,0.4)] hover:shadow-[0_0_60px_rgba(249,115,22,0.6)] transform hover:-translate-y-1 hover:scale-105 w-full sm:w-auto"
+              >
+                <span className="relative z-10 text-lg">Get Started Today</span>
+                <ArrowRight className="relative z-10 ml-3 w-6 h-6 group-hover:translate-x-2 transition-transform" />
+              </Link>
+              <Link
+                href="/services"
+                className="inline-flex items-center justify-center px-10 py-5 border-2 border-white/20 bg-transparent text-white font-semibold rounded-2xl hover:bg-white/10 hover:border-white/40 transition-all duration-300 backdrop-blur-sm transform hover:-translate-y-1 w-full sm:w-auto text-lg"
+              >
+                View Our Work
+              </Link>
+            </div>
           </div>
         </div>
       </section>
