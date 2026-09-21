@@ -8,6 +8,8 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import ServiceCard from '@/components/ServiceCard';
+import TestimonialCard from '@/components/TestimonialCard';
+import { projects } from '@/lib/projects';
 
 import sobujImg from "@/assets/team/ceo-maxit.png";
 import shohidImg from "@/assets/team/shohid.jpg";
@@ -157,6 +159,30 @@ const About = () => {
       image: moznuImg,
       whatsapp: "01711301250",
       linkedin: "#"
+    }
+  ];
+
+  const testimonials = [
+    {
+      name: "Sarah Ahmed",
+      company: "Green Farms Ltd",
+      testimonial: "MaxIT Solution's solar irrigation system transformed our farming efficiency. Highly professional and reliable implementation.",
+      rating: 5,
+      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=600&auto=format&fit=crop"
+    },
+    {
+      name: "Mohammad Rahman",
+      company: "Industrial Complex",
+      testimonial: "Their automation solutions have significantly reduced our operational costs. Excellent technical expertise.",
+      rating: 5,
+      image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=600&auto=format&fit=crop"
+    },
+    {
+      name: "Fatima Khan",
+      company: "Eco Home Owner",
+      testimonial: "The solar home system installation was smooth and the team was very knowledgeable. Great service!",
+      rating: 5,
+      image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=600&auto=format&fit=crop"
     }
   ];
 
@@ -434,41 +460,61 @@ const About = () => {
         </section>
 
         {/* 8. Portfolio & Social Proof */}
-        <section className="py-24 bg-gray-50">
+        <section className="py-24 bg-gray-50 relative">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-             <div className="text-center max-w-3xl mx-auto mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold font-heading text-primary mb-6">Trusted By Industry Leaders</h2>
-              <div className="w-20 h-1 bg-accent rounded-full mx-auto"></div>
-            </div>
-
-            {/* Dummy Client Logos */}
-            <div className="flex flex-wrap justify-center items-center gap-12 opacity-50 grayscale hover:grayscale-0 transition-all duration-500 mb-20">
-              <Building className="w-16 h-16 text-primary" />
-              <Activity className="w-16 h-16 text-primary" />
-              <Globe className="w-16 h-16 text-primary" />
-              <Cpu className="w-16 h-16 text-primary" />
-              <Zap className="w-16 h-16 text-primary" />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {[
-                { quote: "MaxIT completely overhauled our automation infrastructure. Their attention to detail and post-sales support is unmatched.", author: "Sarah Jenkins", company: "TechCorp Industries" },
-                { quote: "The solar integration they provided cut our energy costs by 40%. A highly professional and dedicated team.", author: "Michael Chen", company: "GreenFuture Logistics" }
-              ].map((testimonial, idx) => (
-                <div key={idx} className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 relative">
-                  <Star className="absolute top-8 right-8 w-8 h-8 text-accent/20" />
-                  <div className="flex space-x-1 mb-4">
-                    {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 text-accent fill-accent" />)}
-                  </div>
-                  <p className="text-gray-800 font-medium italic mb-6">"{testimonial.quote}"</p>
-                  <div>
-                    <h4 className="font-bold text-primary">{testimonial.author}</h4>
-                    <p className="text-sm text-gray-700">{testimonial.company}</p>
-                  </div>
+                <div className="text-center max-w-3xl mx-auto mb-16">
+                  <h2 className="text-3xl md:text-4xl font-bold font-heading text-primary mb-6">Our Recent Projects</h2>
+                  <div className="w-20 h-1 bg-accent rounded-full mx-auto mb-10"></div>
                 </div>
-              ))}
-            </div>
-          </div>
+
+                {/* Projects Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
+                  {projects.slice(0, 3).map((project) => (
+                    <Link href={`/projects/${project.id}`} key={project.id} className="group h-full">
+                      <div className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 h-full flex flex-col border border-gray-100 transform hover:-translate-y-1">
+                        <div className="relative h-64 overflow-hidden">
+                          <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors z-10"></div>
+                          <img 
+                            src={project.image} 
+                            alt={project.title}
+                            className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                          />
+                          <div className="absolute top-4 right-4 z-20">
+                            <span className="bg-white/90 backdrop-blur-sm text-primary text-xs font-bold px-3 py-1 rounded-full shadow-sm">
+                              {project.category}
+                            </span>
+                          </div>
+                        </div>
+                        
+                        <div className="p-8 flex flex-col flex-grow relative">
+                          <h3 className="text-2xl font-bold text-gray-900 mb-3 font-heading group-hover:text-accent transition-colors">
+                            {project.title}
+                          </h3>
+                          <p className="text-gray-800 mb-6 flex-grow font-sans text-sm">
+                            {project.shortDescription}
+                          </p>
+                          <div className="flex items-center text-accent font-medium mt-auto group-hover:translate-x-2 transition-transform">
+                            <span>View Details</span>
+                            <ArrowRight className="ml-2 h-4 w-4" />
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+
+                {/* Testimonials */}
+                <div className="text-center max-w-3xl mx-auto mb-16">
+                  <h2 className="text-3xl md:text-4xl font-bold font-heading text-primary mb-6">Client Success Stories</h2>
+                  <div className="w-20 h-1 bg-accent rounded-full mx-auto"></div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  {testimonials.map((testimonial, index) => (
+                    <TestimonialCard key={index} {...testimonial} />
+                  ))}
+                </div>
+              </div>
         </section>
 
         {/* 9. Contact Information & CTA */}
