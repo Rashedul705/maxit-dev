@@ -1,18 +1,33 @@
 import Link from 'next/link';
 import { 
-  ArrowRight, ChevronRight, MapPin, Phone, Mail, 
+  ArrowRight, ChevronRight, MapPin, Phone, Mail, MessageCircle, Linkedin,
   Sun, Droplets, Sprout, Cpu, Wifi, Cctv, RadioTower, Lightbulb, 
   Target, Shield, Settings, Home, Factory, Building2,
   GraduationCap, Activity, Landmark, Briefcase, FileCheck
 } from 'lucide-react';
 import { projects } from '@/lib/projects';
 
-// Dummy Team Data (Can be replaced with real data)
+import sobujImg from "@/assets/team/ceo-maxit.png";
+import shohidImg from "@/assets/team/shohid.jpg";
+import shahidafridiImg from "@/assets/team/shahidafridi.jpeg";
+import rupaliImg from "@/assets/team/rupali.jpg";
+import touhidurImg from "@/assets/team/touhidur.jpg";
+import priyankaImg from "@/assets/team/priyanka.jpg";
+import emonImg from "@/assets/team/emon-ali.jpg";
+import moznuImg from "@/assets/team/moznu.jpg";
+import rashedulImg from "@/assets/team/rashedul.jpg";
+
+// Real Team Data brought from team page
 const team = [
-  { name: "Sobuj Ali", role: "Managing Director", image: "/images/team/ceo-maxit.png" },
-  { name: "Shohidul Islam", role: "Chief Engineer", image: "/images/team/shohid.jpg" },
-  { name: "Moznu Mia", role: "Project Manager", image: "/images/team/moznu.jpg" },
-  { name: "Rashedul Islam", role: "Technical Lead", image: "/images/team/rashedul.jpg" }
+  { name: "Engr. Zahangir Alam (Sobuj)", role: "Chief Executive Officer", description: "Driven by a vision of innovation, technological excellence, and sustainable development.", image: sobujImg, email: "sales@m4xit.com", linkedin: "#" },
+  { name: "Rupali", role: "Project Director", description: "Experienced project director ensuring successful execution and delivery of our initiatives.", image: rupaliImg, email: "rupali@m4xit.com", linkedin: "#" },
+  { name: "Sarwar Jahan", role: "Software Engineer", description: "Expert software engineer developing robust and scalable digital solutions.", image: shohidImg, email: "shohid@m4xit.com", linkedin: "#" },
+  { name: "Rashedul Islam", role: "Software Engineer", description: "BSc in Computer Science and Engineering. Dedicated to building scalable software.", image: rashedulImg, email: "rashedul.afl@gmail.com", linkedin: "https://www.linkedin.com/in/rislam05/" },
+  { name: "Tauhidur Rahman Rony", role: "Adviser", description: "Strategic adviser providing expert guidance on business development and operations.", image: touhidurImg, email: "rony@m4xit.com", linkedin: "#" },
+  { name: "Priyanka Roy", role: "Senior Executive", description: "Dedicated senior executive managing key administrative and operational functions.", image: priyankaImg, email: "sales@m4xit.com", linkedin: "#" },
+  { name: "Md. Emon Ali", role: "Assistant Engineer", description: "Skilled assistant engineer supporting our technical projects and implementations.", image: emonImg, email: "emon@m4xit.com", linkedin: "#" },
+  { name: "MD .SHAHID AFRIDI", role: "Maintaince Engineer", description: "Skilled Maintaince Engineer supporting our technical projects and implementations.", image: shahidafridiImg, linkedin: "#" },
+  { name: "Md.Shaifiqul Islam Moznu", role: "Electrician", description: "Expert electrician ensuring safe and efficient electrical installations and maintenance.", image: moznuImg, whatsapp: "01711301250", linkedin: "#" }
 ];
 
 export default function CompanyProfile() {
@@ -310,21 +325,109 @@ export default function CompanyProfile() {
       </section>
 
       {/* 11. Our Team */}
-      <section className="py-24 bg-white">
+      <section className="py-24 bg-gray-50 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold font-heading text-primary mb-4">Meet the Team Behind MaxIT</h2>
+            <h2 className="text-4xl md:text-5xl font-bold font-heading text-primary mb-6">Meet the Team Behind MaxIT</h2>
             <p className="text-gray-600 text-lg max-w-2xl mx-auto font-medium">Our engineering and management leaders driving innovation.</p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {team.map((member, i) => (
-              <div key={i} className="group">
-                <div className="relative overflow-hidden rounded-2xl mb-4 bg-gray-100 aspect-[3/4]">
-                  <img src={member.image} alt={member.name} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" />
+          {/* CEO Featured Row */}
+          <div className="mb-16 max-w-4xl mx-auto">
+            <div className="group relative bg-white rounded-3xl shadow-xl hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 overflow-hidden border border-gray-200 hover:border-accent/40 flex flex-col md:flex-row items-center p-8 md:p-12">
+              <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+              
+              <div className="relative w-64 h-64 md:w-80 md:h-80 flex-shrink-0 mx-auto md:mx-0 overflow-hidden rounded-full border-8 border-gray-50 shadow-lg group-hover:border-accent/20 transition-colors duration-500 z-10 bg-gray-100 mb-8 md:mb-0 md:mr-12">
+                <img
+                  src={team[0].image.src}
+                  alt={team[0].name}
+                  className="w-full h-full object-cover filter grayscale-[10%] group-hover:grayscale-0 transform group-hover:scale-110 transition-all duration-700 ease-in-out"
+                />
+              </div>
+
+              <div className="relative z-10 flex flex-col text-center md:text-left flex-grow">
+                <p className="text-accent font-semibold tracking-wider uppercase text-lg mb-2">{team[0].role}</p>
+                <h3 className="text-3xl md:text-4xl font-bold font-heading text-primary mb-4 group-hover:text-accent transition-colors duration-300">
+                  {team[0].name}
+                </h3>
+                <p className="text-gray-700 text-lg font-medium leading-relaxed mb-8">
+                  {team[0].description}
+                </p>
+                <div className="flex space-x-4 pt-6 border-t border-gray-100 justify-center md:justify-start">
+                  {team[0].email && (
+                    <a href={`mailto:${team[0].email}`} className="flex items-center justify-center w-12 h-12 bg-gray-50 rounded-xl text-gray-700 hover:bg-accent hover:text-white hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
+                      <Mail className="w-5 h-5" />
+                    </a>
+                  )}
+                  {team[0].linkedin && (
+                    <a href={team[0].linkedin} className="flex items-center justify-center w-12 h-12 bg-gray-50 rounded-xl text-gray-700 hover:bg-[#0077b5] hover:text-white hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
+                      <Linkedin className="w-5 h-5" />
+                    </a>
+                  )}
                 </div>
-                <h4 className="text-xl font-bold text-gray-900">{member.name}</h4>
-                <p className="text-accent font-medium">{member.role}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 xl:gap-12">
+            {team.slice(1).map((member, index) => (
+              <div 
+                key={index} 
+                className="group relative bg-white rounded-3xl flex flex-col h-full shadow-md hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 overflow-hidden transform hover:-translate-y-2 border-2 border-gray-200 hover:border-accent/40"
+              >
+                <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                
+                {/* Image Wrapper */}
+                <div className="relative w-48 h-48 mx-auto mt-8 overflow-hidden rounded-full border-4 border-gray-100 shadow-sm group-hover:border-accent/30 transition-colors duration-500 z-10 flex items-center justify-center bg-gray-50">
+                  <img
+                    src={member.image.src}
+                    alt={member.name}
+                    className="w-full h-full object-cover filter grayscale-[20%] group-hover:grayscale-0 transform group-hover:scale-110 transition-all duration-700 ease-in-out"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-primary/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                </div>
+
+                {/* Content Block */}
+                <div className="p-8 relative z-10 flex flex-col flex-grow bg-white">
+                  <p className="text-accent font-semibold tracking-wider uppercase text-sm mb-2 text-center">{member.role}</p>
+                  <h3 className="text-2xl font-bold font-heading text-primary mb-3 group-hover:text-accent transition-colors duration-300 text-center">
+                    {member.name}
+                  </h3>
+                  <p className="text-gray-700 font-medium leading-relaxed mb-6 flex-grow text-center">
+                    {member.description}
+                  </p>
+
+                  {/* Social Buttons */}
+                  <div className="flex space-x-3 pt-6 border-t border-gray-100 mt-auto justify-center">
+                    {member.email && (
+                      <a
+                        href={`mailto:${member.email}`}
+                        className="flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl text-gray-700 hover:bg-accent hover:text-white hover:shadow-lg hover:shadow-accent/40 transform hover:-translate-y-1 transition-all duration-300"
+                        title="Email"
+                      >
+                        <Mail className="w-4 h-4" />
+                      </a>
+                    )}
+                    {member.whatsapp && (
+                      <a
+                        href={`https://wa.me/88${member.whatsapp}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl text-gray-700 hover:bg-[#25D366] hover:text-white hover:shadow-lg hover:shadow-[#25D366]/40 transform hover:-translate-y-1 transition-all duration-300"
+                        title="WhatsApp"
+                      >
+                        <MessageCircle className="w-4 h-4" />
+                      </a>
+                    )}
+                    <a
+                      href={member.linkedin}
+                      className="flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl text-gray-700 hover:bg-[#0077b5] hover:text-white hover:shadow-lg hover:shadow-[#0077b5]/40 transform hover:-translate-y-1 transition-all duration-300"
+                      title="LinkedIn"
+                    >
+                      <Linkedin className="w-4 h-4" />
+                    </a>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
