@@ -96,7 +96,7 @@ const Team = () => {
             <h1 className="text-5xl md:text-6xl font-bold font-heading text-primary mb-6 tracking-tight">
               Meet Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-red-400">Team</span>
             </h1>
-            <p className="text-xl text-gray-500 font-light leading-relaxed">
+            <p className="text-xl text-gray-700 font-medium leading-relaxed">
               United by a shared vision of innovation, technological excellence, and sustainable development.
             </p>
           </div>
@@ -126,7 +126,7 @@ const Team = () => {
                 </div>
                 <h3 className="text-3xl font-bold font-heading text-primary mb-2">Engr. Zahangir Alam <span className="text-accent">(Sobuj)</span></h3>
                 
-                <div className="prose prose-lg text-gray-500 font-light mt-6 mx-auto lg:mx-0">
+                <div className="prose prose-lg text-gray-700 font-medium mt-6 mx-auto lg:mx-0">
                   <p className="mb-4 leading-relaxed">
                     <span className="text-3xl text-accent font-serif leading-none mr-2">"</span>
                     At Max IT Solution LTD., we believe that technology should serve people, empower communities, and create lasting impact. Since the beginning of our journey, we have been driven by a simple yet powerful mission: to provide reliable, innovative, and sustainable solutions that address real-world challenges faced by businesses and communities alike.
@@ -182,7 +182,7 @@ const Team = () => {
                   <h3 className="text-2xl font-bold font-heading text-primary mb-3 group-hover:text-accent transition-colors duration-300">
                     {member.name}
                   </h3>
-                  <p className="text-gray-500 font-light leading-relaxed mb-6 flex-grow">
+                  <p className="text-gray-700 font-medium leading-relaxed mb-6 flex-grow">
                     {member.description}
                   </p>
 
@@ -191,7 +191,7 @@ const Team = () => {
                     {member.email && (
                       <a
                         href={`mailto:${member.email}`}
-                        className="flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl text-gray-500 hover:bg-accent hover:text-white hover:shadow-lg hover:shadow-accent/40 transform hover:-translate-y-1 transition-all duration-300"
+                        className="flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl text-gray-700 hover:bg-accent hover:text-white hover:shadow-lg hover:shadow-accent/40 transform hover:-translate-y-1 transition-all duration-300"
                         title="Email"
                       >
                         <Mail className="w-4 h-4" />
@@ -202,7 +202,7 @@ const Team = () => {
                         href={`https://wa.me/88${member.whatsapp}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl text-gray-500 hover:bg-[#25D366] hover:text-white hover:shadow-lg hover:shadow-[#25D366]/40 transform hover:-translate-y-1 transition-all duration-300"
+                        className="flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl text-gray-700 hover:bg-[#25D366] hover:text-white hover:shadow-lg hover:shadow-[#25D366]/40 transform hover:-translate-y-1 transition-all duration-300"
                         title="WhatsApp"
                       >
                         <MessageCircle className="w-4 h-4" />
@@ -210,7 +210,7 @@ const Team = () => {
                     )}
                     <a
                       href={member.linkedin}
-                      className="flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl text-gray-500 hover:bg-[#0077b5] hover:text-white hover:shadow-lg hover:shadow-[#0077b5]/40 transform hover:-translate-y-1 transition-all duration-300"
+                      className="flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl text-gray-700 hover:bg-[#0077b5] hover:text-white hover:shadow-lg hover:shadow-[#0077b5]/40 transform hover:-translate-y-1 transition-all duration-300"
                       title="LinkedIn"
                     >
                       <Linkedin className="w-4 h-4" />

@@ -81,7 +81,7 @@ const Services = () => {
             <h1 className="text-5xl md:text-6xl font-bold font-heading text-primary mb-6 tracking-tight">
               Our Premium <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-red-400">Services</span>
             </h1>
-            <p className="text-xl text-gray-500 font-light leading-relaxed">
+            <p className="text-xl text-gray-700 font-medium leading-relaxed">
               Specialized solutions for sustainable energy, modern agriculture, robust infrastructure, and smart industrial automation tailored to your unique needs.
             </p>
           </div>
@@ -107,7 +107,7 @@ const Services = () => {
           <h2 className="text-4xl md:text-5xl font-bold font-heading text-white mb-6">
             Need a Customized Solution?
           </h2>
-          <p className="text-xl text-primary-foreground/80 mb-10 font-light leading-relaxed">
+          <p className="text-xl text-primary-foreground/80 mb-10 font-medium leading-relaxed">
             Our experts are ready to design and implement robust systems suited exactly for your business or community requirements.
           </p>
           <a

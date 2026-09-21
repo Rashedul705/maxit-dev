@@ -176,7 +176,7 @@ const About = () => {
             <h1 className="text-4xl md:text-6xl font-bold font-heading text-primary mb-6 tracking-tight">
               About <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-red-400">MaxIT Solution</span>
             </h1>
-            <p className="text-xl md:text-2xl text-gray-500 font-light max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl md:text-2xl text-gray-700 font-medium max-w-3xl mx-auto leading-relaxed">
               Empowering the future through advanced engineering, sustainable energy, and innovative automation solutions.
             </p>
           </div>
@@ -191,21 +191,21 @@ const About = () => {
                   Who We Are
                 </h2>
                 <div className="w-20 h-1 bg-accent rounded-full mb-8"></div>
-                <p className="text-gray-600 leading-relaxed font-light text-lg">
+                <p className="text-gray-800 leading-relaxed font-medium text-lg">
                   Max IT Solution LTD. is an advanced technology solution provider specializing in sustainable energy and industrial automation. We provide comprehensive engineering support guaranteed to bring robust, measurable scalability to modern infrastructure.
                 </p>
                 <div className="grid grid-cols-2 gap-6 pt-6">
                   <div>
                     <h4 className="font-bold text-primary mb-1 flex items-center"><Building className="w-4 h-4 mr-2 text-accent"/> Established</h4>
-                    <p className="text-gray-500 font-light">2014</p>
+                    <p className="text-gray-700 font-medium">2014</p>
                   </div>
                   <div>
                     <h4 className="font-bold text-primary mb-1 flex items-center"><MapPin className="w-4 h-4 mr-2 text-accent"/> Headquarters</h4>
-                    <p className="text-gray-500 font-light">Rajshahi-6000</p>
+                    <p className="text-gray-700 font-medium">Rajshahi-6000</p>
                   </div>
                   <div className="col-span-2">
                     <h4 className="font-bold text-primary mb-1 flex items-center"><Award className="w-4 h-4 mr-2 text-accent"/> Tagline</h4>
-                    <p className="text-gray-500 font-light italic">"Innovating Infrastructure for a Sustainable Tomorrow"</p>
+                    <p className="text-gray-700 font-medium italic">"Innovating Infrastructure for a Sustainable Tomorrow"</p>
                   </div>
                 </div>
               </div>
@@ -233,14 +233,14 @@ const About = () => {
               <div className="bg-white p-10 rounded-3xl shadow-lg border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                 <Target className="w-12 h-12 text-accent mb-6 bg-accent/10 p-2 rounded-2xl" />
                 <h3 className="text-2xl font-bold font-heading text-primary mb-4">Our Mission</h3>
-                <p className="text-gray-600 font-light leading-relaxed">
+                <p className="text-gray-800 font-medium leading-relaxed">
                   To provide reliable, innovative, and sustainable solutions that address real-world challenges faced by businesses globally, ensuring maximum ROI through cutting-edge engineering and unparalleled technical support.
                 </p>
               </div>
               <div className="bg-white p-10 rounded-3xl shadow-lg border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                 <Eye className="w-12 h-12 text-primary mb-6 bg-primary/10 p-2 rounded-2xl" />
                 <h3 className="text-2xl font-bold font-heading text-primary mb-4">Our Vision</h3>
-                <p className="text-gray-600 font-light leading-relaxed">
+                <p className="text-gray-800 font-medium leading-relaxed">
                   Leading the transition towards intelligent infrastructures and sustainable renewable integrations in every sector, setting the global standard for industrial automation and clean energy adoption.
                 </p>
               </div>
@@ -259,7 +259,7 @@ const About = () => {
                   <div key={idx} className="text-center">
                     <value.icon className="w-10 h-10 text-accent mx-auto mb-4" />
                     <h4 className="text-lg font-bold mb-2">{value.title}</h4>
-                    <p className="text-primary-foreground/70 text-sm font-light">{value.desc}</p>
+                    <p className="text-primary-foreground/70 text-sm font-medium">{value.desc}</p>
                   </div>
                 ))}
               </div>
@@ -272,7 +272,7 @@ const About = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-16">
               <h2 className="text-3xl md:text-4xl font-bold font-heading text-primary mb-6">Core Offerings</h2>
-              <p className="text-gray-500 font-light text-lg mb-6">Comprehensive solutions tailored for modern industrial needs.</p>
+              <p className="text-gray-700 font-medium text-lg mb-6">Comprehensive solutions tailored for modern industrial needs.</p>
               <div className="w-20 h-1 bg-accent rounded-full mx-auto"></div>
             </div>
 
@@ -292,7 +292,7 @@ const About = () => {
                 <div>
                   <h2 className="text-3xl md:text-4xl font-bold font-heading mb-6">Why Partner With Us?</h2>
                   <div className="w-20 h-1 bg-accent rounded-full mb-8"></div>
-                  <p className="text-primary-foreground/80 font-light text-lg mb-8 leading-relaxed">
+                  <p className="text-primary-foreground/80 font-medium text-lg mb-8 leading-relaxed">
                     We don't just deliver projects; we build long-term partnerships. Our unique approach ensures your infrastructure is always optimized for peak performance.
                   </p>
                   <ul className="space-y-4">
@@ -302,7 +302,7 @@ const About = () => {
                       "Cost-effective, scalable solutions",
                       "Commitment to sustainable and green technologies"
                     ].map((item, idx) => (
-                      <li key={idx} className="flex items-center text-lg font-light">
+                      <li key={idx} className="flex items-center text-lg font-medium">
                         <CheckCircle2 className="w-6 h-6 text-accent mr-4 flex-shrink-0" />
                         {item}
                       </li>
@@ -318,7 +318,7 @@ const About = () => {
                   ].map((stat, idx) => (
                      <div key={idx} className="bg-white/10 backdrop-blur-sm p-6 rounded-3xl border border-white/10 text-center hover:bg-white/20 transition-colors duration-300">
                         <h4 className="text-4xl font-bold text-accent mb-2">{stat.number}</h4>
-                        <p className="text-sm font-light uppercase tracking-wider">{stat.label}</p>
+                        <p className="text-sm font-medium uppercase tracking-wider">{stat.label}</p>
                      </div>
                   ))}
                 </div>
@@ -360,7 +360,7 @@ const About = () => {
                     <h3 className="text-xl font-bold font-heading text-primary mb-3 group-hover:text-accent transition-colors duration-300 text-center">
                       {member.name}
                     </h3>
-                    <p className="text-gray-500 font-light text-sm leading-relaxed mb-6 flex-grow text-center">
+                    <p className="text-gray-700 font-medium text-sm leading-relaxed mb-6 flex-grow text-center">
                       {member.description}
                     </p>
 
@@ -369,7 +369,7 @@ const About = () => {
                       {member.email && (
                         <a
                           href={`mailto:${member.email}`}
-                          className="flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl text-gray-500 hover:bg-accent hover:text-white hover:shadow-lg hover:shadow-accent/40 transform hover:-translate-y-1 transition-all duration-300"
+                          className="flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl text-gray-700 hover:bg-accent hover:text-white hover:shadow-lg hover:shadow-accent/40 transform hover:-translate-y-1 transition-all duration-300"
                           title="Email"
                         >
                           <Mail className="w-4 h-4" />
@@ -380,7 +380,7 @@ const About = () => {
                           href={`https://wa.me/88${member.whatsapp}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl text-gray-500 hover:bg-[#25D366] hover:text-white hover:shadow-lg hover:shadow-[#25D366]/40 transform hover:-translate-y-1 transition-all duration-300"
+                          className="flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl text-gray-700 hover:bg-[#25D366] hover:text-white hover:shadow-lg hover:shadow-[#25D366]/40 transform hover:-translate-y-1 transition-all duration-300"
                           title="WhatsApp"
                         >
                           <MessageCircle className="w-4 h-4" />
@@ -388,7 +388,7 @@ const About = () => {
                       )}
                       <a
                         href={member.linkedin}
-                        className="flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl text-gray-500 hover:bg-[#0077b5] hover:text-white hover:shadow-lg hover:shadow-[#0077b5]/40 transform hover:-translate-y-1 transition-all duration-300"
+                        className="flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl text-gray-700 hover:bg-[#0077b5] hover:text-white hover:shadow-lg hover:shadow-[#0077b5]/40 transform hover:-translate-y-1 transition-all duration-300"
                         title="LinkedIn"
                       >
                         <Linkedin className="w-4 h-4" />
@@ -425,7 +425,7 @@ const About = () => {
                       <h3 className="font-bold text-primary text-lg">{milestone.title}</h3>
                       <span className="font-bold text-accent px-3 py-1 bg-accent/10 rounded-full text-sm">{milestone.year}</span>
                     </div>
-                    <p className="text-gray-500 font-light text-sm leading-relaxed">{milestone.desc}</p>
+                    <p className="text-gray-700 font-medium text-sm leading-relaxed">{milestone.desc}</p>
                   </div>
                 </div>
               ))}
@@ -460,10 +460,10 @@ const About = () => {
                   <div className="flex space-x-1 mb-4">
                     {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 text-accent fill-accent" />)}
                   </div>
-                  <p className="text-gray-600 font-light italic mb-6">"{testimonial.quote}"</p>
+                  <p className="text-gray-800 font-medium italic mb-6">"{testimonial.quote}"</p>
                   <div>
                     <h4 className="font-bold text-primary">{testimonial.author}</h4>
-                    <p className="text-sm text-gray-500">{testimonial.company}</p>
+                    <p className="text-sm text-gray-700">{testimonial.company}</p>
                   </div>
                 </div>
               ))}
@@ -479,22 +479,22 @@ const About = () => {
                 <div className="p-12 lg:p-16 relative">
                   <div className="absolute top-0 left-0 w-64 h-64 bg-accent/20 rounded-full blur-[80px] pointer-events-none transform -translate-x-1/2 -translate-y-1/2"></div>
                   <h2 className="text-3xl md:text-4xl font-bold font-heading text-white mb-6">Get In Touch</h2>
-                  <p className="text-primary-foreground/80 mb-10 font-light leading-relaxed">
+                  <p className="text-primary-foreground/80 mb-10 font-medium leading-relaxed">
                     Ready to transform your infrastructure? Contact us today to discuss your next project.
                   </p>
                   
                   <div className="space-y-6 mb-10">
                     <div className="flex items-center text-white">
                       <MapPin className="w-6 h-6 text-accent mr-4 shrink-0" />
-                      <span className="font-light">2nd Floor, Afroza Tower, Uposhohor Newmarket, Rajshahi-6000</span>
+                      <span className="font-medium">2nd Floor, Afroza Tower, Uposhohor Newmarket, Rajshahi-6000</span>
                     </div>
                     <div className="flex items-center text-white">
                       <Phone className="w-6 h-6 text-accent mr-4 shrink-0" />
-                      <span className="font-light">+88 01724-958474</span>
+                      <span className="font-medium">+88 01724-958474</span>
                     </div>
                     <div className="flex items-center text-white">
                       <Mail className="w-6 h-6 text-accent mr-4 shrink-0" />
-                      <span className="font-light">sales@m4xit.com</span>
+                      <span className="font-medium">sales@m4xit.com</span>
                     </div>
                   </div>
 
@@ -506,7 +506,7 @@ const About = () => {
                 </div>
                 <div className="bg-gray-100 p-12 lg:p-16 flex flex-col justify-center">
                   <h3 className="text-2xl font-bold font-heading text-primary mb-6">Start Your Project</h3>
-                  <p className="text-gray-600 mb-8 font-light">Fill out our contact form and our team will get back to you within 24 hours.</p>
+                  <p className="text-gray-800 mb-8 font-medium">Fill out our contact form and our team will get back to you within 24 hours.</p>
                   <Link
                     href="/contact"
                     className="inline-flex items-center justify-center px-8 py-4 bg-accent text-white font-bold rounded-2xl hover:bg-accent/90 transition-all duration-300 shadow-lg shadow-accent/20 group"

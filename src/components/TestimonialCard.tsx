@@ -23,7 +23,7 @@ const TestimonialCard = ({ name, company, testimonial, rating, image }: Testimon
         {[...Array(5)].map((_, i) => (
           <svg
             key={i}
-            className={`w-5 h-5 mr-1.5 ${i < rating ? 'text-[#F59E0B] drop-shadow-[0_0_8px_rgba(245,158,11,0.5)]' : 'text-gray-600'}`}
+            className={`w-5 h-5 mr-1.5 ${i < rating ? 'text-[#F59E0B] drop-shadow-[0_0_8px_rgba(245,158,11,0.5)]' : 'text-gray-800'}`}
             fill="currentColor"
             viewBox="0 0 20 20"
           >
@@ -32,7 +32,7 @@ const TestimonialCard = ({ name, company, testimonial, rating, image }: Testimon
         ))}
       </div>
       
-      <p className="text-gray-300 mb-10 leading-relaxed font-light text-lg relative z-10 flex-grow italic">
+      <p className="text-gray-300 mb-10 leading-relaxed font-medium text-lg relative z-10 flex-grow italic">
         "{testimonial}"
       </p>
       

@@ -84,7 +84,7 @@ const SolarInnovation = () => {
                 Solar Frontier
               </span>
             </h2>
-            <p className="text-xl text-primary-foreground/80 font-light leading-relaxed">
+            <p className="text-xl text-primary-foreground/80 font-medium leading-relaxed">
               Explore our state-of-the-art videography and see how MaxIT Solution is reshaping the energy landscape with break-through technologies.
             </p>
           </div>
@@ -131,7 +131,7 @@ const SolarInnovation = () => {
                     <h3 className="text-3xl md:text-5xl font-bold font-heading text-white mb-4">
                       {slide.title}
                     </h3>
-                    <p className="text-lg md:text-xl text-gray-300 font-light max-w-2xl">
+                    <p className="text-lg md:text-xl text-gray-300 font-medium max-w-2xl">
                       {slide.description}
                     </p>
                   </div>

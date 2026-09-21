@@ -33,7 +33,7 @@ const ServiceCard = ({ icon, title, description, features, image }: ServiceCardP
 
       <div className="pt-12 pb-8 px-8 flex-grow flex flex-col relative z-10 bg-white">
         <h3 className="text-2xl font-bold font-heading text-primary mb-3 tracking-tight group-hover:text-accent transition-colors">{title}</h3>
-        <p className="text-gray-500 leading-relaxed font-light mb-8 flex-grow">{description}</p>
+        <p className="text-gray-700 leading-relaxed font-medium mb-8 flex-grow">{description}</p>
 
         <div className="pt-6 border-t border-gray-100">
           <ul className="space-y-3">

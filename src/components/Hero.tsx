@@ -55,19 +55,19 @@ const Hero = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto pt-8">
             <div className="text-center p-6 bg-white/60 backdrop-blur-md rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
               <div className="text-4xl font-bold text-primary mb-2 font-heading"><CountUp end={50} /><span className="text-accent">+</span></div>
-              <div className="text-sm text-gray-500 font-medium uppercase tracking-wider">Projects</div>
+              <div className="text-sm text-gray-700 font-medium uppercase tracking-wider">Projects</div>
             </div>
             <div className="text-center p-6 bg-white/60 backdrop-blur-md rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
               <div className="text-4xl font-bold text-primary mb-2 font-heading"><CountUp end={30} /><span className="text-accent">+</span></div>
-              <div className="text-sm text-gray-500 font-medium uppercase tracking-wider">Clients</div>
+              <div className="text-sm text-gray-700 font-medium uppercase tracking-wider">Clients</div>
             </div>
             <div className="text-center p-6 bg-white/60 backdrop-blur-md rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
               <div className="text-4xl font-bold text-primary mb-2 font-heading"><CountUp end={10} /><span className="text-accent">+</span></div>
-              <div className="text-sm text-gray-500 font-medium uppercase tracking-wider">Years Exp</div>
+              <div className="text-sm text-gray-700 font-medium uppercase tracking-wider">Years Exp</div>
             </div>
             <div className="text-center p-6 bg-white/60 backdrop-blur-md rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
               <div className="text-4xl font-bold text-primary mb-2 font-heading"><CountUp end={24} /><span className="text-accent">/7</span></div>
-              <div className="text-sm text-gray-500 font-medium uppercase tracking-wider">Support</div>
+              <div className="text-sm text-gray-700 font-medium uppercase tracking-wider">Support</div>
             </div>
           </div>
         </div>

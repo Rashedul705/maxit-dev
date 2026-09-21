@@ -48,7 +48,7 @@ export default function ProjectsPage() {
                   <h3 className="text-2xl font-bold text-gray-900 mb-3 font-heading group-hover:text-accent transition-colors">
                     {project.title}
                   </h3>
-                  <p className="text-gray-600 mb-6 flex-grow font-sans">
+                  <p className="text-gray-800 mb-6 flex-grow font-sans">
                     {project.shortDescription}
                   </p>
                   <div className="flex items-center text-accent font-medium mt-auto group-hover:translate-x-2 transition-transform">

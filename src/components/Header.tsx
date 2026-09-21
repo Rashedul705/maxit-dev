@@ -54,7 +54,7 @@ const Header = () => {
                 className={`relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-full overflow-hidden group ${
                   isActive(item.path)
                     ? 'text-accent bg-accent/5'
-                    : 'text-gray-600 hover:text-accent hover:bg-gray-50/50'
+                    : 'text-gray-800 hover:text-accent hover:bg-gray-50/50'
                 }`}
               >
                 <span className="relative z-10">{item.name}</span>

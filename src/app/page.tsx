@@ -150,7 +150,7 @@ const Index = () => {
             <h2 className="text-4xl md:text-5xl font-bold font-heading text-primary mb-6">
               Why Choose MaxIT Solution?
             </h2>
-            <p className="text-xl text-gray-500 max-w-3xl mx-auto font-light leading-relaxed">
+            <p className="text-xl text-gray-700 max-w-3xl mx-auto font-medium leading-relaxed">
               We are dedicated to empowering businesses and homes with sustainable energy, advanced agricultural technology, and smart automation solutions.
             </p>
           </div>
@@ -168,7 +168,7 @@ const Index = () => {
                 </div>
                 
                 <h3 className="relative z-10 text-2xl font-bold font-heading text-primary mb-3">{reason.title}</h3>
-                <p className="relative z-10 text-gray-500 leading-relaxed font-light">{reason.description}</p>
+                <p className="relative z-10 text-gray-700 leading-relaxed font-medium">{reason.description}</p>
               </div>
             ))}
           </div>
@@ -192,7 +192,7 @@ const Index = () => {
             <h2 className="text-4xl md:text-5xl font-bold font-heading text-primary mb-6">
               Our Premium Services
             </h2>
-            <p className="text-xl text-gray-500 max-w-3xl mx-auto font-light leading-relaxed">
+            <p className="text-xl text-gray-700 max-w-3xl mx-auto font-medium leading-relaxed">
               From solar energy systems to smart industrial automation, we offer the robust technologies you need to power your future.
             </p>
           </div>
@@ -226,7 +226,7 @@ const Index = () => {
             <h2 className="text-4xl md:text-5xl font-bold font-heading text-white mb-6">
               Client Success <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-orange-400">Stories</span>
             </h2>
-            <p className="text-xl text-gray-400 font-light max-w-2xl mx-auto">
+            <p className="text-xl text-gray-400 font-medium max-w-2xl mx-auto">
               Don't just take our word for it — hear from the visionaries who have experienced the MaxIT difference firsthand.
             </p>
           </div>
@@ -257,7 +257,7 @@ const Index = () => {
             <h2 className="text-4xl md:text-6xl font-bold font-heading text-white mb-8 tracking-tight">
               Ready to Power Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-orange-400">Future?</span>
             </h2>
-            <p className="text-xl text-gray-300 mb-12 max-w-2xl mx-auto font-light leading-relaxed">
+            <p className="text-xl text-gray-300 mb-12 max-w-2xl mx-auto font-medium leading-relaxed">
               Let's work together to implement sustainable and intelligent solutions that scale with your ambitions. Get in touch with us today!
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">

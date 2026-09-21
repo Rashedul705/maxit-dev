@@ -65,7 +65,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                   <div className="flex items-start">
                     <User className="h-5 w-5 text-accent mr-3 mt-0.5" />
                     <div>
-                      <p className="text-sm text-gray-500 font-medium">Client</p>
+                      <p className="text-sm text-gray-700 font-medium">Client</p>
                       <p className="text-gray-900 font-medium">{project.client}</p>
                     </div>
                   </div>
@@ -73,7 +73,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                   <div className="flex items-start">
                     <Calendar className="h-5 w-5 text-accent mr-3 mt-0.5" />
                     <div>
-                      <p className="text-sm text-gray-500 font-medium">Completion Date</p>
+                      <p className="text-sm text-gray-700 font-medium">Completion Date</p>
                       <p className="text-gray-900 font-medium">{project.date}</p>
                     </div>
                   </div>
@@ -81,7 +81,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                   <div className="flex items-start">
                     <Tag className="h-5 w-5 text-accent mr-3 mt-0.5" />
                     <div>
-                      <p className="text-sm text-gray-500 font-medium">Category</p>
+                      <p className="text-sm text-gray-700 font-medium">Category</p>
                       <p className="text-gray-900 font-medium">{project.category}</p>
                     </div>
                   </div>

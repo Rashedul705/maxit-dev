@@ -27,7 +27,7 @@ export default function Contact() {
             <h1 className="text-5xl md:text-6xl font-bold font-heading text-primary mb-6 tracking-tight">
               Get in <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-red-400">Touch</span>
             </h1>
-            <p className="text-xl text-gray-500 font-light leading-relaxed max-w-2xl mx-auto">
+            <p className="text-xl text-gray-700 font-medium leading-relaxed max-w-2xl mx-auto">
               Ready to start your next project? We are here to help with solar energy, agro tech, and automation solutions.
             </p>
           </div>
@@ -47,7 +47,7 @@ export default function Contact() {
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold text-primary mb-1">Our Location</h3>
-                      <p className="text-gray-500 font-light">2nd Floor, Afroza Tower,<br /> Uposhohor Newmarket, <br /> Rajshahi-6000</p>
+                      <p className="text-gray-700 font-medium">2nd Floor, Afroza Tower,<br /> Uposhohor Newmarket, <br /> Rajshahi-6000</p>
                     </div>
                   </div>
                   
@@ -57,7 +57,7 @@ export default function Contact() {
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold text-primary mb-1">Phone Number</h3>
-                      <p className="text-gray-500 font-light">+88 01724-958474</p>
+                      <p className="text-gray-700 font-medium">+88 01724-958474</p>
                     </div>
                   </div>
 
@@ -67,7 +67,7 @@ export default function Contact() {
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold text-primary mb-1">Email Address</h3>
-                      <p className="text-gray-500 font-light">sales@m4xit.com</p>
+                      <p className="text-gray-700 font-medium">sales@m4xit.com</p>
                     </div>
                   </div>
                 </div>
