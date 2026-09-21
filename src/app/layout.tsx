@@ -16,12 +16,12 @@ export const metadata: Metadata = {
     title: "MaxIT Solution - Solar Energy, Agro Tech & Automation",
     description: "Leading provider of solar home systems, smart irrigation, agricultural technology, and industrial automation solutions in Bangladesh.",
     type: "website",
-    images: [{ url: "https://lovable.dev/opengraph-image-p98pqg.png" }]
+    images: [{ url: "/images/slides/commercial_rooftop_slide_1789677880098.jpg" }]
   },
   twitter: {
     card: "summary_large_image",
     site: "@maxitsolution",
-    images: ["https://lovable.dev/opengraph-image-p98pqg.png"]
+    images: ["/images/slides/commercial_rooftop_slide_1789677880098.jpg"]
   }
 };
 
