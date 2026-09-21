@@ -1,574 +1,421 @@
+import Link from 'next/link';
 import { 
-  ArrowRight, Target, Eye, Shield, Users, MapPin, 
-  Phone, Mail, Globe, Award, CheckCircle2, Star, 
-  Zap, Building, TrendingUp, Cpu, Leaf, Wrench,
-  Facebook, Twitter, Linkedin, ChevronRight, Activity, MessageCircle,
-  Sun, Sprout, Wifi, Cctv, Droplets, RadioTower, Lightbulb
+  ArrowRight, ChevronRight, MapPin, Phone, Mail, 
+  Sun, Droplets, Sprout, Cpu, Wifi, Cctv, RadioTower, Lightbulb, 
+  Target, Shield, Settings, Home, Factory, Building2,
+  GraduationCap, Activity, Landmark, Briefcase, FileCheck
 } from 'lucide-react';
-import Link from "next/link";
-import Image from "next/image";
-import ServiceCard from '@/components/ServiceCard';
-import TestimonialCard from '@/components/TestimonialCard';
 import { projects } from '@/lib/projects';
 
-import sobujImg from "@/assets/team/ceo-maxit.png";
-import shohidImg from "@/assets/team/shohid.jpg";
-import shahidafridiImg from "@/assets/team/shahidafridi.jpeg";
-import rupaliImg from "@/assets/team/rupali.jpg";
-import touhidurImg from "@/assets/team/touhidur.jpg";
-import priyankaImg from "@/assets/team/priyanka.jpg";
-import emonImg from "@/assets/team/emon-ali.jpg";
-import moznuImg from "@/assets/team/moznu.jpg";
-import rashedulImg from "@/assets/team/rashedul.jpg";
+// Dummy Team Data (Can be replaced with real data)
+const team = [
+  { name: "Sobuj Ali", role: "Managing Director", image: "/images/team/ceo-maxit.png" },
+  { name: "Shohidul Islam", role: "Chief Engineer", image: "/images/team/shohid.jpg" },
+  { name: "Moznu Mia", role: "Project Manager", image: "/images/team/moznu.jpg" },
+  { name: "Rashedul Islam", role: "Technical Lead", image: "/images/team/rashedul.jpg" }
+];
 
-const CompanyProfile = () => {
-  const services = [
-    {
-      title: "Solar Home Systems (SHS)",
-      description: "Complete solar energy solutions for residential use, reducing grid dependency and promoting green energy throughout the community.",
-      icon: <Sun className="w-8 h-8" />,
-      features: ["Rooftop Installation", "Battery Storage", "Grid Independence"],
-      image: "/images/slides/hybrid_inverter_slide_1789677816112.jpg"
-    },
-    {
-      title: "Solar Pump & Smart Irrigation",
-      description: "Advanced solar-powered pumping systems integrated with smart irrigation technology for efficient water management in agriculture.",
-      icon: <Sprout className="w-8 h-8" />,
-      features: ["Automated Watering", "Solar Powered", "High Efficiency"],
-      image: "/images/slides/agro_solar_slide_1789677870674.jpg"
-    },
-    {
-      title: "Agro Technology",
-      description: "Innovative agricultural tech solutions including IoT monitoring, soil sensors, and automated climate control for greenhouses.",
-      icon: <Leaf className="w-8 h-8" />,
-      features: ["IoT Monitoring", "Soil Sensors", "Climate Control"],
-      image: "/images/slides/agro_tech_service_1789678968707.jpg"
-    },
-    {
-      title: "Industrial & Home Automation",
-      description: "Smart control systems for industries and homes, improving efficiency, safety, and convenience through electric automation.",
-      icon: <Cpu className="w-8 h-8" />,
-      features: ["Smart Controls", "IoT Integration", "Energy Tracking"],
-      image: "/images/slides/iot_smart_home_slide_1789677856585.jpg"
-    },
-    {
-      title: "Networking & Internet Services",
-      description: "Robust network infrastructure design and reliable high-speed internet connectivity for businesses and rural areas.",
-      icon: <Wifi className="w-8 h-8" />,
-      features: ["High-speed Setup", "Network Security", "Infrastructure Design"],
-      image: "/images/slides/networking_service_1789678979212.jpg"
-    },
-    {
-      title: "CCTV Security Systems",
-      description: "Professional installation of IP camera systems and surveillance solutions for 24/7 security monitoring.",
-      icon: <Cctv className="w-8 h-8" />,
-      features: ["24/7 Monitoring", "IP Cameras", "Cloud Storage"],
-      image: "/images/slides/cctv_service_1789678989455.jpg"
-    },
-    {
-      title: "Water Treatment Solutions",
-      description: "Comprehensive water treatment plants ensuring clean and safe water for communities and industries.",
-      icon: <Droplets className="w-8 h-8" />,
-      features: ["Purification Plants", "Filtration", "Quality Monitoring"],
-      image: "/images/slides/water_treatment_service_1789679001434.jpg"
-    },
-    {
-      title: "Communication Infrastructure",
-      description: "Construction and maintenance of radio communication towers and related infrastructure.",
-      icon: <RadioTower className="w-8 h-8" />,
-      features: ["Radio Towers", "Maintenance", "Signal Optimization"],
-      image: "/images/slides/solar_automation_slide_1789677805531.jpg"
-    },
-    {
-      title: "Building Electrical Engineering",
-      description: "Expert electrical planning and wiring services for commercial and residential construction projects.",
-      icon: <Lightbulb className="w-8 h-8" />,
-      features: ["Wiring Planning", "Safety Compliance", "Commercial Projects"],
-      image: "/images/slides/commercial_rooftop_slide_1789677880098.jpg"
-    }
-  ];
-
-  const teamMembers = [
-    {
-      name: "Engr. Zahangir Alam (Sobuj)",
-      role: "Chief Executive Officer",
-      description: "Visionary leader driving innovation and sustainable solutions at Max IT Solution LTD.",
-      image: sobujImg,
-      email: "ceo@m4xit.com",
-      linkedin: "#"
-    },
-    {
-      name: "Rupali",
-      role: "Project Director",
-      description: "Experienced project director ensuring successful execution and delivery of our initiatives.",
-      image: rupaliImg,
-      email: "rupali@m4xit.com",
-      linkedin: "#"
-    },
-    {
-      name: "Sarwar Jahan",
-      role: "Software Engineer",
-      description: "Expert software engineer developing robust and scalable digital solutions.",
-      image: shohidImg,
-      email: "shohid@m4xit.com",
-      linkedin: "#"
-    },
-    {
-      name: "Rashedul Islam",
-      role: "Software Engineer",
-      description: "BSc in Computer Science and Engineering. Dedicated to building scalable and robust software solutions.",
-      image: rashedulImg,
-      email: "rashedul.afl@gmail.com",
-      linkedin: "https://www.linkedin.com/in/rislam05/"
-    },
-    {
-      name: "Tauhidur Rahman Rony",
-      role: "Adviser",
-      description: "Strategic adviser providing expert guidance on business development and operations.",
-      image: touhidurImg,
-      email: "rony@m4xit.com",
-      linkedin: "#"
-    },
-    {
-      name: "Priyanka Roy",
-      role: "Senior Executive",
-      description: "Dedicated senior executive managing key administrative and operational functions.",
-      image: priyankaImg,
-      email: "sales@m4xit.com",
-      linkedin: "#"
-    },
-    {
-      name: "Md. Emon Ali",
-      role: "Assistant Engineer",
-      description: "Skilled assistant engineer supporting our technical projects and implementations.",
-      image: emonImg,
-      email: "emon@m4xit.com",
-      linkedin: "#"
-    },
-    {
-      name: "MD .SHAHID AFRIDI",
-      role: "Maintaince Engineer",
-      description: "Skilled Maintaince Engineer supporting our technical projects and implementations.",
-      image: shahidafridiImg,
-      linkedin: "#"
-    },
-    {
-      name: "Md.Shaifiqul Islam Moznu",
-      role: "Electrician",
-      description: "Expert electrician ensuring safe and efficient electrical installations and maintenance.",
-      image: moznuImg,
-      whatsapp: "01711301250",
-      linkedin: "#"
-    }
-  ];
-
-  const testimonials = [
-    {
-      name: "Sarah Ahmed",
-      company: "Green Farms Ltd",
-      testimonial: "MaxIT Solution's solar irrigation system transformed our farming efficiency. Highly professional and reliable implementation.",
-      rating: 5,
-      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=600&auto=format&fit=crop"
-    },
-    {
-      name: "Mohammad Rahman",
-      company: "Industrial Complex",
-      testimonial: "Their automation solutions have significantly reduced our operational costs. Excellent technical expertise.",
-      rating: 5,
-      image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=600&auto=format&fit=crop"
-    },
-    {
-      name: "Fatima Khan",
-      company: "Eco Home Owner",
-      testimonial: "The solar home system installation was smooth and the team was very knowledgeable. Great service!",
-      rating: 5,
-      image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=600&auto=format&fit=crop"
-    }
-  ];
-
+export default function CompanyProfile() {
   return (
-    <div className="min-h-screen flex flex-col overflow-x-hidden w-full max-w-[100vw]">
-      <main className="flex-1 pt-16 animate-slide-up overflow-hidden w-full">
+    <div className="min-h-screen bg-white pt-16">
+      
+      {/* 1. Hero Section */}
+      <section className="relative h-[80vh] min-h-[600px] flex items-center bg-[#0B1120]">
+        <div className="absolute inset-0">
+          <img 
+            src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=2000&auto=format&fit=crop" 
+            alt="Engineering Infrastructure" 
+            className="w-full h-full object-cover opacity-40 mix-blend-overlay"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0B1120] via-[#0B1120]/80 to-transparent" />
+        </div>
         
-        {/* 1. Hero Section */}
-        <section className="relative pt-32 pb-20 bg-gradient-to-b from-primary/5 to-white overflow-hidden">
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[100px] pointer-events-none transform translate-x-1/2 -translate-y-1/2" />
-          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-primary/5 rounded-full blur-[100px] pointer-events-none transform -translate-x-1/2 translate-y-1/2" />
-          
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-            <div className="inline-block px-4 py-2 bg-primary/5 rounded-full mb-6 border border-primary/10">
-              <span className="text-primary font-semibold text-sm tracking-wider uppercase">Company Profile</span>
-            </div>
-            <h1 className="text-4xl md:text-6xl font-bold font-heading text-primary mb-6 tracking-tight">
-              Company <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-red-400">MaxIT Solution</span>
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-10">
+          <div className="max-w-3xl">
+            <h1 className="text-5xl md:text-7xl font-bold font-heading text-white mb-6 leading-tight">
+              Technology & Engineering Solutions Built for a <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-orange-400">Smarter Future</span>
             </h1>
-            <p className="text-xl md:text-2xl text-gray-700 font-medium max-w-3xl mx-auto leading-relaxed">
-              Empowering the future through advanced engineering, sustainable energy, and innovative automation solutions.
+            <p className="text-xl text-gray-300 mb-10 font-medium leading-relaxed max-w-2xl">
+              MaxIT provides integrated technology and engineering solutions across renewable energy, smart agriculture, automation, security, networking, water treatment, communication infrastructure and building electrical systems.
             </p>
-          </div>
-        </section>
-
-        {/* 2. Company Overview */}
-        <section className="py-20 bg-white relative">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-              <div className="space-y-6">
-                <h2 className="text-3xl md:text-4xl font-bold font-heading text-primary">
-                  Who We Are
-                </h2>
-                <div className="w-20 h-1 bg-accent rounded-full mb-8"></div>
-                <p className="text-gray-800 leading-relaxed font-medium text-lg">
-                  Max IT Solution LTD. is an advanced technology solution provider specializing in sustainable energy and industrial automation. We provide comprehensive engineering support guaranteed to bring robust, measurable scalability to modern infrastructure.
-                </p>
-                <div className="grid grid-cols-2 gap-6 pt-6">
-                  <div>
-                    <h4 className="font-bold text-primary mb-1 flex items-center"><Building className="w-4 h-4 mr-2 text-accent"/> Established</h4>
-                    <p className="text-gray-700 font-medium">2014</p>
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-primary mb-1 flex items-center"><MapPin className="w-4 h-4 mr-2 text-accent"/> Headquarters</h4>
-                    <p className="text-gray-700 font-medium">Rajshahi-6000</p>
-                  </div>
-                  <div className="col-span-2">
-                    <h4 className="font-bold text-primary mb-1 flex items-center"><Award className="w-4 h-4 mr-2 text-accent"/> Tagline</h4>
-                    <p className="text-gray-700 font-medium italic">"Innovating Infrastructure for a Sustainable Tomorrow"</p>
-                  </div>
-                </div>
-              </div>
-              <div className="relative h-[400px] rounded-3xl overflow-hidden shadow-2xl">
-                <div className="absolute inset-0 bg-primary/20 mix-blend-multiply z-10"></div>
-                <img 
-                  src="https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
-                  alt="Company Office" 
-                  className="object-cover w-full h-full"
-                />
-              </div>
+            <div className="flex flex-wrap gap-4">
+              <Link href="#solutions" className="px-8 py-4 bg-primary text-white font-bold rounded-xl hover:bg-primary/90 transition-all shadow-lg hover:shadow-primary/30 flex items-center">
+                Explore Our Solutions
+                <ArrowRight className="ml-2 w-5 h-5" />
+              </Link>
+              <Link href="#contact" className="px-8 py-4 bg-white/10 text-white font-bold rounded-xl border border-white/20 hover:bg-white/20 transition-all backdrop-blur-sm">
+                Talk to Our Team
+              </Link>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* 3. Mission, Vision & Core Values */}
-        <section className="py-24 bg-gray-50 relative">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold font-heading text-primary mb-6">Our Purpose & Values</h2>
-              <div className="w-20 h-1 bg-accent rounded-full mx-auto"></div>
+      {/* 2. Quick Company Introduction */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-12">
+            <span className="text-accent font-bold uppercase tracking-wider text-sm">About MaxIT</span>
+            <h2 className="text-3xl font-bold font-heading text-primary mt-2">Engineering the Future of Infrastructure</h2>
+          </div>
+          
+          <div className="flex flex-col lg:flex-row gap-16 items-center">
+            <div className="w-full lg:w-1/2">
+              <p className="text-lg text-gray-700 leading-relaxed font-medium mb-6">
+                MaxIT is a technology and engineering solutions company focused on delivering reliable, efficient and sustainable solutions for homes, businesses, industries and institutions. 
+              </p>
+              <p className="text-lg text-gray-700 leading-relaxed font-medium">
+                We bridge the gap between complex technological capabilities and practical implementation. From solar grid installations to fully automated smart environments, our multi-disciplinary approach ensures every project is executed to the highest engineering standards.
+              </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-              <div className="bg-white p-10 rounded-3xl shadow-lg border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                <Target className="w-12 h-12 text-accent mb-6 bg-accent/10 p-2 rounded-2xl" />
-                <h3 className="text-2xl font-bold font-heading text-primary mb-4">Our Mission</h3>
-                <p className="text-gray-800 font-medium leading-relaxed">
-                  To provide reliable, innovative, and sustainable solutions that address real-world challenges faced by businesses globally, ensuring maximum ROI through cutting-edge engineering and unparalleled technical support.
-                </p>
-              </div>
-              <div className="bg-white p-10 rounded-3xl shadow-lg border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                <Eye className="w-12 h-12 text-primary mb-6 bg-primary/10 p-2 rounded-2xl" />
-                <h3 className="text-2xl font-bold font-heading text-primary mb-4">Our Vision</h3>
-                <p className="text-gray-800 font-medium leading-relaxed">
-                  Leading the transition towards intelligent infrastructures and sustainable renewable integrations in every sector, setting the global standard for industrial automation and clean energy adoption.
-                </p>
-              </div>
-            </div>
-
-            <div className="bg-primary rounded-3xl p-10 text-white shadow-2xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-accent/20 rounded-full blur-[80px] pointer-events-none transform translate-x-1/2 -translate-y-1/2"></div>
-              <h3 className="text-2xl font-bold font-heading mb-8 text-center">Core Values</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
+            <div className="w-full lg:w-1/2">
+              <div className="grid grid-cols-2 gap-6">
                 {[
-                  { icon: Shield, title: "Integrity", desc: "Honesty and transparency in all our dealings." },
-                  { icon: Zap, title: "Innovation", desc: "Continuously pushing technological boundaries." },
-                  { icon: Users, title: "Collaboration", desc: "Working together to achieve mutual success." },
-                  { icon: CheckCircle2, title: "Excellence", desc: "Delivering superior quality in every project." }
-                ].map((value, idx) => (
-                  <div key={idx} className="text-center">
-                    <value.icon className="w-10 h-10 text-accent mx-auto mb-4" />
-                    <h4 className="text-lg font-bold mb-2">{value.title}</h4>
-                    <p className="text-primary-foreground/70 text-sm font-medium">{value.desc}</p>
+                  { value: "10+", label: "Years of Experience" },
+                  { value: "250+", label: "Projects Completed" },
+                  { value: "100+", label: "Clients Served" },
+                  { value: "20+", label: "Technical Professionals" }
+                ].map((stat, i) => (
+                  <div key={i} className="bg-gray-50 p-8 rounded-2xl border border-gray-100">
+                    <div className="text-4xl font-bold text-primary mb-2 font-heading">{stat.value}</div>
+                    <div className="text-gray-600 font-medium uppercase text-sm tracking-wide">{stat.label}</div>
                   </div>
                 ))}
               </div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* 4. Products & Services */}
-        <section className="py-24 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold font-heading text-primary mb-6">Core Offerings</h2>
-              <p className="text-gray-700 font-medium text-lg mb-6">Comprehensive solutions tailored for modern industrial needs.</p>
-              <div className="w-20 h-1 bg-accent rounded-full mx-auto"></div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {services.map((service, index) => (
-                <ServiceCard key={index} {...service} />
-              ))}
-            </div>
+      {/* 3. What We Do (Our Solutions) */}
+      <section id="solutions" className="py-24 bg-gray-50 border-t border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <span className="text-accent font-bold uppercase tracking-wider text-sm">Our Solutions</span>
+            <h2 className="text-4xl font-bold font-heading text-primary mt-2">Comprehensive Engineering Capabilities</h2>
           </div>
-        </section>
 
-        {/* 5. Why Choose Us (USP) */}
-        <section className="py-24 bg-primary text-white relative overflow-hidden">
-           <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5 mix-blend-overlay"></div>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                <div>
-                  <h2 className="text-3xl md:text-4xl font-bold font-heading mb-6">Why Partner With Us?</h2>
-                  <div className="w-20 h-1 bg-accent rounded-full mb-8"></div>
-                  <p className="text-primary-foreground/80 font-medium text-lg mb-8 leading-relaxed">
-                    We don't just deliver projects; we build long-term partnerships. Our unique approach ensures your infrastructure is always optimized for peak performance.
-                  </p>
-                  <ul className="space-y-4">
-                    {[
-                      "Decades of combined engineering expertise",
-                      "Guaranteed 24/7 post-installation support",
-                      "Cost-effective, scalable solutions",
-                      "Commitment to sustainable and green technologies"
-                    ].map((item, idx) => (
-                      <li key={idx} className="flex items-center text-lg font-medium">
-                        <CheckCircle2 className="w-6 h-6 text-accent mr-4 flex-shrink-0" />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              { icon: <Sun />, title: "Solar Home Systems", desc: "Reliable solar power solutions for residential and commercial applications." },
+              { icon: <Droplets />, title: "Solar Pump & Smart Irrigation", desc: "Solar-powered pumping and intelligent irrigation solutions for agriculture." },
+              { icon: <Sprout />, title: "Agro Technology", desc: "Technology-driven solutions for smarter and more efficient farming." },
+              { icon: <Cpu />, title: "Industrial & Home Automation", desc: "Automation solutions designed to improve efficiency, comfort and control." },
+              { icon: <Wifi />, title: "Networking & Internet Services", desc: "Reliable network infrastructure, connectivity and communication systems." },
+              { icon: <Cctv />, title: "CCTV Security Systems", desc: "Modern surveillance and security solutions for homes, businesses and institutions." },
+              { icon: <Activity />, title: "Water Treatment Solutions", desc: "Water purification, filtration and treatment systems for different applications." },
+              { icon: <RadioTower />, title: "Communication Infrastructure", desc: "Infrastructure solutions for reliable data and communication networks." },
+              { icon: <Lightbulb />, title: "Building Electrical Engineering", desc: "Electrical design, installation, distribution and engineering solutions." },
+            ].map((service, idx) => (
+              <div key={idx} className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-xl transition-all duration-300 group">
+                <div className="w-14 h-14 bg-primary/5 rounded-xl flex items-center justify-center text-primary mb-6 group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all duration-300">
+                  {service.icon}
                 </div>
-                <div className="grid grid-cols-2 gap-6">
-                  {[
-                    { number: "10+", label: "Years Experience" },
-                    { number: "500+", label: "Projects Completed" },
-                    { number: "24/7", label: "Technical Support" },
-                    { number: "100%", label: "Client Satisfaction" }
-                  ].map((stat, idx) => (
-                     <div key={idx} className="bg-white/10 backdrop-blur-sm p-6 rounded-3xl border border-white/10 text-center hover:bg-white/20 transition-colors duration-300">
-                        <h4 className="text-4xl font-bold text-white mb-2">{stat.number}</h4>
-                        <p className="text-sm font-medium uppercase tracking-wider">{stat.label}</p>
-                     </div>
-                  ))}
-                </div>
-             </div>
-          </div>
-        </section>
-
-        {/* 6. Leadership Team */}
-        <section className="py-24 bg-gray-50 relative">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold font-heading text-primary mb-6">
-                Our Key Professionals
-              </h2>
-              <div className="w-20 h-1 bg-accent rounded-full mx-auto"></div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 xl:gap-12">
-              {teamMembers.map((member, index) => (
-                <div 
-                  key={index} 
-                  className="group relative bg-white rounded-3xl flex flex-col h-full shadow-md hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 overflow-hidden transform hover:-translate-y-2 border-2 border-gray-200 hover:border-accent/40"
-                >
-                  <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-                  
-                  {/* Image Wrapper */}
-                  <div className="relative w-48 h-48 mx-auto mt-8 overflow-hidden rounded-full border-4 border-gray-100 shadow-sm group-hover:border-accent/30 transition-colors duration-500 z-10 flex items-center justify-center bg-gray-50">
-                    <img
-                      src={member.image.src}
-                      alt={member.name}
-                      className="w-full h-full object-cover filter grayscale-[20%] group-hover:grayscale-0 transform group-hover:scale-110 transition-all duration-700 ease-in-out"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-primary/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-                  </div>
-
-                  {/* Content Block */}
-                  <div className="p-8 relative z-10 flex flex-col flex-grow bg-white">
-                    <p className="text-accent font-semibold tracking-wider uppercase text-sm mb-2 text-center">{member.role}</p>
-                    <h3 className="text-xl font-bold font-heading text-primary mb-3 group-hover:text-accent transition-colors duration-300 text-center">
-                      {member.name}
-                    </h3>
-                    <p className="text-gray-700 font-medium text-sm leading-relaxed mb-6 flex-grow text-center">
-                      {member.description}
-                    </p>
-
-                    {/* Social Buttons */}
-                    <div className="flex space-x-3 pt-6 border-t border-gray-100 mt-auto justify-center">
-                      {member.email && (
-                        <a
-                          href={`mailto:${member.email}`}
-                          className="flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl text-gray-700 hover:bg-accent hover:text-white hover:shadow-lg hover:shadow-accent/40 transform hover:-translate-y-1 transition-all duration-300"
-                          title="Email"
-                        >
-                          <Mail className="w-4 h-4" />
-                        </a>
-                      )}
-                      {member.whatsapp && (
-                        <a
-                          href={`https://wa.me/88${member.whatsapp}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl text-gray-700 hover:bg-[#25D366] hover:text-white hover:shadow-lg hover:shadow-[#25D366]/40 transform hover:-translate-y-1 transition-all duration-300"
-                          title="WhatsApp"
-                        >
-                          <MessageCircle className="w-4 h-4" />
-                        </a>
-                      )}
-                      <a
-                        href={member.linkedin}
-                        className="flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl text-gray-700 hover:bg-[#0077b5] hover:text-white hover:shadow-lg hover:shadow-[#0077b5]/40 transform hover:-translate-y-1 transition-all duration-300"
-                        title="LinkedIn"
-                      >
-                        <Linkedin className="w-4 h-4" />
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* 7. Milestones & Achievements */}
-        <section className="py-24 bg-white relative">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-                <h2 className="text-3xl md:text-4xl font-bold font-heading text-primary mb-6">Our Journey</h2>
-              <div className="w-20 h-1 bg-accent rounded-full mx-auto"></div>
-            </div>
-
-            <div className="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-gray-200 before:to-transparent">
-              {[
-                { year: "2014", title: "Company Founded", desc: "Started as a small consulting firm in Dhaka." },
-                { year: "2017", title: "First Major Solar Project", desc: "Successfully installed a 5MW solar grid for a commercial client." },
-                { year: "2020", title: "ISO Certification", desc: "Awarded ISO 9001 for quality management systems." },
-                { year: "2023", title: "National Expansion", desc: "Opened three new branch offices across the country." }
-              ].map((milestone, idx) => (
-                <div key={idx} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-                  <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white bg-accent shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
-                    <TrendingUp className="w-4 h-4 text-white" />
-                  </div>
-                  <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-6 rounded-3xl bg-gray-50 border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="font-bold text-primary text-lg">{milestone.title}</h3>
-                      <span className="font-bold text-accent px-3 py-1 bg-accent/10 rounded-full text-sm">{milestone.year}</span>
-                    </div>
-                    <p className="text-gray-700 font-medium text-sm leading-relaxed">{milestone.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* 8. Portfolio & Social Proof */}
-        <section className="py-24 bg-gray-50 relative">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center max-w-3xl mx-auto mb-16">
-                  <h2 className="text-3xl md:text-4xl font-bold font-heading text-primary mb-6">Our Recent Projects</h2>
-                  <div className="w-20 h-1 bg-accent rounded-full mx-auto mb-10"></div>
-                </div>
-
-                {/* Projects Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
-                  {projects.slice(0, 3).map((project) => (
-                    <Link href={`/projects/${project.id}`} key={project.id} className="group h-full">
-                      <div className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 h-full flex flex-col border border-gray-100 transform hover:-translate-y-1">
-                        <div className="relative h-64 overflow-hidden">
-                          <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors z-10"></div>
-                          <img 
-                            src={project.image} 
-                            alt={project.title}
-                            className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
-                          />
-                          <div className="absolute top-4 right-4 z-20">
-                            <span className="bg-white/90 backdrop-blur-sm text-primary text-xs font-bold px-3 py-1 rounded-full shadow-sm">
-                              {project.category}
-                            </span>
-                          </div>
-                        </div>
-                        
-                        <div className="p-8 flex flex-col flex-grow relative">
-                          <h3 className="text-2xl font-bold text-gray-900 mb-3 font-heading group-hover:text-accent transition-colors">
-                            {project.title}
-                          </h3>
-                          <p className="text-gray-800 mb-6 flex-grow font-sans text-sm">
-                            {project.shortDescription}
-                          </p>
-                          <div className="flex items-center text-accent font-medium mt-auto group-hover:translate-x-2 transition-transform">
-                            <span>View Details</span>
-                            <ArrowRight className="ml-2 h-4 w-4" />
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-
-                {/* Testimonials */}
-                <div className="text-center max-w-3xl mx-auto mb-16">
-                  <h2 className="text-3xl md:text-4xl font-bold font-heading text-primary mb-6">Client Success Stories</h2>
-                  <div className="w-20 h-1 bg-accent rounded-full mx-auto"></div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  {testimonials.map((testimonial, index) => (
-                    <TestimonialCard key={index} {...testimonial} />
-                  ))}
-                </div>
+                <h3 className="text-xl font-bold font-heading text-gray-900 mb-3 group-hover:text-primary transition-colors">{service.title}</h3>
+                <p className="text-gray-600 mb-6 font-medium leading-relaxed">{service.desc}</p>
+                <Link href="/services" className="inline-flex items-center text-accent font-bold hover:text-primary transition-colors">
+                  Learn More <ArrowRight className="ml-2 w-4 h-4" />
+                </Link>
               </div>
-        </section>
+            ))}
+          </div>
+        </div>
+      </section>
 
-        {/* 9. Contact Information & CTA */}
-        <section className="py-24 bg-white relative">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="bg-primary rounded-3xl overflow-hidden shadow-2xl">
-              <div className="grid grid-cols-1 lg:grid-cols-2">
-                <div className="p-12 lg:p-16 relative">
-                  <div className="absolute top-0 left-0 w-64 h-64 bg-accent/20 rounded-full blur-[80px] pointer-events-none transform -translate-x-1/2 -translate-y-1/2"></div>
-                  <h2 className="text-3xl md:text-4xl font-bold font-heading text-white mb-6">Get In Touch</h2>
-                  <p className="text-primary-foreground/80 mb-10 font-medium leading-relaxed">
-                    Ready to transform your infrastructure? Contact us today to discuss your next project.
-                  </p>
-                  
-                  <div className="space-y-6 mb-10">
-                    <div className="flex items-center text-white">
-                      <MapPin className="w-6 h-6 text-accent mr-4 shrink-0" />
-                      <span className="font-medium">2nd Floor, Afroza Tower, Uposhohor Newmarket, Rajshahi-6000</span>
-                    </div>
-                    <div className="flex items-center text-white">
-                      <Phone className="w-6 h-6 text-accent mr-4 shrink-0" />
-                      <span className="font-medium">+88 01724-958474</span>
-                    </div>
-                    <div className="flex items-center text-white">
-                      <Mail className="w-6 h-6 text-accent mr-4 shrink-0" />
-                      <span className="font-medium">sales@m4xit.com</span>
-                    </div>
-                  </div>
+      {/* 4. Our Expertise */}
+      <section className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold font-heading text-primary mb-12">One Partner. Multiple Engineering Capabilities.</h2>
+          
+          <div className="flex flex-wrap justify-center items-center gap-4 md:gap-8 mb-16">
+            {['Energy', 'Automation', 'Agriculture', 'Security', 'Networking', 'Infrastructure'].map((cap, i, arr) => (
+              <div key={i} className="flex items-center">
+                <div className="px-6 py-3 bg-gray-50 border border-gray-200 rounded-full text-primary font-bold text-lg shadow-sm">
+                  {cap}
+                </div>
+                {i < arr.length - 1 && <ChevronRight className="w-6 h-6 text-gray-400 mx-2 hidden md:block" />}
+              </div>
+            ))}
+          </div>
 
-                  <div className="flex space-x-4">
-                    <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-accent transition-colors text-white"><Facebook className="w-5 h-5"/></a>
-                    <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-accent transition-colors text-white"><Twitter className="w-5 h-5"/></a>
-                    <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-accent transition-colors text-white"><Linkedin className="w-5 h-5"/></a>
+          <p className="text-xl text-gray-700 max-w-4xl mx-auto font-medium leading-relaxed">
+            From initial consultation and system design to installation, commissioning and after-sales support, MaxIT provides end-to-end technology and engineering solutions tailored to each project.
+          </p>
+        </div>
+      </section>
+
+      {/* 5. Why MaxIT */}
+      <section className="py-24 bg-primary text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold font-heading mb-4">Why Choose MaxIT?</h2>
+            <p className="text-white/80 font-medium max-w-2xl mx-auto text-lg">Delivering proven value through technical excellence and integrated approaches.</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              { icon: <Target />, title: "Integrated Solutions", desc: "Multiple technology and engineering capabilities under one roof." },
+              { icon: <Settings />, title: "Customized Approach", desc: "Solutions designed according to each client's technical and operational requirements." },
+              { icon: <Shield />, title: "Quality Equipment", desc: "Reliable equipment and technologies selected for performance and long-term use." },
+              { icon: <Briefcase />, title: "Professional Installation", desc: "Experienced technical teams for installation, configuration and commissioning." },
+              { icon: <Phone />, title: "End-to-End Support", desc: "Support from consultation through implementation and maintenance." },
+              { icon: <Sprout />, title: "Sustainable Solutions", desc: "Technology focused on efficiency, resource optimization and long-term value." }
+            ].map((reason, i) => (
+              <div key={i} className="bg-white/5 border border-white/10 p-8 rounded-2xl hover:bg-white/10 transition-colors">
+                <div className="text-accent mb-4">{reason.icon}</div>
+                <h3 className="text-xl font-bold font-heading mb-3">{reason.title}</h3>
+                <p className="text-white/70 font-medium leading-relaxed">{reason.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 6. How We Work */}
+      <section className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <span className="text-accent font-bold uppercase tracking-wider text-sm">From Idea to Implementation</span>
+            <h2 className="text-4xl font-bold font-heading text-primary mt-2">How We Work</h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+            {[
+              { num: "01", title: "Consultation", desc: "We understand your requirements and objectives." },
+              { num: "02", title: "Site Assessment", desc: "Our team evaluates the site, infrastructure and technical requirements." },
+              { num: "03", title: "Solution Design", desc: "We develop a suitable technical solution tailored to your exact needs." },
+              { num: "04", title: "Proposal", desc: "We provide specifications, scope and a transparent commercial proposal." },
+              { num: "05", title: "Installation & Commissioning", desc: "Our team implements, tests and commissions the system." },
+              { num: "06", title: "Support", desc: "We provide ongoing technical support and proactive maintenance." }
+            ].map((step, i) => (
+              <div key={i} className="relative pl-8 md:pl-0">
+                <div className="md:hidden absolute left-0 top-2 bottom-[-3rem] w-px bg-gray-200"></div>
+                <div className="md:hidden absolute left-[-4px] top-2 w-2 h-2 rounded-full bg-accent"></div>
+                
+                <div className="text-5xl font-bold font-heading text-gray-100 mb-4">{step.num}</div>
+                <h3 className="text-xl font-bold text-primary mb-3 flex items-center">
+                  <span className="hidden md:flex w-8 h-8 rounded-full bg-primary/5 items-center justify-center text-primary text-sm mr-3">{i+1}</span>
+                  {step.title}
+                </h3>
+                <p className="text-gray-600 font-medium leading-relaxed">{step.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 7. Featured Projects */}
+      <section className="py-24 bg-gray-50 border-y border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-end mb-12">
+            <div>
+              <span className="text-accent font-bold uppercase tracking-wider text-sm">Proven Success</span>
+              <h2 className="text-4xl font-bold font-heading text-primary mt-2">Our Recent Projects</h2>
+            </div>
+            <Link href="/projects" className="hidden md:inline-flex items-center text-primary font-bold hover:text-accent transition-colors">
+              View All Projects <ArrowRight className="ml-2 w-4 h-4" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {projects.slice(0, 4).map((project) => (
+              <div key={project.id} className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col sm:flex-row group">
+                <div className="w-full sm:w-2/5 h-64 sm:h-auto overflow-hidden relative">
+                  <img src={project.image} alt={project.title} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" />
+                  <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-primary text-xs font-bold px-3 py-1 rounded-full shadow-sm">
+                    {project.category}
                   </div>
                 </div>
-                <div className="bg-gray-100 p-12 lg:p-16 flex flex-col justify-center">
-                  <h3 className="text-2xl font-bold font-heading text-primary mb-6">Start Your Project</h3>
-                  <p className="text-gray-800 mb-8 font-medium">Fill out our contact form and our team will get back to you within 24 hours.</p>
-                  <Link
-                    href="/contact"
-                    className="inline-flex items-center justify-center px-8 py-4 bg-accent text-white font-bold rounded-2xl hover:bg-accent/90 transition-all duration-300 shadow-lg shadow-accent/20 group"
-                  >
-                    Contact Us Now
-                    <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <div className="w-full sm:w-3/5 p-8 flex flex-col justify-center">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3 font-heading group-hover:text-primary transition-colors">{project.title}</h3>
+                  <div className="flex items-center text-sm font-medium text-gray-500 mb-4">
+                    <MapPin className="w-4 h-4 mr-1 text-accent" /> Location Verified
+                  </div>
+                  <p className="text-gray-600 mb-6 line-clamp-2">{project.shortDescription}</p>
+                  <Link href={`/projects/${project.id}`} className="inline-flex items-center text-accent font-bold mt-auto group-hover:translate-x-2 transition-transform w-fit">
+                    View Project <ArrowRight className="ml-2 w-4 h-4" />
                   </Link>
                 </div>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 8. Industries We Serve */}
+      <section className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold font-heading text-primary mb-4">Solutions Across Industries</h2>
+            <p className="text-gray-600 text-lg max-w-2xl mx-auto font-medium">Delivering scalable engineering solutions for diverse sector requirements.</p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {[
+              { icon: <Home className="w-8 h-8"/>, name: "Residential" },
+              { icon: <Sprout className="w-8 h-8"/>, name: "Agriculture" },
+              { icon: <Building2 className="w-8 h-8"/>, name: "Commercial" },
+              { icon: <Factory className="w-8 h-8"/>, name: "Industrial" },
+              { icon: <GraduationCap className="w-8 h-8"/>, name: "Educational" },
+              { icon: <Activity className="w-8 h-8"/>, name: "Healthcare" },
+              { icon: <Settings className="w-8 h-8"/>, name: "Construction" },
+              { icon: <Landmark className="w-8 h-8"/>, name: "Government" }
+            ].map((ind, i) => (
+              <div key={i} className="flex flex-col items-center justify-center p-8 bg-gray-50 rounded-2xl border border-gray-100 hover:border-primary hover:bg-primary/5 transition-colors group cursor-default">
+                <div className="text-gray-400 group-hover:text-primary transition-colors mb-4">{ind.icon}</div>
+                <h4 className="font-bold text-gray-800 group-hover:text-primary">{ind.name}</h4>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 9 & 10. Partners & Certifications */}
+      <section className="py-24 bg-[#0B1120] text-white overflow-hidden relative">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[100px] pointer-events-none -translate-y-1/2 translate-x-1/2"></div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid md:grid-cols-2 gap-16">
+            
+            {/* Partners */}
+            <div>
+              <h3 className="text-3xl font-bold font-heading mb-8">Technology Partners</h3>
+              <p className="text-gray-400 font-medium mb-10">We integrate equipment from trusted, world-class manufacturers to ensure long-term reliability.</p>
+              <div className="grid grid-cols-2 gap-4">
+                {[1,2,3,4].map((i) => (
+                  <div key={i} className="h-20 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center text-gray-500 font-bold uppercase tracking-widest text-sm hover:bg-white/10 hover:text-white transition-colors cursor-default">
+                    Brand {String.fromCharCode(64 + i)}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Certifications */}
+            <div>
+              <h3 className="text-3xl font-bold font-heading mb-8">Certifications & Credentials</h3>
+              <p className="text-gray-400 font-medium mb-10">Operating with full regulatory compliance and adhering to international quality standards.</p>
+              <ul className="space-y-4">
+                {['Trade Licenses', 'ISO Certifications', 'Electrical Licenses', 'Manufacturer Certifications'].map((cert, i) => (
+                  <li key={i} className="flex items-center bg-white/5 p-4 rounded-xl border border-white/10">
+                    <FileCheck className="w-6 h-6 text-accent mr-4" />
+                    <span className="font-bold">{cert}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            
+          </div>
+        </div>
+      </section>
+
+      {/* 11. Our Team */}
+      <section className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold font-heading text-primary mb-4">Meet the Team Behind MaxIT</h2>
+            <p className="text-gray-600 text-lg max-w-2xl mx-auto font-medium">Our engineering and management leaders driving innovation.</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {team.map((member, i) => (
+              <div key={i} className="group">
+                <div className="relative overflow-hidden rounded-2xl mb-4 bg-gray-100 aspect-[3/4]">
+                  <img src={member.image} alt={member.name} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" />
+                </div>
+                <h4 className="text-xl font-bold text-gray-900">{member.name}</h4>
+                <p className="text-accent font-medium">{member.role}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 12. Company Numbers */}
+      <section className="py-20 bg-primary text-white border-b border-primary/90">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold font-heading">MaxIT at a Glance</h2>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 text-center">
+            {[
+              { num: "10+", label: "Years in Business" },
+              { num: "250+", label: "Projects" },
+              { num: "100+", label: "Clients" },
+              { num: "20+", label: "Tech Experts" },
+              { num: "9", label: "Categories" },
+              { num: "XX+", label: "Districts" }
+            ].map((stat, i) => (
+              <div key={i}>
+                <div className="text-4xl font-bold mb-2 font-heading text-accent">{stat.num}</div>
+                <div className="text-sm font-medium text-white/80 uppercase tracking-wide">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 13. CTA Section */}
+      <section className="relative py-32 flex items-center justify-center bg-[#0B1120]">
+        <div className="absolute inset-0">
+          <img 
+            src="https://images.unsplash.com/photo-1541888086425-d81bb19240f5?q=80&w=2000&auto=format&fit=crop" 
+            alt="Engineering Project" 
+            className="w-full h-full object-cover opacity-30 mix-blend-overlay"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0B1120] via-[#0B1120]/80 to-transparent" />
+        </div>
+        
+        <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
+          <h2 className="text-5xl md:text-6xl font-bold font-heading text-white mb-6">Have a Project in Mind?</h2>
+          <p className="text-xl text-gray-300 mb-10 font-medium">
+            Tell us about your requirements and let our technical team help you find the right solution.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/contact" className="px-8 py-4 bg-accent text-white font-bold rounded-xl hover:bg-accent/90 transition-all shadow-lg hover:shadow-accent/30 text-lg">
+              Request a Consultation
+            </Link>
+            <Link href="/contact" className="px-8 py-4 bg-white/10 text-white font-bold rounded-xl border border-white/20 hover:bg-white/20 transition-all backdrop-blur-sm text-lg">
+              Contact Us
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* 14. Contact Section */}
+      <section id="contact" className="py-20 bg-gray-50 border-t border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl font-bold font-heading text-primary mb-12">Let's Talk</h2>
+          
+          <div className="flex flex-wrap justify-center gap-12 mb-12">
+            <div className="flex flex-col items-center">
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4"><MapPin /></div>
+              <h4 className="font-bold text-gray-900 mb-2">Office Address</h4>
+              <p className="text-gray-600 font-medium">2nd Floor, Afroza Tower,<br/>Uposhohor Newmarket, Rajshahi-6000</p>
+            </div>
+            
+            <div className="flex flex-col items-center">
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4"><Phone /></div>
+              <h4 className="font-bold text-gray-900 mb-2">Phone</h4>
+              <p className="text-gray-600 font-medium">+8801733-272445</p>
+            </div>
+            
+            <div className="flex flex-col items-center">
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4"><Mail /></div>
+              <h4 className="font-bold text-gray-900 mb-2">Email</h4>
+              <p className="text-gray-600 font-medium">sales@m4xit.com</p>
             </div>
           </div>
-        </section>
+          
+          <div className="flex justify-center space-x-6">
+            <a href="#" className="font-bold text-gray-600 hover:text-accent transition-colors flex items-center">Google Maps <ArrowRight className="w-4 h-4 ml-1"/></a>
+            <a href="#" className="font-bold text-gray-600 hover:text-accent transition-colors flex items-center">Facebook <ArrowRight className="w-4 h-4 ml-1"/></a>
+            <a href="#" className="font-bold text-gray-600 hover:text-accent transition-colors flex items-center">LinkedIn <ArrowRight className="w-4 h-4 ml-1"/></a>
+          </div>
+        </div>
+      </section>
 
-      </main>
     </div>
   );
-};
-
-export default CompanyProfile;
+}
