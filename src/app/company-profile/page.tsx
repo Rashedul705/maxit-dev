@@ -38,9 +38,9 @@ export default function CompanyProfile() {
       <section className="relative h-[80vh] min-h-[600px] flex items-center bg-[#0B1120]">
         <div className="absolute inset-0">
           <img 
-            src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=2000&auto=format&fit=crop" 
+            src="/images/slides/commercial_rooftop_slide_1789677880098.jpg" 
             alt="Engineering Infrastructure" 
-            className="w-full h-full object-cover opacity-40 mix-blend-overlay"
+            className="w-full h-full object-cover opacity-60"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-[#0B1120] via-[#0B1120]/80 to-transparent" />
         </div>
@@ -463,9 +463,9 @@ export default function CompanyProfile() {
       <section className="relative py-32 flex items-center justify-center bg-[#0B1120]">
         <div className="absolute inset-0">
           <img 
-            src="https://images.unsplash.com/photo-1541888086425-d81bb19240f5?q=80&w=2000&auto=format&fit=crop" 
+            src="/images/slides/agro_solar_slide_1789677870674.jpg" 
             alt="Engineering Project" 
-            className="w-full h-full object-cover opacity-30 mix-blend-overlay"
+            className="w-full h-full object-cover opacity-50"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0B1120] via-[#0B1120]/80 to-transparent" />
         </div>
