@@ -10,7 +10,7 @@ interface TestimonialCardProps {
 
 const TestimonialCard = ({ name, company, testimonial, rating, image }: TestimonialCardProps) => {
   return (
-    <div className="group relative bg-[#1E293B] p-10 rounded-3xl transition-all duration-500 border border-white/10 hover:border-accent/50 transform hover:-translate-y-2 overflow-hidden shadow-2xl flex flex-col h-full">
+    <div className="group relative bg-primary p-10 rounded-3xl transition-all duration-500 border border-white/10 hover:border-accent/50 transform hover:-translate-y-2 overflow-hidden shadow-2xl flex flex-col h-full">
       {/* Decorative Glow */}
       <div className="absolute top-0 right-0 w-48 h-48 bg-accent/10 rounded-full blur-[60px] group-hover:bg-accent/20 transition-colors duration-500 pointer-events-none translate-x-1/3 -translate-y-1/3" />
       

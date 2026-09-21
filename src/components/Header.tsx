@@ -33,16 +33,16 @@ const Header = () => {
     <header 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 pointer-events-auto ${
         isScrolled 
-          ? 'bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm py-2' 
+          ? 'bg-primary/95 backdrop-blur-md shadow-sm py-2' 
           : 'bg-transparent py-4'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center bg-white/90 backdrop-blur-md rounded-2xl px-6 py-3 shadow-[0_4px_30px_rgba(0,0,0,0.03)] border border-white/50">
+        <div className="flex justify-between items-center bg-primary backdrop-blur-md rounded-2xl px-6 py-3 shadow-[0_4px_30px_rgba(0,0,0,0.1)] border border-white/10">
           <Link href="/" className="flex items-center space-x-3 group relative">
             <div className="absolute -inset-2 bg-accent/10 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition duration-500"></div>
             <img src="/logo.png" alt="MaxIT Solution Logo" className="w-9 h-9 relative z-10" />
-            <span className="text-2xl font-bold font-heading text-primary relative z-10">MaxIT<span className="text-accent">.</span></span>
+            <span className="text-2xl font-bold font-heading text-white relative z-10">MaxIT<span className="text-accent">.</span></span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -53,8 +53,8 @@ const Header = () => {
                 href={item.path}
                 className={`relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-full overflow-hidden group ${
                   isActive(item.path)
-                    ? 'text-accent bg-accent/5'
-                    : 'text-gray-800 hover:text-accent hover:bg-gray-50/50'
+                    ? 'text-white bg-white/20'
+                    : 'text-white/80 hover:text-white hover:bg-white/10'
                 }`}
               >
                 <span className="relative z-10">{item.name}</span>
@@ -77,7 +77,7 @@ const Header = () => {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden p-2 rounded-full text-gray-700 hover:text-accent hover:bg-gray-100 transition-colors"
+            className="md:hidden p-2 rounded-full text-white/80 hover:text-white hover:bg-white/10 transition-colors"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -86,7 +86,7 @@ const Header = () => {
 
         {/* Mobile Navigation */}
         <div 
-          className={`md:hidden absolute top-full left-4 right-4 mt-2 bg-white/95 backdrop-blur-xl border border-gray-100 rounded-2xl shadow-xl overflow-hidden transition-all duration-300 origin-top transform ${
+          className={`md:hidden absolute top-full left-4 right-4 mt-2 bg-primary backdrop-blur-xl border border-white/10 rounded-2xl shadow-xl overflow-hidden transition-all duration-300 origin-top transform ${
             isMenuOpen ? 'opacity-100 scale-y-100' : 'opacity-0 scale-y-0 pointer-events-none'
           }`}
         >
@@ -97,15 +97,15 @@ const Header = () => {
                 href={item.path}
                 className={`px-4 py-3 text-base font-medium rounded-xl transition-colors duration-200 ${
                   isActive(item.path)
-                    ? 'text-accent bg-accent/10'
-                    : 'text-gray-700 hover:text-accent hover:bg-gray-50'
+                    ? 'text-white bg-white/20'
+                    : 'text-white/80 hover:text-white hover:bg-white/10'
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 {item.name}
               </Link>
             ))}
-            <div className="pt-4 mt-2 border-t border-gray-100">
+            <div className="pt-4 mt-2 border-t border-white/10">
               <Link 
                 href="/contact" 
                 className="flex justify-center w-full px-6 py-3 text-sm font-medium text-white bg-accent hover:bg-accent/90 rounded-xl transition-colors"

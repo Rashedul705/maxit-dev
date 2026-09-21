@@ -340,10 +340,10 @@ const About = () => {
                     { number: "10+", label: "Years Experience" },
                     { number: "500+", label: "Projects Completed" },
                     { number: "24/7", label: "Technical Support" },
-                    { number: "99%", label: "Client Satisfaction" }
+                    { number: "100%", label: "Client Satisfaction" }
                   ].map((stat, idx) => (
                      <div key={idx} className="bg-white/10 backdrop-blur-sm p-6 rounded-3xl border border-white/10 text-center hover:bg-white/20 transition-colors duration-300">
-                        <h4 className="text-4xl font-bold text-accent mb-2">{stat.number}</h4>
+                        <h4 className="text-4xl font-bold text-white mb-2">{stat.number}</h4>
                         <p className="text-sm font-medium uppercase tracking-wider">{stat.label}</p>
                      </div>
                   ))}
