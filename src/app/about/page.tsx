@@ -2,12 +2,164 @@ import {
   ArrowRight, Target, Eye, Shield, Users, MapPin, 
   Phone, Mail, Globe, Award, CheckCircle2, Star, 
   Zap, Building, TrendingUp, Cpu, Leaf, Wrench,
-  Facebook, Twitter, Linkedin, ChevronRight, Activity
+  Facebook, Twitter, Linkedin, ChevronRight, Activity, MessageCircle,
+  Sun, Sprout, Wifi, Cctv, Droplets, RadioTower, Lightbulb
 } from 'lucide-react';
 import Link from "next/link";
 import Image from "next/image";
+import ServiceCard from '@/components/ServiceCard';
+
+import sobujImg from "@/assets/team/ceo-maxit.png";
+import shohidImg from "@/assets/team/shohid.jpg";
+import shahidafridiImg from "@/assets/team/shahidafridi.jpeg";
+import rupaliImg from "@/assets/team/rupali.jpg";
+import touhidurImg from "@/assets/team/touhidur.jpg";
+import priyankaImg from "@/assets/team/priyanka.jpg";
+import emonImg from "@/assets/team/emon-ali.jpg";
+import moznuImg from "@/assets/team/moznu.jpg";
+import rashedulImg from "@/assets/team/rashedul.jpg";
 
 const About = () => {
+  const services = [
+    {
+      title: "Solar Home Systems (SHS)",
+      description: "Complete solar energy solutions for residential use, reducing grid dependency and promoting green energy throughout the community.",
+      icon: <Sun className="w-8 h-8" />,
+      features: ["Rooftop Installation", "Battery Storage", "Grid Independence"],
+      image: "/images/slides/hybrid_inverter_slide_1789677816112.jpg"
+    },
+    {
+      title: "Solar Pump & Smart Irrigation",
+      description: "Advanced solar-powered pumping systems integrated with smart irrigation technology for efficient water management in agriculture.",
+      icon: <Sprout className="w-8 h-8" />,
+      features: ["Automated Watering", "Solar Powered", "High Efficiency"],
+      image: "/images/slides/agro_solar_slide_1789677870674.jpg"
+    },
+    {
+      title: "Agro Technology",
+      description: "Innovative agricultural tech solutions including IoT monitoring, soil sensors, and automated climate control for greenhouses.",
+      icon: <Leaf className="w-8 h-8" />,
+      features: ["IoT Monitoring", "Soil Sensors", "Climate Control"],
+      image: "/images/slides/agro_tech_service_1789678968707.jpg"
+    },
+    {
+      title: "Industrial & Home Automation",
+      description: "Smart control systems for industries and homes, improving efficiency, safety, and convenience through electric automation.",
+      icon: <Cpu className="w-8 h-8" />,
+      features: ["Smart Controls", "IoT Integration", "Energy Tracking"],
+      image: "/images/slides/iot_smart_home_slide_1789677856585.jpg"
+    },
+    {
+      title: "Networking & Internet Services",
+      description: "Robust network infrastructure design and reliable high-speed internet connectivity for businesses and rural areas.",
+      icon: <Wifi className="w-8 h-8" />,
+      features: ["High-speed Setup", "Network Security", "Infrastructure Design"],
+      image: "/images/slides/networking_service_1789678979212.jpg"
+    },
+    {
+      title: "CCTV Security Systems",
+      description: "Professional installation of IP camera systems and surveillance solutions for 24/7 security monitoring.",
+      icon: <Cctv className="w-8 h-8" />,
+      features: ["24/7 Monitoring", "IP Cameras", "Cloud Storage"],
+      image: "/images/slides/cctv_service_1789678989455.jpg"
+    },
+    {
+      title: "Water Treatment Solutions",
+      description: "Comprehensive water treatment plants ensuring clean and safe water for communities and industries.",
+      icon: <Droplets className="w-8 h-8" />,
+      features: ["Purification Plants", "Filtration", "Quality Monitoring"],
+      image: "/images/slides/water_treatment_service_1789679001434.jpg"
+    },
+    {
+      title: "Communication Infrastructure",
+      description: "Construction and maintenance of radio communication towers and related infrastructure.",
+      icon: <RadioTower className="w-8 h-8" />,
+      features: ["Radio Towers", "Maintenance", "Signal Optimization"],
+      image: "/images/slides/solar_automation_slide_1789677805531.jpg"
+    },
+    {
+      title: "Building Electrical Engineering",
+      description: "Expert electrical planning and wiring services for commercial and residential construction projects.",
+      icon: <Lightbulb className="w-8 h-8" />,
+      features: ["Wiring Planning", "Safety Compliance", "Commercial Projects"],
+      image: "/images/slides/commercial_rooftop_slide_1789677880098.jpg"
+    }
+  ];
+
+  const teamMembers = [
+    {
+      name: "Engr. Zahangir Alam (Sobuj)",
+      role: "Chief Executive Officer",
+      description: "Visionary leader driving innovation and sustainable solutions at Max IT Solution LTD.",
+      image: sobujImg,
+      email: "ceo@m4xit.com",
+      linkedin: "#"
+    },
+    {
+      name: "Rupali",
+      role: "Project Director",
+      description: "Experienced project director ensuring successful execution and delivery of our initiatives.",
+      image: rupaliImg,
+      email: "rupali@m4xit.com",
+      linkedin: "#"
+    },
+    {
+      name: "Sarwar Jahan",
+      role: "Software Engineer",
+      description: "Expert software engineer developing robust and scalable digital solutions.",
+      image: shohidImg,
+      email: "shohid@m4xit.com",
+      linkedin: "#"
+    },
+    {
+      name: "Rashedul Islam",
+      role: "Software Engineer",
+      description: "BSc in Computer Science and Engineering. Dedicated to building scalable and robust software solutions.",
+      image: rashedulImg,
+      email: "rashedul.afl@gmail.com",
+      linkedin: "https://www.linkedin.com/in/rislam05/"
+    },
+    {
+      name: "Tauhidur Rahman Rony",
+      role: "Adviser",
+      description: "Strategic adviser providing expert guidance on business development and operations.",
+      image: touhidurImg,
+      email: "rony@m4xit.com",
+      linkedin: "#"
+    },
+    {
+      name: "Priyanka Roy",
+      role: "Senior Executive",
+      description: "Dedicated senior executive managing key administrative and operational functions.",
+      image: priyankaImg,
+      email: "sales@m4xit.com",
+      linkedin: "#"
+    },
+    {
+      name: "Md. Emon Ali",
+      role: "Assistant Engineer",
+      description: "Skilled assistant engineer supporting our technical projects and implementations.",
+      image: emonImg,
+      email: "emon@m4xit.com",
+      linkedin: "#"
+    },
+    {
+      name: "MD .SHAHID AFRIDI",
+      role: "Maintaince Engineer",
+      description: "Skilled Maintaince Engineer supporting our technical projects and implementations.",
+      image: shahidafridiImg,
+      linkedin: "#"
+    },
+    {
+      name: "Md.Shaifiqul Islam Moznu",
+      role: "Electrician",
+      description: "Expert electrician ensuring safe and efficient electrical installations and maintenance.",
+      image: moznuImg,
+      whatsapp: "01711301250",
+      linkedin: "#"
+    }
+  ];
+
   return (
     <div className="min-h-screen flex flex-col overflow-x-hidden w-full max-w-[100vw]">
       <main className="flex-1 pt-16 animate-slide-up overflow-hidden w-full">
@@ -124,19 +276,9 @@ const About = () => {
               <div className="w-20 h-1 bg-accent rounded-full mx-auto"></div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {[
-                { icon: Leaf, title: "Solar Energy Solutions", desc: "Commercial and residential solar installations, battery storage, and energy management systems." },
-                { icon: Cpu, title: "Industrial Automation", desc: "PLC programming, SCADA systems, and robotic integrations for streamlined manufacturing." },
-                { icon: Wrench, title: "Advanced Engineering Support", desc: "24/7 technical maintenance, system upgrades, and infrastructure consulting." }
-              ].map((service, idx) => (
-                <div key={idx} className="group bg-gray-50 p-8 rounded-3xl border border-gray-100 hover:border-accent/30 hover:bg-white hover:shadow-xl transition-all duration-300">
-                  <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-sm group-hover:scale-110 group-hover:bg-accent transition-all duration-300 mb-6">
-                    <service.icon className="w-7 h-7 text-primary group-hover:text-white transition-colors" />
-                  </div>
-                  <h3 className="text-xl font-bold font-heading text-primary mb-3">{service.title}</h3>
-                  <p className="text-gray-500 font-light leading-relaxed">{service.desc}</p>
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {services.map((service, index) => (
+                <ServiceCard key={index} {...service} />
               ))}
             </div>
           </div>
@@ -185,32 +327,73 @@ const About = () => {
         </section>
 
         {/* 6. Leadership Team */}
-        <section className="py-24 bg-gray-50">
+        <section className="py-24 bg-gray-50 relative">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold font-heading text-primary mb-6">Leadership Team</h2>
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold font-heading text-primary mb-6">
+                Our Key Professionals
+              </h2>
               <div className="w-20 h-1 bg-accent rounded-full mx-auto"></div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {[
-                { name: "John Doe", role: "Chief Executive Officer", img: "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" },
-                { name: "Jane Smith", role: "Head of Engineering", img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" },
-                { name: "Robert Johnson", role: "Director of Operations", img: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" }
-              ].map((member, idx) => (
-                <div key={idx} className="group bg-white rounded-3xl overflow-hidden shadow-lg border border-gray-100 hover:shadow-2xl transition-all duration-300">
-                  <div className="h-64 overflow-hidden relative">
-                    <img src={member.img} alt={member.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-                      <div className="flex space-x-3 text-white">
-                        <Linkedin className="w-5 h-5 hover:text-accent cursor-pointer" />
-                        <Twitter className="w-5 h-5 hover:text-accent cursor-pointer" />
-                      </div>
-                    </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 xl:gap-12">
+              {teamMembers.map((member, index) => (
+                <div 
+                  key={index} 
+                  className="group relative bg-white rounded-3xl flex flex-col h-full shadow-md hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 overflow-hidden transform hover:-translate-y-2 border-2 border-gray-200 hover:border-accent/40"
+                >
+                  <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                  
+                  {/* Image Wrapper */}
+                  <div className="relative w-48 h-48 mx-auto mt-8 overflow-hidden rounded-full border-4 border-gray-100 shadow-sm group-hover:border-accent/30 transition-colors duration-500 z-10 flex items-center justify-center bg-gray-50">
+                    <img
+                      src={member.image.src}
+                      alt={member.name}
+                      className="w-full h-full object-cover filter grayscale-[20%] group-hover:grayscale-0 transform group-hover:scale-110 transition-all duration-700 ease-in-out"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-primary/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                   </div>
-                  <div className="p-6 text-center">
-                    <h3 className="text-xl font-bold font-heading text-primary">{member.name}</h3>
-                    <p className="text-accent font-medium text-sm mt-1">{member.role}</p>
+
+                  {/* Content Block */}
+                  <div className="p-8 relative z-10 flex flex-col flex-grow bg-white">
+                    <p className="text-accent font-semibold tracking-wider uppercase text-sm mb-2 text-center">{member.role}</p>
+                    <h3 className="text-xl font-bold font-heading text-primary mb-3 group-hover:text-accent transition-colors duration-300 text-center">
+                      {member.name}
+                    </h3>
+                    <p className="text-gray-500 font-light text-sm leading-relaxed mb-6 flex-grow text-center">
+                      {member.description}
+                    </p>
+
+                    {/* Social Buttons */}
+                    <div className="flex space-x-3 pt-6 border-t border-gray-100 mt-auto justify-center">
+                      {member.email && (
+                        <a
+                          href={`mailto:${member.email}`}
+                          className="flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl text-gray-500 hover:bg-accent hover:text-white hover:shadow-lg hover:shadow-accent/40 transform hover:-translate-y-1 transition-all duration-300"
+                          title="Email"
+                        >
+                          <Mail className="w-4 h-4" />
+                        </a>
+                      )}
+                      {member.whatsapp && (
+                        <a
+                          href={`https://wa.me/88${member.whatsapp}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl text-gray-500 hover:bg-[#25D366] hover:text-white hover:shadow-lg hover:shadow-[#25D366]/40 transform hover:-translate-y-1 transition-all duration-300"
+                          title="WhatsApp"
+                        >
+                          <MessageCircle className="w-4 h-4" />
+                        </a>
+                      )}
+                      <a
+                        href={member.linkedin}
+                        className="flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl text-gray-500 hover:bg-[#0077b5] hover:text-white hover:shadow-lg hover:shadow-[#0077b5]/40 transform hover:-translate-y-1 transition-all duration-300"
+                        title="LinkedIn"
+                      >
+                        <Linkedin className="w-4 h-4" />
+                      </a>
+                    </div>
                   </div>
                 </div>
               ))}
