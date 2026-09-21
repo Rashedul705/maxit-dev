@@ -43,6 +43,7 @@ const Footer = () => {
             <ul className="space-y-3 w-full">
               {[
                 { name: 'About Us', path: '/about' },
+                { name: 'Company Profile', path: '/company-profile' },
                 { name: 'Services', path: '/services' },
                 { name: 'Our Team', path: '/team' },
                 { name: 'Contact', path: '/contact' }
