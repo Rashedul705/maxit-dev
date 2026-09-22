@@ -26,7 +26,7 @@ export default function AdminLayout({
     { name: 'Dashboard', path: '/admin', icon: LayoutDashboard },
     { name: 'Team Members', path: '/admin/team', icon: Users },
     { name: 'About Section', path: '/admin/about', icon: FileText },
-    { name: 'Projects', path: '/admin/projects', icon: Briefcase, disabled: true },
+    { name: 'Projects', path: '/admin/projects', icon: Briefcase },
     { name: 'Settings', path: '/admin/settings', icon: Settings, disabled: true },
   ];
 
