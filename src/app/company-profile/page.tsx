@@ -111,30 +111,99 @@ export default function CompanyProfile() {
             <h2 className="text-4xl font-bold font-heading text-primary mt-2">Comprehensive Engineering Capabilities</h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              { icon: <Sun />, title: "Solar Home Systems", desc: "Reliable solar power solutions for residential and commercial applications." },
-              { icon: <Droplets />, title: "Solar Pump & Smart Irrigation", desc: "Solar-powered pumping and intelligent irrigation solutions for agriculture." },
-              { icon: <Sprout />, title: "Agro Technology", desc: "Technology-driven solutions for smarter and more efficient farming." },
-              { icon: <Cpu />, title: "Industrial & Home Automation", desc: "Automation solutions designed to improve efficiency, comfort and control." },
-              { icon: <Wifi />, title: "Networking & Internet Services", desc: "Reliable network infrastructure, connectivity and communication systems." },
-              { icon: <Cctv />, title: "CCTV Security Systems", desc: "Modern surveillance and security solutions for homes, businesses and institutions." },
-              { icon: <Activity />, title: "Water Treatment Solutions", desc: "Water purification, filtration and treatment systems for different applications." },
-              { icon: <RadioTower />, title: "Communication Infrastructure", desc: "Infrastructure solutions for reliable data and communication networks." },
-              { icon: <Lightbulb />, title: "Building Electrical Engineering", desc: "Electrical design, installation, distribution and engineering solutions." },
-            ].map((service, idx) => (
-              <div key={idx} className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-xl transition-all duration-300 group">
-                <div className="w-14 h-14 bg-primary/5 rounded-xl flex items-center justify-center text-primary mb-6 group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all duration-300">
-                  {service.icon}
+          {/* Core Service - Featured */}
+          <div className="mb-12">
+            <div className="bg-primary rounded-3xl overflow-hidden shadow-2xl flex flex-col lg:flex-row relative">
+              {/* Image Half */}
+              <div className="lg:w-5/12 relative min-h-[300px] lg:min-h-full">
+                <img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?w=1200&q=80" alt="Solar Installation" className="absolute inset-0 w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-primary to-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-primary" />
+                <div className="absolute top-6 left-6 z-10 lg:hidden">
+                   <div className="inline-block px-4 py-1.5 bg-accent text-white font-bold text-xs uppercase tracking-widest rounded-full shadow-lg">
+                    Core Service
+                  </div>
                 </div>
-                <h3 className="text-xl font-bold font-heading text-gray-900 mb-3 group-hover:text-primary transition-colors">{service.title}</h3>
-                <p className="text-gray-600 mb-6 font-medium leading-relaxed">{service.desc}</p>
-                <Link href="/services" className="inline-flex items-center text-accent font-bold hover:text-primary transition-colors">
-                  Learn More <ArrowRight className="ml-2 w-4 h-4" />
-                </Link>
               </div>
-            ))}
+
+              {/* Content Half */}
+              <div className="lg:w-7/12 p-8 md:p-12 relative z-10 flex flex-col justify-center bg-primary">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-accent/20 rounded-full blur-[80px] pointer-events-none -translate-y-1/2 translate-x-1/4"></div>
+                
+                <div className="hidden lg:inline-block px-4 py-1.5 bg-accent text-white font-bold text-xs uppercase tracking-widest rounded-full mb-6 w-fit shadow-lg">
+                  Core Service
+                </div>
+                
+                <div className="flex items-center space-x-4 mb-6">
+                  <div className="w-16 h-16 bg-accent/20 rounded-2xl flex items-center justify-center text-accent shadow-inner shrink-0">
+                    <Sun className="w-8 h-8" />
+                  </div>
+                  <h3 className="text-3xl md:text-4xl font-bold font-heading text-white leading-tight">Comprehensive Solar Solutions</h3>
+                </div>
+                
+                <p className="text-white/80 font-medium leading-relaxed text-lg mb-8">
+                  Leading the transition to sustainable energy with end-to-end solar engineering, ensuring maximum efficiency and reliability for industrial and commercial sectors.
+                </p>
+                
+                <div className="bg-black/10 rounded-2xl p-6 md:p-8 border border-white/5">
+                  <h4 className="text-xl font-bold text-white mb-6">Key Solar Expertise:</h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-8">
+                    {[
+                      { name: "Solar Installation", desc: "End-to-end design & setup" },
+                      { name: "Roof Top Solar", desc: "Commercial optimization" },
+                      { name: "Complete Solar Setup", desc: "Turnkey off-grid & on-grid" },
+                      { name: "Net Metering", desc: "Grid synchronization" },
+                      { name: "Solar Lift Integration", desc: "Heavy industrial power" }
+                    ].map((item, idx) => (
+                      <div key={idx} className="flex items-start space-x-3 group">
+                        <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center text-accent group-hover:bg-accent group-hover:text-white transition-colors shrink-0 mt-1">
+                          <ArrowRight className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <span className="block text-white/90 font-bold group-hover:text-white transition-colors">{item.name}</span>
+                          <span className="block text-white/60 text-xs mt-0.5">{item.desc}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-8">
+                  <Link href="/services" className="inline-flex items-center text-accent font-bold hover:text-white transition-colors">
+                    Explore Solar Projects <ArrowRight className="ml-2 w-5 h-5" />
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
+
+          {/* Other Services Grid */}
+          <div className="pt-8">
+            <h3 className="text-2xl font-bold font-heading text-primary mb-8 text-center md:text-left border-b border-gray-200 pb-4">Technology & Infrastructure Services</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[
+                { icon: <Cpu className="w-6 h-6" />, title: "Computer & Accessories", desc: "Enterprise-grade IT hardware supply and comprehensive computer accessories.", img: "https://images.unsplash.com/photo-1517430816045-df4b7de11d1d?w=800&q=80" },
+                { icon: <Activity className="w-6 h-6" />, title: "Data Logger & IoT R&D", desc: "Custom research, development, and deployment of intelligent IoT devices and data logging systems.", img: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80" },
+                { icon: <Settings className="w-6 h-6" />, title: "Server & Security Systems", desc: "Robust server infrastructure setup and advanced cybersecurity implementations.", img: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80" },
+                { icon: <Cctv className="w-6 h-6" />, title: "CCTV Surveillance", desc: "High-definition, continuous monitoring camera systems for total premises security.", img: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?w=800&q=80" },
+                { icon: <Target className="w-6 h-6" />, title: "AI-Based Camera Models", desc: "Next-generation smart cameras with artificial intelligence for automated threat detection and analytics.", img: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80" }
+              ].map((service, idx) => (
+                <div key={idx} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-100 flex flex-col group">
+                  <div className="h-48 overflow-hidden relative">
+                    <div className="absolute inset-0 bg-primary/20 mix-blend-multiply z-10 group-hover:bg-transparent transition-colors duration-500"></div>
+                    <img src={service.img} alt={service.title} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
+                    <div className="absolute bottom-4 left-4 z-20 w-12 h-12 bg-white rounded-xl flex items-center justify-center text-primary shadow-lg group-hover:bg-primary group-hover:text-white transition-colors duration-300">
+                      {service.icon}
+                    </div>
+                  </div>
+                  <div className="p-8 flex flex-col flex-grow">
+                    <h4 className="text-xl font-bold font-heading text-gray-900 mb-3 group-hover:text-primary transition-colors">{service.title}</h4>
+                    <p className="text-gray-600 font-medium leading-relaxed">{service.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          
         </div>
       </section>
 
