@@ -7,7 +7,7 @@ import {
 const About = () => {
   return (
     <div className="min-h-screen flex flex-col overflow-x-hidden w-full max-w-[100vw]">
-      <main className="flex-1 pt-16 animate-slide-up overflow-hidden w-full">
+      <main className="flex-1 animate-slide-up overflow-hidden w-full">
         
         {/* 1. Hero & Brand Story / Our Journey */}
         <section className="relative py-24 bg-white overflow-hidden">

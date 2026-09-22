@@ -32,7 +32,7 @@ const team = [
 
 export default function CompanyProfile() {
   return (
-    <div className="min-h-screen bg-white pt-16">
+    <div className="min-h-screen bg-white">
       
       {/* 1. Hero Section */}
       <section className="relative h-[80vh] min-h-[600px] flex items-center bg-[#0B1120]">

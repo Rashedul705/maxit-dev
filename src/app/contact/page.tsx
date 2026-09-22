@@ -17,7 +17,7 @@ export default function Contact() {
 
   return (
     <div className="min-h-screen flex flex-col overflow-x-hidden w-full max-w-[100vw]">
-      <main className="flex-1 pt-16 animate-slide-up overflow-hidden w-full">
+      <main className="flex-1 animate-slide-up overflow-hidden w-full">
         {/* Header */}
         <section className="relative pt-32 pb-20 bg-gradient-to-b from-primary/5 to-white overflow-hidden">
           <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-accent/5 rounded-full blur-[120px] pointer-events-none transform translate-x-1/3 -translate-y-1/3" />
