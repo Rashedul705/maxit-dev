@@ -11,7 +11,7 @@
     "build": "next build && npx start-server-and-test start http://localhost:3000 generate-pdf",
     "start": "next start",
     "lint": "next lint",
-    "generate-pdf": "npx puppeteer browsers install chrome && node scripts/generate-web-pdf.cjs"
+    "generate-pdf": "npx puppeteer browsers clear && npx puppeteer browsers install chrome && node scripts/generate-web-pdf.cjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
