@@ -534,7 +534,7 @@ export default function CompanyProfile() {
       </section>
 
       {/* Partners Section */}
-      <Partners />
+      <Partners isGrid={true} />
 
       {/* 13. CTA Section */}
       <section className="relative py-32 flex items-center justify-center bg-[#0B1120]">

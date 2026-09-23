@@ -2,70 +2,163 @@ import React from 'react';
 import { Building2 } from 'lucide-react';
 
 const partnersList = [
-  "NESCO (Northern Electricity Supply Company)", 
+  "NESCO", 
   "Palli Bidyut", 
   "Nabir Group", 
   "Nabil Group", 
   "Income Tax Office", 
-  "Rajshahi City Corporation", 
-  "RMP Police (Rajshahi Metropolitan Police)", 
-  "BMDA (Barind Multipurpose Development Authority)", 
-  "PKSF (Palli Karma-Sahayak Foundation)", 
+  "Rajshahi City Corp.", 
+  "RMP Police", 
+  "BMDA", 
+  "PKSF", 
   "BRAC NGO", 
   "Rajshahi University", 
-  "BADC (Bangladesh Agricultural Development Corporation)", 
-  "Rajshahi Krishi Unnayan Bank (RAKUB)", 
+  "BADC", 
+  "RAKUB", 
   "Urban Health Care", 
-  "Roads and Highways", 
-  "LGED (Local Government Engineering Department)", 
-  "Education Engineering Department (EED)", 
-  "Department of Public Health Engineering (DPHE)", 
-  "DSB Rajshahi (District Special Branch)", 
-  "RAB Rajshahi (Rapid Action Battalion)", 
-  "TTC / Teachers' Training College", 
-  "Panchagarh Police Headquarters", 
+  "Roads & Highways", 
+  "LGED", 
+  "EED", 
+  "DPHE", 
+  "DSB Rajshahi", 
+  "RAB Rajshahi", 
+  "TTC", 
+  "Panchagarh Police", 
   "Aman Cold Storage", 
   "Uttara Cold Storage", 
-  "Rajshahi Polytechnic Institute", 
-  "Mohila Polytechnic Institute", 
-  "Bangla Bari School and College", 
-  "Basantapur School and College"
+  "Rajshahi Poly", 
+  "Mohila Poly", 
+  "Bangla Bari S&C", 
+  "Basantapur S&C"
 ];
 
-const Partners = () => {
+const Partners = ({ isGrid = false }: { isGrid?: boolean }) => {
   return (
-    <section className="py-24 bg-white border-y border-gray-100 overflow-hidden relative">
+    <section className="py-24 bg-[#f8fafe] border-y border-gray-100 overflow-hidden relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 text-center">
         <h2 className="text-4xl md:text-5xl font-bold font-heading text-primary mb-6">
-          Trusted by <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-orange-400">Leading Organizations</span>
+          Technologies & Partners with <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-orange-400">MaxIT</span>
         </h2>
         <p className="text-gray-600 max-w-2xl mx-auto font-medium text-lg leading-relaxed">
           We are proud to partner with top government institutions, corporations, educational facilities, and NGOs to deliver engineering excellence.
         </p>
       </div>
 
-      <div className="relative flex overflow-x-hidden group">
-        {/* Left Gradient Mask */}
-        <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
-        
-        <div className="flex animate-scroll whitespace-nowrap py-4">
-          {/* Double the list to create a seamless infinite loop */}
-          {[...partnersList, ...partnersList].map((partner, index) => (
-            <div 
-              key={index} 
-              className="flex items-center space-x-4 bg-gray-50 border border-gray-100 rounded-2xl px-8 py-5 mx-3 shadow-sm hover:shadow-xl hover:border-primary/30 transition-all duration-300 transform hover:-translate-y-1"
-            >
-              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0 shadow-inner">
-                <Building2 className="w-5 h-5" />
+      {isGrid ? (
+        <div className="max-w-6xl mx-auto px-4 relative">
+          <style>{`
+            .hex-grid {
+              display: flex;
+              flex-wrap: wrap;
+              justify-content: center;
+              gap: 1.5rem;
+              padding: 2rem 0;
+            }
+            .hex-wrap {
+              filter: drop-shadow(0px 8px 16px rgba(0,0,0,0.06));
+              transition: transform 0.3s ease, filter 0.3s ease;
+            }
+            .hex-wrap:hover {
+              transform: translateY(-8px) scale(1.05);
+              filter: drop-shadow(0px 15px 25px rgba(0,0,0,0.12));
+              z-index: 10;
+            }
+            .hex {
+              width: 150px;
+              height: 130px; /* 150 * 0.866 */
+              clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              padding: 0 20px;
+              text-align: center;
+            }
+            .hex-content {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              gap: 8px;
+            }
+            .hex-text {
+              font-size: 0.8rem;
+              font-weight: 700;
+              color: white;
+              line-height: 1.2;
+            }
+            .hex-center-wrap {
+              filter: drop-shadow(0px 15px 30px rgba(11, 17, 32, 0.3));
+              margin: 1rem 2rem;
+            }
+            .hex-center {
+              width: 260px;
+              height: 225px;
+              background: linear-gradient(135deg, #0B1120 0%, #1a2744 100%);
+              clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+              text-align: center;
+              color: white;
+            }
+          `}</style>
+          
+          <div className="hex-grid">
+            {/* Center piece logic - we place it in the middle of the array visually */}
+            {partnersList.slice(0, 14).map((partner, index) => (
+              <div key={`p1-${index}`} className="hex-wrap">
+                <div className="hex bg-primary border border-white/10">
+                  <div className="hex-content">
+                    <Building2 className="w-5 h-5 text-accent" />
+                    <span className="hex-text">{partner}</span>
+                  </div>
+                </div>
               </div>
-              <span className="font-bold text-gray-800 text-base md:text-lg tracking-tight">{partner}</span>
+            ))}
+            
+            <div className="hex-center-wrap w-full md:w-auto flex justify-center order-first md:order-none mb-8 md:mb-0">
+              <div className="hex-center border-4 border-accent/20">
+                <h3 className="text-3xl font-bold font-heading mb-2 text-white">MaxIT</h3>
+                <p className="text-sm text-gray-300 font-medium px-8">Trusted by 28+ Organizations</p>
+              </div>
             </div>
-          ))}
+            
+            {partnersList.slice(14).map((partner, index) => (
+              <div key={`p2-${index}`} className="hex-wrap">
+                <div className="hex bg-primary border border-white/10">
+                  <div className="hex-content">
+                    <Building2 className="w-5 h-5 text-accent" />
+                    <span className="hex-text">{partner}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
+      ) : (
+        <div className="relative flex overflow-x-hidden group">
+          {/* Left Gradient Mask */}
+          <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-[#f8fafe] to-transparent z-10 pointer-events-none"></div>
+          
+          <div className="flex animate-scroll whitespace-nowrap py-8">
+            {/* Double the list to create a seamless infinite loop */}
+            {[...partnersList, ...partnersList].map((partner, index) => (
+              <div 
+                key={index} 
+                className="flex items-center space-x-4 bg-white border border-gray-100 rounded-2xl px-8 py-5 mx-3 shadow-sm hover:shadow-xl hover:border-primary/30 transition-all duration-300 transform hover:-translate-y-1"
+              >
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0 shadow-inner">
+                  <Building2 className="w-5 h-5" />
+                </div>
+                <span className="font-bold text-gray-800 text-base md:text-lg tracking-tight">{partner}</span>
+              </div>
+            ))}
+          </div>
 
-        {/* Right Gradient Mask */}
-        <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
-      </div>
+          {/* Right Gradient Mask */}
+          <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-[#f8fafe] to-transparent z-10 pointer-events-none"></div>
+        </div>
+      )}
     </section>
   );
 };
