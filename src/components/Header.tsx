@@ -28,6 +28,7 @@ const Header = () => {
     { name: 'Projects', path: '/projects' },
     { name: 'Team', path: '/team' },
     { name: 'Contact', path: '/contact' },
+    { name: 'Admin Login', path: '/admin/login' },
   ];
 
   if (pathname.startsWith('/admin')) return null;

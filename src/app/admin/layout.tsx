@@ -65,13 +65,23 @@ export default function AdminLayout({
       </nav>
 
       <div className="p-4 border-t border-gray-100">
-        <Link href="/" className="flex items-center justify-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors font-medium">
+        <button 
+          onClick={() => {
+            document.cookie = "admin_auth=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+            window.location.href = "/";
+          }}
+          className="flex items-center justify-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors font-medium"
+        >
           <LogOut className="w-4 h-4 mr-2" />
-          Back to Website
-        </Link>
+          Logout
+        </button>
       </div>
     </>
   );
+
+  if (pathname === '/admin/login') {
+    return <>{children}</>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
