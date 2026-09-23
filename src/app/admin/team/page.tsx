@@ -133,7 +133,11 @@ export default function TeamManagement() {
       designation: member.designation,
       description: member.description || "",
       image: member.image || "",
-      socialLinks: member.socialLinks || { linkedin: "", email: "", whatsapp: "" }
+      socialLinks: {
+        linkedin: member.socialLinks?.linkedin || "",
+        email: member.socialLinks?.email || "",
+        whatsapp: member.socialLinks?.whatsapp || ""
+      }
     });
     setError("");
     setIsModalOpen(true);
