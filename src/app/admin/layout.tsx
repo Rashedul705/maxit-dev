@@ -11,7 +11,8 @@ import {
   Settings,
   LogOut,
   Menu,
-  X
+  X,
+  Building2
 } from 'lucide-react';
 
 export default function AdminLayout({
@@ -27,6 +28,7 @@ export default function AdminLayout({
     { name: 'Team Members', path: '/admin/team', icon: Users },
     { name: 'About Section', path: '/admin/about', icon: FileText },
     { name: 'Projects', path: '/admin/projects', icon: Briefcase },
+    { name: 'Partners', path: '/admin/partners', icon: Building2 },
     { name: 'Settings', path: '/admin/settings', icon: Settings, disabled: true },
   ];
 

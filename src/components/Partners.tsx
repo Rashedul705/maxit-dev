@@ -1,38 +1,51 @@
-import React from 'react';
+"use client";
+
+import React, { useState, useEffect } from 'react';
 import { Building2 } from 'lucide-react';
 
-const partnersList = [
-  "NESCO", 
-  "Palli Bidyut", 
-  "Nabir Group", 
-  "Nabil Group", 
-  "Income Tax Office", 
-  "Rajshahi City Corp.", 
-  "RMP Police", 
-  "BMDA", 
-  "PKSF", 
-  "BRAC NGO", 
-  "Rajshahi University", 
-  "BADC", 
-  "RAKUB", 
-  "Urban Health Care", 
-  "Roads & Highways", 
-  "LGED", 
-  "EED", 
-  "DPHE", 
-  "DSB Rajshahi", 
-  "RAB Rajshahi", 
-  "TTC", 
-  "Panchagarh Police", 
-  "Aman Cold Storage", 
-  "Uttara Cold Storage", 
-  "Rajshahi Poly", 
-  "Mohila Poly", 
-  "Bangla Bari S&C", 
-  "Basantapur S&C"
-];
+type Partner = {
+  id: string;
+  name: string;
+  section: "home" | "profile";
+  order: number;
+};
 
 const Partners = ({ isGrid = false }: { isGrid?: boolean }) => {
+  const [partnersList, setPartnersList] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPartners = async () => {
+      try {
+        const section = isGrid ? 'profile' : 'home';
+        const res = await fetch(`/api/admin/partners?section=${section}`);
+        if (res.ok) {
+          const data: Partner[] = await res.json();
+          setPartnersList(data.map(p => p.name));
+        }
+      } catch (err) {
+        console.error("Failed to fetch partners", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPartners();
+  }, [isGrid]);
+
+  if (isLoading) {
+    return (
+      <section className={`py-24 border-y border-white/10 overflow-hidden relative ${!isGrid ? 'bg-primary' : 'bg-[#f8fafe]'}`}>
+        <div className="flex justify-center items-center h-48">
+          <div className="animate-pulse flex flex-col items-center">
+            <div className={`w-12 h-12 rounded-full mb-4 ${!isGrid ? 'bg-white/20' : 'bg-primary/20'}`}></div>
+            <div className={`h-4 w-32 rounded ${!isGrid ? 'bg-white/20' : 'bg-primary/20'}`}></div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className={`py-24 border-y border-white/10 overflow-hidden relative ${!isGrid ? 'bg-primary' : 'bg-[#f8fafe]'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 text-center">
