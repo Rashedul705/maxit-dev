@@ -4,6 +4,7 @@ import ServiceCard from '../components/ServiceCard';
 import TestimonialCard from '../components/TestimonialCard';
 import { Settings, ArrowRight, Sun, Sprout, Zap, Leaf, Cpu, Headphones, TrendingDown, Wifi, Cctv, Droplets, RadioTower, Lightbulb } from 'lucide-react';
 import Link from "next/link";
+import Partners from '../components/Partners';
 
 const Index = () => {
   const services = [
@@ -238,6 +239,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Partners Section */}
+      <Partners />
 
       {/* CTA Section */}
       <section className="py-32 relative overflow-hidden flex items-center justify-center min-h-[600px] bg-[#0F172A]">

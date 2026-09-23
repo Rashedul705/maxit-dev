@@ -6,6 +6,7 @@ import {
   GraduationCap, Activity, Landmark, Briefcase, FileCheck, Download
 } from 'lucide-react';
 import { projects } from '@/lib/projects';
+import Partners from '@/components/Partners';
 
 import sobujImg from "@/assets/team/ceo-maxit.png";
 import shohidImg from "@/assets/team/shohid.jpg";
@@ -531,6 +532,9 @@ export default function CompanyProfile() {
           </div>
         </div>
       </section>
+
+      {/* Partners Section */}
+      <Partners />
 
       {/* 13. CTA Section */}
       <section className="relative py-32 flex items-center justify-center bg-[#0B1120]">
