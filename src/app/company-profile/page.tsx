@@ -3,7 +3,7 @@ import {
   ArrowRight, ChevronRight, MapPin, Phone, Mail, MessageCircle, Linkedin,
   Sun, Droplets, Sprout, Cpu, Wifi, Cctv, RadioTower, Lightbulb, 
   Target, Shield, Settings, Home, Factory, Building2,
-  GraduationCap, Activity, Landmark, Briefcase, FileCheck
+  GraduationCap, Activity, Landmark, Briefcase, FileCheck, Download
 } from 'lucide-react';
 import { projects } from '@/lib/projects';
 
@@ -53,11 +53,15 @@ export default function CompanyProfile() {
             <p className="text-xl text-gray-300 mb-10 font-medium leading-relaxed max-w-2xl">
               MaxIT provides integrated technology and engineering solutions across renewable energy, smart agriculture, automation, security, networking, water treatment, communication infrastructure and building electrical systems.
             </p>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-4 mt-8">
               <Link href="#solutions" className="px-8 py-4 bg-primary text-white font-bold rounded-xl hover:bg-primary/90 transition-all shadow-lg hover:shadow-primary/30 flex items-center">
                 Explore Our Solutions
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Link>
+              <a href="/MaxIT_Company_Profile.pdf" download className="px-8 py-4 bg-accent text-white font-bold rounded-xl hover:bg-accent/90 transition-all shadow-lg hover:shadow-accent/30 flex items-center">
+                <Download className="w-5 h-5 mr-2" />
+                Download Profile
+              </a>
               <Link href="#contact" className="px-8 py-4 bg-white/10 text-white font-bold rounded-xl border border-white/20 hover:bg-white/20 transition-all backdrop-blur-sm">
                 Talk to Our Team
               </Link>
@@ -544,11 +548,15 @@ export default function CompanyProfile() {
           <p className="text-xl text-gray-300 mb-10 font-medium">
             Tell us about your requirements and let our technical team help you find the right solution.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/contact" className="px-8 py-4 bg-accent text-white font-bold rounded-xl hover:bg-accent/90 transition-all shadow-lg hover:shadow-accent/30 text-lg">
+          <div className="flex flex-col sm:flex-row flex-wrap gap-4 justify-center">
+            <Link href="/contact" className="px-8 py-4 bg-accent text-white font-bold rounded-xl hover:bg-accent/90 transition-all shadow-lg hover:shadow-accent/30 text-lg flex items-center justify-center">
               Request a Consultation
             </Link>
-            <Link href="/contact" className="px-8 py-4 bg-white/10 text-white font-bold rounded-xl border border-white/20 hover:bg-white/20 transition-all backdrop-blur-sm text-lg">
+            <a href="/MaxIT_Company_Profile.pdf" download className="px-8 py-4 bg-primary text-white font-bold rounded-xl hover:bg-primary/90 transition-all shadow-lg hover:shadow-primary/30 text-lg flex items-center justify-center">
+              <Download className="w-5 h-5 mr-2" />
+              Download Company Profile
+            </a>
+            <Link href="/contact" className="px-8 py-4 bg-white/10 text-white font-bold rounded-xl border border-white/20 hover:bg-white/20 transition-all backdrop-blur-sm text-lg flex items-center justify-center">
               Contact Us
             </Link>
           </div>
