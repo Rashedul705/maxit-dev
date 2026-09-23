@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getTeamData, saveTeamData } from '../route';
+import { triggerPDFRegeneration } from '@/lib/pdfGenerator';
 
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -31,6 +32,8 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     team.members = members;
     await saveTeamData(team);
     
+    triggerPDFRegeneration();
+    
     return NextResponse.json(members[index]);
   } catch (error) {
     console.error('Error updating member:', error);
@@ -52,6 +55,8 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
     
     team.members = filteredMembers;
     await saveTeamData(team);
+    
+    triggerPDFRegeneration();
     
     return NextResponse.json({ success: true });
   } catch (error) {

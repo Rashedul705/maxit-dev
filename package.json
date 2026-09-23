@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && npx start-server-and-test start http://localhost:3000 generate-pdf",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate-pdf": "node scripts/generate-web-pdf.cjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -71,6 +72,8 @@
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "globals": "^15.9.0",
     "postcss": "^8.4.47",
+    "puppeteer": "^25.12.0",
+    "start-server-and-test": "^3.0.12",
     "tailwindcss": "^3.4.11",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1"

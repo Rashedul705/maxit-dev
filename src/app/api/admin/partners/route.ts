@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
+import { triggerPDFRegeneration } from '@/lib/pdfGenerator';
 
 const dataFilePath = path.join(process.cwd(), 'data', 'partners.json');
 
@@ -68,6 +69,8 @@ export async function POST(request: Request) {
     
     partners.push(newPartner);
     await savePartnersData(partners);
+    
+    triggerPDFRegeneration();
     
     return NextResponse.json(newPartner, { status: 201 });
   } catch (error) {

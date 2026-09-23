@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getTeamData, saveTeamData } from '../team/route';
+import { triggerPDFRegeneration } from '@/lib/pdfGenerator';
 
 export async function GET() {
   const team = await getTeamData();
@@ -28,6 +29,8 @@ export async function PUT(request: Request) {
     };
     
     await saveTeamData(team);
+    
+    triggerPDFRegeneration();
     
     return NextResponse.json(team.ceo);
   } catch (error) {

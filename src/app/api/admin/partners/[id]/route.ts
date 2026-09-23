@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
+import { triggerPDFRegeneration } from '@/lib/pdfGenerator';
 
 const dataFilePath = path.join(process.cwd(), 'data', 'partners.json');
 
@@ -43,6 +44,8 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     partners[index].name = name.trim();
     await savePartnersData(partners);
     
+    triggerPDFRegeneration();
+    
     return NextResponse.json(partners[index]);
   } catch (error) {
     console.error('Error updating partner:', error);
@@ -62,6 +65,8 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
     }
     
     await savePartnersData(filteredPartners);
+    
+    triggerPDFRegeneration();
     
     return NextResponse.json({ success: true });
   } catch (error) {
