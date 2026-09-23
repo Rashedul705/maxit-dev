@@ -8,30 +8,25 @@ import {
 import { projects } from '@/lib/projects';
 import Partners from '@/components/Partners';
 
-import sobujImg from "@/assets/team/ceo-maxit.png";
-import shohidImg from "@/assets/team/shohid.jpg";
-import shahidafridiImg from "@/assets/team/shahidafridi.jpeg";
-import rupaliImg from "@/assets/team/rupali.jpg";
-import touhidurImg from "@/assets/team/touhidur.jpg";
-import priyankaImg from "@/assets/team/priyanka.jpg";
-import emonImg from "@/assets/team/emon-ali.jpg";
-import moznuImg from "@/assets/team/moznu.jpg";
-import rashedulImg from "@/assets/team/rashedul.jpg";
+import fs from 'fs/promises';
+import path from 'path';
 
-// Real Team Data brought from team page
-const team = [
-  { name: "Engr. Zahangir Alam (Sobuj)", role: "Chief Executive Officer", description: "Driven by a vision of innovation, technological excellence, and sustainable development.", image: sobujImg, email: "sales@m4xit.com", linkedin: "#" },
-  { name: "Rupali", role: "Project Director", description: "Experienced project director ensuring successful execution and delivery of our initiatives.", image: rupaliImg, email: "rupali@m4xit.com", linkedin: "#" },
-  { name: "Sarwar Jahan", role: "Software Engineer", description: "Expert software engineer developing robust and scalable digital solutions.", image: shohidImg, email: "shohid@m4xit.com", linkedin: "#" },
-  { name: "Rashedul Islam", role: "Software Engineer", description: "BSc in Computer Science and Engineering. Dedicated to building scalable software.", image: rashedulImg, email: "rashedul.afl@gmail.com", linkedin: "https://www.linkedin.com/in/rislam05/" },
-  { name: "Tauhidur Rahman Rony", role: "Adviser", description: "Strategic adviser providing expert guidance on business development and operations.", image: touhidurImg, email: "rony@m4xit.com", linkedin: "#" },
-  { name: "Priyanka Roy", role: "Senior Executive", description: "Dedicated senior executive managing key administrative and operational functions.", image: priyankaImg, email: "sales@m4xit.com", linkedin: "#" },
-  { name: "Md. Emon Ali", role: "Assistant Engineer", description: "Skilled assistant engineer supporting our technical projects and implementations.", image: emonImg, email: "emon@m4xit.com", linkedin: "#" },
-  { name: "MD .SHAHID AFRIDI", role: "Maintaince Engineer", description: "Skilled Maintaince Engineer supporting our technical projects and implementations.", image: shahidafridiImg, linkedin: "#" },
-  { name: "Md.Shaifiqul Islam Moznu", role: "Electrician", description: "Expert electrician ensuring safe and efficient electrical installations and maintenance.", image: moznuImg, whatsapp: "01711301250", linkedin: "#" }
-];
+async function getTeamData() {
+  try {
+    const dataFilePath = path.join(process.cwd(), 'data', 'team.json');
+    const data = await fs.readFile(dataFilePath, 'utf-8');
+    return JSON.parse(data);
+  } catch (error) {
+    console.error('Error reading team data:', error);
+    return { ceo: {}, members: [] };
+  }
+}
 
-export default function CompanyProfile() {
+export default async function CompanyProfile() {
+  const teamData = await getTeamData();
+  const { ceo, members = [] } = teamData;
+  members.sort((a, b) => (a.order || 0) - (b.order || 0));
+
   return (
     <div className="min-h-screen bg-white">
       
@@ -412,29 +407,33 @@ export default function CompanyProfile() {
               <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
               
               <div className="relative w-64 h-64 md:w-80 md:h-80 flex-shrink-0 mx-auto md:mx-0 overflow-hidden rounded-full border-8 border-gray-50 shadow-lg group-hover:border-accent/20 transition-colors duration-500 z-10 bg-gray-100 mb-8 md:mb-0 md:mr-12">
-                <img
-                  src={team[0].image.src}
-                  alt={team[0].name}
-                  className="w-full h-full object-cover filter grayscale-[10%] group-hover:grayscale-0 transform group-hover:scale-110 transition-all duration-700 ease-in-out"
-                />
+                {ceo.image ? (
+                  <img
+                    src={ceo.image}
+                    alt={ceo.name}
+                    className="w-full h-full object-cover filter grayscale-[10%] group-hover:grayscale-0 transform group-hover:scale-110 transition-all duration-700 ease-in-out"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gray-200 animate-pulse" />
+                )}
               </div>
 
               <div className="relative z-10 flex flex-col text-center md:text-left flex-grow">
-                <p className="text-accent font-semibold tracking-wider uppercase text-lg mb-2">{team[0].role}</p>
+                <p className="text-accent font-semibold tracking-wider uppercase text-lg mb-2">{ceo.designation}</p>
                 <h3 className="text-3xl md:text-4xl font-bold font-heading text-primary mb-4 group-hover:text-accent transition-colors duration-300">
-                  {team[0].name}
+                  {ceo.name}
                 </h3>
                 <p className="text-gray-700 text-lg font-medium leading-relaxed mb-8">
-                  {team[0].description}
+                  {ceo.message}
                 </p>
                 <div className="flex space-x-4 pt-6 border-t border-gray-100 justify-center md:justify-start">
-                  {team[0].email && (
-                    <a href={`mailto:${team[0].email}`} className="flex items-center justify-center w-12 h-12 bg-gray-50 rounded-xl text-gray-700 hover:bg-accent hover:text-white hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
+                  {ceo.socialLinks?.email && (
+                    <a href={`mailto:${ceo.socialLinks?.email}`} className="flex items-center justify-center w-12 h-12 bg-gray-50 rounded-xl text-gray-700 hover:bg-accent hover:text-white hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
                       <Mail className="w-5 h-5" />
                     </a>
                   )}
-                  {team[0].linkedin && (
-                    <a href={team[0].linkedin} className="flex items-center justify-center w-12 h-12 bg-gray-50 rounded-xl text-gray-700 hover:bg-[#0077b5] hover:text-white hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
+                  {ceo.socialLinks?.linkedin && (
+                    <a href={ceo.socialLinks?.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-12 h-12 bg-gray-50 rounded-xl text-gray-700 hover:bg-[#0077b5] hover:text-white hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
                       <Linkedin className="w-5 h-5" />
                     </a>
                   )}
@@ -444,26 +443,30 @@ export default function CompanyProfile() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 xl:gap-12">
-            {team.slice(1).map((member, index) => (
+            {members.map((member: any) => (
               <div 
-                key={index} 
+                key={member.id} 
                 className="group relative bg-white rounded-3xl flex flex-col h-full shadow-md hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 overflow-hidden transform hover:-translate-y-2 border-2 border-gray-200 hover:border-accent/40"
               >
                 <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                 
                 {/* Image Wrapper */}
                 <div className="relative w-48 h-48 mx-auto mt-8 overflow-hidden rounded-full border-4 border-gray-100 shadow-sm group-hover:border-accent/30 transition-colors duration-500 z-10 flex items-center justify-center bg-gray-50">
-                  <img
-                    src={member.image.src}
-                    alt={member.name}
-                    className="w-full h-full object-cover filter grayscale-[20%] group-hover:grayscale-0 transform group-hover:scale-110 transition-all duration-700 ease-in-out"
-                  />
+                  {member.image ? (
+                    <img
+                      src={member.image}
+                      alt={member.name}
+                      className="w-full h-full object-cover filter grayscale-[20%] group-hover:grayscale-0 transform group-hover:scale-110 transition-all duration-700 ease-in-out"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gray-200 animate-pulse" />
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-t from-primary/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                 </div>
 
                 {/* Content Block */}
                 <div className="p-8 relative z-10 flex flex-col flex-grow bg-white">
-                  <p className="text-accent font-semibold tracking-wider uppercase text-sm mb-2 text-center">{member.role}</p>
+                  <p className="text-accent font-semibold tracking-wider uppercase text-sm mb-2 text-center">{member.designation}</p>
                   <h3 className="text-2xl font-bold font-heading text-primary mb-3 group-hover:text-accent transition-colors duration-300 text-center">
                     {member.name}
                   </h3>
@@ -475,16 +478,16 @@ export default function CompanyProfile() {
                   <div className="flex space-x-3 pt-6 border-t border-gray-100 mt-auto justify-center">
                     {member.email && (
                       <a
-                        href={`mailto:${member.email}`}
+                        href={`mailto:${member.socialLinks?.email}`}
                         className="flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl text-gray-700 hover:bg-accent hover:text-white hover:shadow-lg hover:shadow-accent/40 transform hover:-translate-y-1 transition-all duration-300"
                         title="Email"
                       >
                         <Mail className="w-4 h-4" />
                       </a>
                     )}
-                    {member.whatsapp && (
+                    {member.socialLinks?.whatsapp && (
                       <a
-                        href={`https://wa.me/88${member.whatsapp}`}
+                        href={`https://wa.me/88${member.socialLinks?.whatsapp}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl text-gray-700 hover:bg-[#25D366] hover:text-white hover:shadow-lg hover:shadow-[#25D366]/40 transform hover:-translate-y-1 transition-all duration-300"
@@ -494,7 +497,9 @@ export default function CompanyProfile() {
                       </a>
                     )}
                     <a
-                      href={member.linkedin}
+                      href={member.socialLinks?.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl text-gray-700 hover:bg-[#0077b5] hover:text-white hover:shadow-lg hover:shadow-[#0077b5]/40 transform hover:-translate-y-1 transition-all duration-300"
                       title="LinkedIn"
                     >
