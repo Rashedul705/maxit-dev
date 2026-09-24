@@ -12,7 +12,8 @@ type SocialLinks = {
 type CEO = {
   name: string;
   nickname?: string;
-  designation: string;
+  officialTitle: string;
+  functionalDesignation: string;
   image: string;
   message: string;
   socialLinks: SocialLinks;
@@ -21,11 +22,15 @@ type CEO = {
 type TeamMember = {
   id: string;
   name: string;
-  designation: string;
-  description: string;
+  officialTitle: string;
+  functionalDesignation: string;
+  department: string;
+  section: string;
+  bio: string;
   image: string;
   socialLinks: SocialLinks;
   order: number;
+  department: string;
 };
 
 export default function TeamManagement() {
@@ -46,8 +51,11 @@ export default function TeamManagement() {
   
   const [memberForm, setMemberForm] = useState({
     name: "",
-    designation: "",
-    description: "",
+    officialTitle: "",
+    functionalDesignation: "",
+    department: "",
+    section: "Board of Directors",
+    bio: "",
     image: "",
     socialLinks: { linkedin: "", email: "", whatsapp: "" }
   });
@@ -117,8 +125,11 @@ export default function TeamManagement() {
     setEditId(null);
     setMemberForm({
       name: "",
-      designation: "",
-      description: "",
+      officialTitle: "",
+      functionalDesignation: "",
+      department: "",
+      section: "Board of Directors",
+      bio: "",
       image: "",
       socialLinks: { linkedin: "", email: "", whatsapp: "" }
     });
@@ -130,8 +141,11 @@ export default function TeamManagement() {
     setEditId(member.id);
     setMemberForm({
       name: member.name,
-      designation: member.designation,
-      description: member.description || "",
+      officialTitle: member.officialTitle,
+      functionalDesignation: member.functionalDesignation || "",
+      department: member.department || "",
+      section: member.section || "Board of Directors",
+      bio: member.bio || "",
       image: member.image || "",
       socialLinks: {
         linkedin: member.socialLinks?.linkedin || "",
@@ -162,8 +176,8 @@ export default function TeamManagement() {
     e.preventDefault();
     setError("");
     
-    if (!memberForm.name.trim() || !memberForm.designation.trim()) {
-      setError("Name and designation are required");
+    if (!memberForm.name.trim() || !memberForm.officialTitle.trim()) {
+      setError("Name and official title are required");
       return;
     }
 
@@ -303,11 +317,20 @@ export default function TeamManagement() {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Designation</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Official Title</label>
                         <input
                           type="text"
-                          value={ceoData.designation}
-                          onChange={(e) => setCeoData({ ...ceoData, designation: e.target.value })}
+                          value={ceoData.officialTitle}
+                          onChange={(e) => setCeoData({ ...ceoData, officialTitle: e.target.value })}
+                          className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Functional Designation</label>
+                        <input
+                          type="text"
+                          value={ceoData.functionalDesignation || ""}
+                          onChange={(e) => setCeoData({ ...ceoData, functionalDesignation: e.target.value })}
                           className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20"
                         />
                       </div>
@@ -383,7 +406,9 @@ export default function TeamManagement() {
                     <tr className="bg-gray-50 text-gray-500 text-sm border-b border-gray-100">
                       <th className="px-6 py-4 font-medium">Profile</th>
                       <th className="px-6 py-4 font-medium">Name</th>
-                      <th className="px-6 py-4 font-medium">Designation</th>
+                      <th className="px-6 py-4 font-medium">Section</th>
+                      <th className="px-6 py-4 font-medium">Official Title</th>
+                      <th className="px-6 py-4 font-medium">Functional Designation</th>
                       <th className="px-6 py-4 font-medium text-right">Actions</th>
                     </tr>
                   </thead>
@@ -400,10 +425,16 @@ export default function TeamManagement() {
                           </div>
                         </td>
                         <td className="px-6 py-4 font-medium text-gray-900">{member.name}</td>
+                        <td className="px-6 py-4 text-gray-600 text-sm">
+                          {member.section}
+                        </td>
                         <td className="px-6 py-4 text-gray-600">
                           <span className="px-3 py-1 bg-primary/10 text-primary text-xs rounded-full font-medium">
-                            {member.designation}
+                            {member.officialTitle}
                           </span>
+                        </td>
+                        <td className="px-6 py-4 text-gray-600 text-sm">
+                          {member.functionalDesignation || '-'}
                         </td>
                         <td className="px-6 py-4 text-right">
                           <div className="flex items-center justify-end space-x-2">
@@ -486,24 +517,63 @@ export default function TeamManagement() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Designation *</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Official Title *</label>
                     <input
                       type="text"
                       required
-                      value={memberForm.designation}
-                      onChange={(e) => setMemberForm({ ...memberForm, designation: e.target.value })}
+                      value={memberForm.officialTitle}
+                      onChange={(e) => setMemberForm({ ...memberForm, officialTitle: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Functional Designation</label>
+                    <input
+                      type="text"
+                      value={memberForm.functionalDesignation}
+                      onChange={(e) => setMemberForm({ ...memberForm, functionalDesignation: e.target.value })}
                       className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
                     />
                   </div>
                 </div>
               </div>
 
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Section (Grouping) *</label>
+                  <select
+                    required
+                    value={memberForm.section}
+                    onChange={(e) => setMemberForm({ ...memberForm, section: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  >
+                    <option value="Board of Directors">Board of Directors</option>
+                    <option value="Advisory Council">Advisory Council</option>
+                    <option value="Core Engineering & R&D Wing">Core Engineering & R&D Wing</option>
+                    <option value="Technical Field Staff">Technical Field Staff</option>
+                    <option value="Global Supply Chain & Procurement Division">Global Supply Chain & Procurement Division</option>
+                    <option value="Corporate, Finance, HR & Tender Wing">Corporate, Finance, HR & Tender Wing</option>
+                    <option value="Facilities & Logistics Support">Facilities & Logistics Support</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Department Text</label>
+                  <input
+                    type="text"
+                    value={memberForm.department}
+                    onChange={(e) => setMemberForm({ ...memberForm, department: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
+                    placeholder="e.g. Research, Development & Product Architecture"
+                  />
+                </div>
+              </div>
+
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Short Description</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Bio (Short Description)</label>
                 <textarea
                   rows={3}
-                  value={memberForm.description}
-                  onChange={(e) => setMemberForm({ ...memberForm, description: e.target.value })}
+                  value={memberForm.bio}
+                  onChange={(e) => setMemberForm({ ...memberForm, bio: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
                 />
               </div>

@@ -6,10 +6,10 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
   try {
     const { id } = await params;
     const body = await request.json();
-    const { name, designation, description, image, socialLinks } = body;
+    const { name, officialTitle, functionalDesignation, section, department, bio, image, socialLinks } = body;
     
-    if (!name || !designation) {
-      return NextResponse.json({ error: 'Name and designation are required' }, { status: 400 });
+    if (!name || !officialTitle) {
+      return NextResponse.json({ error: 'Name and official title are required' }, { status: 400 });
     }
     
     const team = await getTeamData();
@@ -23,8 +23,11 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     members[index] = {
       ...members[index],
       name,
-      designation,
-      description: description || '',
+      officialTitle,
+      functionalDesignation: functionalDesignation || '',
+      section: section || members[index].section || 'Board of Directors',
+      department: department || members[index].department || '',
+      bio: bio || '',
       image: image || members[index].image, // retain old if empty
       socialLinks: socialLinks || members[index].socialLinks
     };

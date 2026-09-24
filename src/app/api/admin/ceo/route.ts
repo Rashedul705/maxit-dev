@@ -12,7 +12,7 @@ export async function GET() {
 export async function PUT(request: Request) {
   try {
     const body = await request.json();
-    const { name, nickname, designation, image, message, socialLinks } = body;
+    const { name, nickname, officialTitle, functionalDesignation, image, message, socialLinks } = body;
     
     if (!name) {
       return NextResponse.json({ error: 'Name is required' }, { status: 400 });
@@ -24,7 +24,8 @@ export async function PUT(request: Request) {
       ...team.ceo,
       name,
       nickname: nickname || team.ceo.nickname || '',
-      designation: designation || team.ceo.designation || '',
+      officialTitle: officialTitle || team.ceo.officialTitle || '',
+      functionalDesignation: functionalDesignation || team.ceo.functionalDesignation || '',
       image: image || team.ceo.image || '',
       message: message || team.ceo.message || '',
       socialLinks: socialLinks || team.ceo.socialLinks || { linkedin: '', email: '' }

@@ -32,10 +32,10 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, designation, description, image, socialLinks } = body;
+    const { name, officialTitle, functionalDesignation, section, department, bio, image, socialLinks } = body;
     
-    if (!name || !designation) {
-      return NextResponse.json({ error: 'Name and designation are required' }, { status: 400 });
+    if (!name || !officialTitle) {
+      return NextResponse.json({ error: 'Name and official title are required' }, { status: 400 });
     }
     
     const team = await getTeamData();
@@ -45,10 +45,13 @@ export async function POST(request: Request) {
     const newMember = {
       id: `team_${Date.now()}`,
       name,
-      designation,
-      description: description || '',
+      officialTitle,
+      functionalDesignation: functionalDesignation || '',
+      section: section || 'Board of Directors',
+      department: department || '',
+      bio: bio || '',
       image: image || '',
-      socialLinks: socialLinks || { linkedin: '', email: '' },
+      socialLinks: socialLinks || { linkedin: '', email: '', whatsapp: '' },
       order: maxOrder + 1
     };
     

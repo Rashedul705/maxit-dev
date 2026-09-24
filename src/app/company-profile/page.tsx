@@ -29,6 +29,24 @@ export default async function CompanyProfile() {
   const { ceo, members = [] } = teamData;
   members.sort((a, b) => (a.order || 0) - (b.order || 0));
 
+  const sectionsOrder = [
+    "Board of Directors",
+    "Advisory Council",
+    "Core Engineering & R&D Wing",
+    "Technical Field Staff",
+    "Global Supply Chain & Procurement Division",
+    "Corporate, Finance, HR & Tender Wing",
+    "Facilities & Logistics Support"
+  ];
+
+  // Group members by section based on the strict order
+  const groupedMembers = sectionsOrder.map(sectionName => {
+    return {
+      section: sectionName,
+      members: members.filter((m: any) => m.section === sectionName)
+    };
+  }).filter(g => g.members.length > 0);
+
   return (
     <div className="min-h-screen bg-white">
       
@@ -399,115 +417,107 @@ export default async function CompanyProfile() {
       <section className="py-24 bg-gray-50 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold font-heading text-primary mb-6">Meet the Team Behind MaxIT</h2>
-            <p className="text-gray-600 text-lg max-w-2xl mx-auto font-medium">Our engineering and management leaders driving innovation.</p>
+            <h2 className="text-4xl md:text-5xl font-bold font-heading text-primary mb-6">Complete Corporate Governance and Web Team Directory</h2>
+            <p className="text-gray-800 text-xl font-bold mb-3">Max IT Solution Ltd.</p>
+            <p className="text-gray-600 text-lg max-w-3xl mx-auto font-medium">Corporate Organogram and Profile Layout with Global Supply Chain Network.</p>
           </div>
 
-          {/* CEO Featured Row */}
-          <div className="mb-16 max-w-4xl mx-auto">
-            <div className="group relative bg-white rounded-3xl shadow-xl hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 overflow-hidden border border-gray-200 hover:border-accent/40 flex flex-col md:flex-row items-center p-8 md:p-12">
-              <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-              
-              <div className="relative w-64 h-64 md:w-80 md:h-80 flex-shrink-0 mx-auto md:mx-0 overflow-hidden rounded-full border-8 border-gray-50 shadow-lg group-hover:border-accent/20 transition-colors duration-500 z-10 bg-gray-100 mb-8 md:mb-0 md:mr-12">
-                {ceo.image ? (
-                  <img
-                    src={ceo.image}
-                    alt={ceo.name}
-                    className="w-full h-full object-cover filter grayscale-[10%] group-hover:grayscale-0 transform group-hover:scale-110 transition-all duration-700 ease-in-out"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gray-200 animate-pulse" />
-                )}
-              </div>
 
-              <div className="relative z-10 flex flex-col text-center md:text-left flex-grow">
-                <p className="text-accent font-semibold tracking-wider uppercase text-lg mb-2">{ceo.designation}</p>
-                <h3 className="text-3xl md:text-4xl font-bold font-heading text-primary mb-4 group-hover:text-accent transition-colors duration-300">
-                  {ceo.name}
-                </h3>
-                <p className="text-gray-700 text-lg font-medium leading-relaxed mb-8">
-                  {ceo.message}
-                </p>
-                <div className="flex space-x-4 pt-6 border-t border-gray-100 justify-center md:justify-start">
-                  {ceo.socialLinks?.email && (
-                    <a href={`mailto:${ceo.socialLinks?.email}`} className="flex items-center justify-center w-12 h-12 bg-gray-50 rounded-xl text-gray-700 hover:bg-accent hover:text-white hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
-                      <Mail className="w-5 h-5" />
-                    </a>
-                  )}
-                  {ceo.socialLinks?.linkedin && (
-                    <a href={ceo.socialLinks?.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-12 h-12 bg-gray-50 rounded-xl text-gray-700 hover:bg-[#0077b5] hover:text-white hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
-                      <Linkedin className="w-5 h-5" />
-                    </a>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 xl:gap-12">
-            {members.map((member: any) => (
-              <div 
-                key={member.id} 
-                className="group relative bg-white rounded-3xl flex flex-col h-full shadow-md hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 overflow-hidden transform hover:-translate-y-2 border-2 border-gray-200 hover:border-accent/40"
-              >
-                <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-                
-                {/* Image Wrapper */}
-                <div className="relative w-48 h-48 mx-auto mt-8 overflow-hidden rounded-full border-4 border-gray-100 shadow-sm group-hover:border-accent/30 transition-colors duration-500 z-10 flex items-center justify-center bg-gray-50">
-                  {member.image ? (
-                    <img
-                      src={member.image}
-                      alt={member.name}
-                      className="w-full h-full object-cover filter grayscale-[20%] group-hover:grayscale-0 transform group-hover:scale-110 transition-all duration-700 ease-in-out"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-gray-200 animate-pulse" />
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-primary/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-                </div>
-
-                {/* Content Block */}
-                <div className="p-8 relative z-10 flex flex-col flex-grow bg-white">
-                  <p className="text-accent font-semibold tracking-wider uppercase text-sm mb-2 text-center">{member.designation}</p>
-                  <h3 className="text-2xl font-bold font-heading text-primary mb-3 group-hover:text-accent transition-colors duration-300 text-center">
-                    {member.name}
+          <div className="space-y-24">
+            {groupedMembers.map((group, groupIndex) => (
+              <div key={groupIndex} className="relative">
+                <div className="flex items-center justify-center mb-12 relative">
+                  <div className="absolute inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+                  <h3 className="relative bg-gray-50 px-8 text-3xl font-bold font-heading text-primary text-center">
+                    {groupIndex + 1}. {group.section}
                   </h3>
-                  <p className="text-gray-700 font-medium leading-relaxed mb-6 flex-grow text-center">
-                    {member.description}
-                  </p>
+                </div>
 
-                  {/* Social Buttons */}
-                  <div className="flex space-x-3 pt-6 border-t border-gray-100 mt-auto justify-center">
-                    {member.email && (
-                      <a
-                        href={`mailto:${member.socialLinks?.email}`}
-                        className="flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl text-gray-700 hover:bg-accent hover:text-white hover:shadow-lg hover:shadow-accent/40 transform hover:-translate-y-1 transition-all duration-300"
-                        title="Email"
-                      >
-                        <Mail className="w-4 h-4" />
-                      </a>
-                    )}
-                    {member.socialLinks?.whatsapp && (
-                      <a
-                        href={`https://wa.me/88${member.socialLinks?.whatsapp}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl text-gray-700 hover:bg-[#25D366] hover:text-white hover:shadow-lg hover:shadow-[#25D366]/40 transform hover:-translate-y-1 transition-all duration-300"
-                        title="WhatsApp"
-                      >
-                        <MessageCircle className="w-4 h-4" />
-                      </a>
-                    )}
-                    <a
-                      href={member.socialLinks?.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl text-gray-700 hover:bg-[#0077b5] hover:text-white hover:shadow-lg hover:shadow-[#0077b5]/40 transform hover:-translate-y-1 transition-all duration-300"
-                      title="LinkedIn"
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 xl:gap-12">
+                  {group.members.map((member: any) => (
+                    <div 
+                      key={member.id} 
+                      className="group relative bg-white rounded-3xl flex flex-col h-full shadow-md hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 overflow-hidden transform hover:-translate-y-2 border-2 border-gray-200 hover:border-accent/40"
                     >
-                      <Linkedin className="w-4 h-4" />
-                    </a>
-                  </div>
+                      <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                      
+                      {/* Image Wrapper */}
+                      <div className="relative w-48 h-48 mx-auto mt-8 overflow-hidden rounded-full border-4 border-gray-100 shadow-sm group-hover:border-accent/30 transition-colors duration-500 z-10 flex items-center justify-center bg-gray-50">
+                        {member.image ? (
+                          <img
+                            src={member.image}
+                            alt={member.name}
+                            className="w-full h-full object-cover filter grayscale-[20%] group-hover:grayscale-0 transform group-hover:scale-110 transition-all duration-700 ease-in-out"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400 font-bold text-4xl">
+                            {member.name.charAt(0)}
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-primary/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                      </div>
+
+                      {/* Content Block */}
+                      <div className="p-8 relative z-10 flex flex-col flex-grow bg-white text-center">
+                        <h4 className="text-2xl font-bold font-heading text-primary mb-3 group-hover:text-accent transition-colors duration-300">
+                          {member.name}
+                        </h4>
+                        {member.officialTitle && (
+                          <p className="text-accent font-semibold tracking-wider uppercase text-sm mb-1">{member.officialTitle}</p>
+                        )}
+                        {member.functionalDesignation && (
+                          <p className="text-gray-500 font-medium tracking-wide text-xs mb-1 uppercase">{member.functionalDesignation}</p>
+                        )}
+                        {member.department && (
+                          <p className="text-gray-600 font-medium tracking-wide text-sm mb-4">
+                            <span className="font-bold text-primary">Department:</span> {member.department}
+                          </p>
+                        )}
+                        {member.bio && (
+                          <p className="text-gray-700 font-medium leading-relaxed mb-6 flex-grow whitespace-pre-wrap text-sm">
+                            {member.bio}
+                          </p>
+                        )}
+
+                        {/* Social Buttons */}
+                        {(member.socialLinks?.email || member.socialLinks?.whatsapp || member.socialLinks?.linkedin) && (
+                          <div className="flex justify-center space-x-3 pt-6 border-t border-gray-100 mt-auto">
+                            {member.socialLinks?.email && (
+                              <a
+                                href={`mailto:${member.socialLinks.email}`}
+                                className="flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl text-gray-700 hover:bg-accent hover:text-white hover:shadow-lg hover:shadow-accent/40 transform hover:-translate-y-1 transition-all duration-300"
+                                title="Email"
+                              >
+                                <Mail className="w-4 h-4" />
+                              </a>
+                            )}
+                            {member.socialLinks?.whatsapp && (
+                              <a
+                                href={`https://wa.me/88${member.socialLinks.whatsapp}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl text-gray-700 hover:bg-[#25D366] hover:text-white hover:shadow-lg hover:shadow-[#25D366]/40 transform hover:-translate-y-1 transition-all duration-300"
+                                title="WhatsApp"
+                              >
+                                <MessageCircle className="w-4 h-4" />
+                              </a>
+                            )}
+                            {member.socialLinks?.linkedin && (
+                              <a
+                                href={member.socialLinks.linkedin}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center justify-center w-10 h-10 bg-gray-50 rounded-xl text-gray-700 hover:bg-[#0077b5] hover:text-white hover:shadow-lg hover:shadow-[#0077b5]/40 transform hover:-translate-y-1 transition-all duration-300"
+                                title="LinkedIn"
+                              >
+                                <Linkedin className="w-4 h-4" />
+                              </a>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             ))}
