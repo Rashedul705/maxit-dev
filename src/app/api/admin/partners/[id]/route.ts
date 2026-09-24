@@ -24,7 +24,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
   try {
     const { id } = await params;
     const body = await request.json();
-    const { name, logo } = body;
+    const { name, logo, description } = body;
     
     // Validation
     if (!name || typeof name !== 'string' || name.trim() === '') {
@@ -44,6 +44,9 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     partners[index].name = name.trim();
     if (logo !== undefined) {
       partners[index].logo = logo;
+    }
+    if (description !== undefined) {
+      partners[index].description = description;
     }
     await savePartnersData(partners);
     

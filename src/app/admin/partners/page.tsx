@@ -9,6 +9,7 @@ type Partner = {
   section: "home" | "profile";
   order: number;
   logo?: string;
+  description?: string;
 };
 
 export default function PartnersManagement() {
@@ -18,7 +19,7 @@ export default function PartnersManagement() {
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
-  const [formData, setFormData] = useState({ name: "", logo: "" });
+  const [formData, setFormData] = useState({ name: "", logo: "", description: "" });
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -43,14 +44,14 @@ export default function PartnersManagement() {
 
   const openAddModal = () => {
     setEditId(null);
-    setFormData({ name: "", logo: "" });
+    setFormData({ name: "", logo: "", description: "" });
     setError("");
     setIsModalOpen(true);
   };
 
   const openEditModal = (partner: Partner) => {
     setEditId(partner.id);
-    setFormData({ name: partner.name, logo: partner.logo || "" });
+    setFormData({ name: partner.name, logo: partner.logo || "", description: partner.description || "" });
     setError("");
     setIsModalOpen(true);
   };
@@ -101,7 +102,7 @@ export default function PartnersManagement() {
         const res = await fetch(`/api/admin/partners/${editId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: formData.name, logo: formData.logo })
+          body: JSON.stringify({ name: formData.name, logo: formData.logo, description: formData.description })
         });
         
         if (res.ok) {
@@ -116,7 +117,7 @@ export default function PartnersManagement() {
         const res = await fetch('/api/admin/partners', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: formData.name, section: activeTab, logo: formData.logo })
+          body: JSON.stringify({ name: formData.name, section: activeTab, logo: formData.logo, description: formData.description })
         });
         
         if (res.ok) {
@@ -315,6 +316,26 @@ export default function PartnersManagement() {
                   </p>
                 </div>
               </div>
+
+              {activeTab === 'profile' && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Short Description
+                  </label>
+                  <input
+                    type="text"
+                    maxLength={100}
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
+                    placeholder="e.g. Export to spreadsheet in one click"
+                  />
+                  <p className="text-xs text-gray-500 mt-1 flex justify-between">
+                    <span>Only visible on Company Profile grid</span>
+                    <span>{formData.description.length}/100</span>
+                  </p>
+                </div>
+              )}
 
               {error && (
                 <div className="p-3 bg-red-50 text-red-600 text-sm rounded-lg border border-red-100">
