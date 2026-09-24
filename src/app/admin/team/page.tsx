@@ -30,7 +30,6 @@ type TeamMember = {
   image: string;
   socialLinks: SocialLinks;
   order: number;
-  department: string;
 };
 
 export default function TeamManagement() {
