@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { getTeamData, saveTeamData } from '../team/route';
 import { triggerPDFRegeneration } from '@/lib/pdfGenerator';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   const team = await getTeamData();
   return NextResponse.json(team.ceo || {});

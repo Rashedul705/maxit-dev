@@ -11,6 +11,8 @@ import Partners from '@/components/Partners';
 import fs from 'fs/promises';
 import path from 'path';
 
+export const dynamic = 'force-dynamic';
+
 async function getTeamData() {
   try {
     const dataFilePath = path.join(process.cwd(), 'data', 'team.json');

@@ -2,6 +2,8 @@ import { Mail, Linkedin, MessageCircle } from 'lucide-react';
 import fs from 'fs/promises';
 import path from 'path';
 
+export const dynamic = 'force-dynamic';
+
 async function getTeamData() {
   try {
     const dataFilePath = path.join(process.cwd(), 'data', 'team.json');

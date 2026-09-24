@@ -3,6 +3,8 @@ import fs from 'fs/promises';
 import path from 'path';
 import { triggerPDFRegeneration } from '@/lib/pdfGenerator';
 
+export const dynamic = 'force-dynamic';
+
 const dataFilePath = path.join(process.cwd(), 'data', 'team.json');
 
 export async function getTeamData() {
