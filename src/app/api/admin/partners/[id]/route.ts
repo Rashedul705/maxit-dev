@@ -24,7 +24,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
   try {
     const { id } = await params;
     const body = await request.json();
-    const { name } = body;
+    const { name, logo } = body;
     
     // Validation
     if (!name || typeof name !== 'string' || name.trim() === '') {
@@ -42,6 +42,9 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     }
     
     partners[index].name = name.trim();
+    if (logo !== undefined) {
+      partners[index].logo = logo;
+    }
     await savePartnersData(partners);
     
     triggerPDFRegeneration();

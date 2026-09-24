@@ -8,10 +8,11 @@ type Partner = {
   name: string;
   section: "home" | "profile";
   order: number;
+  logo?: string;
 };
 
 const Partners = ({ isGrid = false }: { isGrid?: boolean }) => {
-  const [partnersList, setPartnersList] = useState<string[]>([]);
+  const [partnersList, setPartnersList] = useState<Partner[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -21,7 +22,7 @@ const Partners = ({ isGrid = false }: { isGrid?: boolean }) => {
         const res = await fetch(`/api/admin/partners?section=${section}`);
         if (res.ok) {
           const data: Partner[] = await res.json();
-          setPartnersList(data.map(p => p.name));
+          setPartnersList(data);
         }
       } catch (err) {
         console.error("Failed to fetch partners", err);
@@ -122,8 +123,12 @@ const Partners = ({ isGrid = false }: { isGrid?: boolean }) => {
               <div key={`p1-${index}`} className="hex-wrap">
                 <div className="hex bg-primary border border-white/10">
                   <div className="hex-content">
-                    <Building2 className="w-5 h-5 text-accent" />
-                    <span className="hex-text">{partner}</span>
+                    {partner.logo ? (
+                      <img src={partner.logo} alt={partner.name} className="w-8 h-8 object-contain" />
+                    ) : (
+                      <Building2 className="w-5 h-5 text-accent" />
+                    )}
+                    <span className="hex-text">{partner.name}</span>
                   </div>
                 </div>
               </div>
@@ -140,8 +145,12 @@ const Partners = ({ isGrid = false }: { isGrid?: boolean }) => {
               <div key={`p2-${index}`} className="hex-wrap">
                 <div className="hex bg-primary border border-white/10">
                   <div className="hex-content">
-                    <Building2 className="w-5 h-5 text-accent" />
-                    <span className="hex-text">{partner}</span>
+                    {partner.logo ? (
+                      <img src={partner.logo} alt={partner.name} className="w-8 h-8 object-contain" />
+                    ) : (
+                      <Building2 className="w-5 h-5 text-accent" />
+                    )}
+                    <span className="hex-text">{partner.name}</span>
                   </div>
                 </div>
               </div>
@@ -160,10 +169,16 @@ const Partners = ({ isGrid = false }: { isGrid?: boolean }) => {
                 key={index} 
                 className="flex items-center space-x-4 bg-white border border-gray-100 rounded-2xl px-8 py-5 mx-3 shadow-sm hover:shadow-xl hover:border-accent/30 transition-all duration-300 transform hover:-translate-y-1"
               >
-                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0 shadow-inner">
-                  <Building2 className="w-5 h-5" />
-                </div>
-                <span className="font-bold text-gray-800 text-base md:text-lg tracking-tight">{partner}</span>
+                {partner.logo ? (
+                  <div className="w-10 h-10 flex items-center justify-center shrink-0">
+                    <img src={partner.logo} alt={partner.name} className="max-w-full max-h-full object-contain" />
+                  </div>
+                ) : (
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0 shadow-inner">
+                    <Building2 className="w-5 h-5" />
+                  </div>
+                )}
+                <span className="font-bold text-gray-800 text-base md:text-lg tracking-tight">{partner.name}</span>
               </div>
             ))}
           </div>

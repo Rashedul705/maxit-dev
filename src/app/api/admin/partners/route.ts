@@ -43,7 +43,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, section } = body;
+    const { name, section, logo } = body;
     
     // Validation
     if (!name || typeof name !== 'string' || name.trim() === '') {
@@ -66,7 +66,8 @@ export async function POST(request: Request) {
       id: `${section}_${Date.now()}`,
       name: name.trim(),
       section,
-      order: maxOrder + 1
+      order: maxOrder + 1,
+      ...(logo && { logo })
     };
     
     partners.push(newPartner);
