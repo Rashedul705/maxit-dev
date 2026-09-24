@@ -12,14 +12,6 @@ type Partner = {
   description?: string;
 };
 
-const hoverGradients = [
-  { i: '#a955ff', j: '#ea51ff' },
-  { i: '#56CCF2', j: '#2F80ED' },
-  { i: '#FF9966', j: '#FF5E62' },
-  { i: '#80FF72', j: '#7EE8FA' },
-  { i: '#ffa9c6', j: '#f434e2' },
-];
-
 const Partners = ({ isGrid = false }: { isGrid?: boolean }) => {
   const [partnersList, setPartnersList] = useState<Partner[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -73,31 +65,32 @@ const Partners = ({ isGrid = false }: { isGrid?: boolean }) => {
             .partner-hover-ul {
               display: flex;
               position: relative;
-              gap: 30px;
+              gap: 35px;
               flex-wrap: wrap;
               justify-content: center;
-              padding: 20px 0;
+              padding: 40px 0;
             }
             .partner-hover-li {
               position: relative;
               list-style: none;
-              width: 100px;
-              height: 100px;
+              width: 250px;
+              height: 90px;
               background: white;
-              box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-              border-radius: 100px;
+              box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+              border: 2px solid hsl(var(--primary));
+              border-radius: 90px;
               cursor: pointer;
               display: flex;
-              justify-content: center;
               align-items: center;
-              transition: 0.5s;
+              padding: 0 15px;
+              transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             }
             .partner-hover-li::before {
               content: "";
               position: absolute;
               inset: 0;
-              border-radius: 100px;
-              background: linear-gradient(45deg, var(--i), var(--j));
+              border-radius: 90px;
+              background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
               opacity: 0;
               transition: 0.5s;
             }
@@ -107,85 +100,88 @@ const Partners = ({ isGrid = false }: { isGrid?: boolean }) => {
               top: 10px;
               width: 100%;
               height: 100%;
-              border-radius: 100px;
-              background: linear-gradient(45deg, var(--i), var(--j));
+              border-radius: 90px;
+              background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
               transition: 0.5s;
               filter: blur(15px);
               z-index: -1;
               opacity: 0;
             }
             .partner-hover-li:hover {
-              width: 260px;
+              width: 280px;
+              transform: scale(1.1);
+              border-color: transparent;
               box-shadow: 0 10px 25px rgba(0, 0, 0, 0);
             }
             .partner-hover-li:hover::before {
               opacity: 1;
             }
             .partner-hover-li:hover::after {
-              opacity: 0.5;
+              opacity: 0.6;
             }
             .partner-hover-li .icon {
-              width: 60px;
-              height: 60px;
+              width: 65px;
+              height: 65px;
               display: flex;
               justify-content: center;
               align-items: center;
               transition: 0.5s;
-              transition-delay: 0.25s;
               z-index: 2;
+              flex-shrink: 0;
+              background: white;
+              border-radius: 50%;
+              padding: 12px;
+              box-shadow: 0 4px 15px rgba(0,0,0,0.06);
             }
             .partner-hover-li:hover .icon {
-              transform: scale(0);
-              transition-delay: 0s;
+              transform: scale(1.15);
             }
             .partner-hover-li .content-wrap {
-              position: absolute;
+              position: relative;
               z-index: 2;
               display: flex;
               flex-direction: column;
-              align-items: center;
               justify-content: center;
-              transform: scale(0);
               transition: 0.5s;
-              transition-delay: 0s;
-              width: 100%;
-              padding: 0 25px;
+              padding-left: 15px;
+              width: calc(100% - 65px);
             }
             .partner-hover-li:hover .content-wrap {
-              transform: scale(1);
-              transition-delay: 0.25s;
+              transform: scale(1.05);
             }
             .partner-hover-li .title {
-              color: #fff;
-              font-size: 1.1em;
+              color: #1f2937;
+              font-size: 1.05em;
               font-weight: 700;
-              letter-spacing: 0.05em;
-              text-align: center;
               white-space: nowrap;
               overflow: hidden;
               text-overflow: ellipsis;
               width: 100%;
+              transition: 0.5s;
+            }
+            .partner-hover-li:hover .title {
+              color: #fff;
             }
             .partner-hover-li .desc {
-              color: rgba(255, 255, 255, 0.9);
+              color: #6b7280;
               font-size: 0.75em;
-              text-align: center;
-              margin-top: 4px;
-              display: -webkit-box;
-              -webkit-line-clamp: 2;
-              -webkit-box-orient: vertical;
+              margin-top: 2px;
+              white-space: nowrap;
               overflow: hidden;
               text-overflow: ellipsis;
+              width: 100%;
+              transition: 0.5s;
+            }
+            .partner-hover-li:hover .desc {
+              color: rgba(255, 255, 255, 0.9);
             }
           `}</style>
           <ul className="partner-hover-ul">
             {partnersList.map((partner, index) => {
-              const grad = hoverGradients[index % hoverGradients.length];
               return (
                 <li 
                   key={index} 
                   className="partner-hover-li" 
-                  style={{ '--i': grad.i, '--j': grad.j } as React.CSSProperties}
                 >
                   <span className="icon">
                     {partner.logo ? (
