@@ -19,7 +19,7 @@ const handler = NextAuth({
 
         await dbConnect();
         
-        const admin = await Admin.findOne({ email: credentials.email });
+        const admin = await Admin.findOne({ email: credentials.email } as any);
         if (!admin) {
           throw new Error("Invalid credentials");
         }

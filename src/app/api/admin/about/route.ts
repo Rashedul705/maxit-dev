@@ -6,7 +6,7 @@ export async function GET() {
   try {
     await dbConnect();
     // Since there's only one about section content, we just find the first one
-    let about = await AboutContent.findOne({}).lean();
+    let about = await AboutContent.findOne().lean();
     
     // If it doesn't exist, return a default template
     if (!about) {
@@ -32,7 +32,7 @@ export async function POST(request: Request) {
 
     // Find the first document and update it, or create a new one if none exists
     const updatedAbout = await AboutContent.findOneAndUpdate(
-      {},
+      {} as any,
       { $set: { journey, mission, vision } },
       { new: true, upsert: true, runValidators: true }
     );

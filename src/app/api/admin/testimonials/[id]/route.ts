@@ -4,14 +4,15 @@ import Testimonial from '@/models/Testimonial';
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await context.params;
   try {
     await dbConnect();
     const body = await request.json();
 
     const updated = await Testimonial.findByIdAndUpdate(
-      params.id,
+      id,
       { $set: body },
       { new: true, runValidators: true }
     );
@@ -29,11 +30,12 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await context.params;
   try {
     await dbConnect();
-    const deleted = await Testimonial.findByIdAndDelete(params.id);
+    const deleted = await Testimonial.findByIdAndDelete(id);
 
     if (!deleted) {
       return NextResponse.json({ error: 'Testimonial not found' }, { status: 404 });

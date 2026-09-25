@@ -4,14 +4,15 @@ import Service from '@/models/Service';
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await context.params;
   try {
     await dbConnect();
     const body = await request.json();
 
     const updatedService = await Service.findByIdAndUpdate(
-      params.id,
+      id,
       { $set: body },
       { new: true, runValidators: true }
     );
@@ -29,12 +30,13 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await context.params;
   try {
     await dbConnect();
     
-    const deletedService = await Service.findByIdAndDelete(params.id);
+    const deletedService = await Service.findByIdAndDelete(id);
 
     if (!deletedService) {
       return NextResponse.json({ error: 'Service not found' }, { status: 404 });

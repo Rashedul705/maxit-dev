@@ -289,7 +289,7 @@ export default function PartnersManagement() {
                   required
                   maxLength={50}
                   value={formData.name}
-                  onChange={(e) => setFormData({ name: e.target.value })}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
                   placeholder="e.g. NESCO"
                 />

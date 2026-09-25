@@ -63,12 +63,12 @@ export default function AdminLayout({
           return (
             <Link 
               key={item.name}
-              href={item.disabled ? '#' : item.path} 
+              href={item.path} 
               className={`flex items-center px-4 py-3 rounded-xl transition-colors font-medium ${
                 isActive 
                   ? 'bg-primary text-white shadow-md' 
                   : 'text-gray-700 hover:bg-primary/5 hover:text-primary'
-              } ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+              }`}
               onClick={() => setIsMobileMenuOpen(false)}
             >
               <item.icon className="w-5 h-5 mr-3" />

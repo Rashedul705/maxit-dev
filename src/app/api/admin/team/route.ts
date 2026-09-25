@@ -25,7 +25,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Name and official title are required' }, { status: 400 });
     }
     
-    const maxOrderDoc = await TeamMember.findOne({ isCeo: false }).sort({ order: -1 }).select('order');
+    const maxOrderDoc = await TeamMember.findOne({ isCeo: false } as any).sort({ order: -1 }).select('order');
     const order = maxOrderDoc && maxOrderDoc.order !== undefined ? maxOrderDoc.order + 1 : 1;
     
     // In our model, we named it 'photoUrl' but the frontend might be sending 'image' 

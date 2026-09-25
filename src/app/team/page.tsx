@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 async function getTeamData() {
   try {
     await dbConnect();
-    const ceoDoc = await TeamMember.findOne({ isCeo: true }).lean();
+    const ceoDoc = await TeamMember.findOne({ isCeo: true } as any).lean();
     const membersDocs = await TeamMember.find({ isCeo: false }).sort({ order: 1 }).lean();
     
     // Parse to stringify ObjectIds for Next.js

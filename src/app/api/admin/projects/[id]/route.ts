@@ -4,14 +4,15 @@ import Project from '@/models/Project';
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await context.params;
   try {
     await dbConnect();
     const body = await request.json();
 
     const updatedProject = await Project.findByIdAndUpdate(
-      params.id,
+      id,
       { $set: body },
       { new: true, runValidators: true }
     );
@@ -29,12 +30,13 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await context.params;
   try {
     await dbConnect();
     
-    const deletedProject = await Project.findByIdAndDelete(params.id);
+    const deletedProject = await Project.findByIdAndDelete(id);
 
     if (!deletedProject) {
       return NextResponse.json({ error: 'Project not found' }, { status: 404 });
