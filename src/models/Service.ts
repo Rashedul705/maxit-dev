@@ -15,6 +15,9 @@ const ServiceSchema = new mongoose.Schema(
       required: true,
       default: 'Settings',
     },
+    imageUrl: {
+      type: String,
+    },
     order: {
       type: Number,
       default: 0,

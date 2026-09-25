@@ -4,9 +4,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Mail, Phone, Github, Linkedin, Facebook, MapPin, ArrowRight } from 'lucide-react';
 
-const Footer = () => {
+const Footer = ({ contactInfo }: { contactInfo?: any }) => {
   const pathname = usePathname();
   const currentYear = new Date().getFullYear();
+
+  const addressLine1 = contactInfo?.addressLine1 || "2nd Floor, Afroza Tower,";
+  const addressLine2 = contactInfo?.addressLine2 || "Uposhohor Newmarket,";
+  const addressLine3 = contactInfo?.addressLine3 || "Rajshahi-6000";
+  const phone = contactInfo?.phoneNumber || "+8801733-272445";
+  const email = contactInfo?.email || "sales@m4xit.com";
+  const facebook = contactInfo?.facebookUrl || "#";
+  const linkedin = contactInfo?.linkedinUrl || "#";
+  const github = contactInfo?.githubUrl || "#";
 
   if (pathname.startsWith('/admin')) return null;
 
@@ -31,13 +40,13 @@ const Footer = () => {
               Your partner for sustainable energy, advanced agro-tech, and intelligent automation solutions. Empowering a greener tomorrow.
             </p>
             <div className="flex space-x-4 justify-center md:justify-start">
-              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/80 hover:text-white hover:bg-accent hover:shadow-[0_0_15px_rgba(232,87,70,0.5)] transition-all duration-300">
+              <a href={facebook} className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/80 hover:text-white hover:bg-accent hover:shadow-[0_0_15px_rgba(232,87,70,0.5)] transition-all duration-300">
                 <Facebook size={18} />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/80 hover:text-white hover:bg-accent hover:shadow-[0_0_15px_rgba(232,87,70,0.5)] transition-all duration-300">
+              <a href={linkedin} className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/80 hover:text-white hover:bg-accent hover:shadow-[0_0_15px_rgba(232,87,70,0.5)] transition-all duration-300">
                 <Linkedin size={18} />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/80 hover:text-white hover:bg-accent hover:shadow-[0_0_15px_rgba(232,87,70,0.5)] transition-all duration-300">
+              <a href={github} className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/80 hover:text-white hover:bg-accent hover:shadow-[0_0_15px_rgba(232,87,70,0.5)] transition-all duration-300">
                 <Github size={18} />
               </a>
             </div>
@@ -75,22 +84,22 @@ const Footer = () => {
                 <div className="p-2 rounded-lg bg-white/5 group-hover:bg-accent/20 transition-colors mt-0 md:mt-0.5">
                   <Mail size={16} className="text-accent" />
                 </div>
-                <span className="text-white/80 text-sm group-hover:text-white transition-colors">sales@m4xit.com</span>
+                <span className="text-white/80 text-sm group-hover:text-white transition-colors">{email}</span>
               </li>
               <li className="flex items-center md:items-start justify-center md:justify-start space-x-3 group cursor-pointer">
                 <div className="p-2 rounded-lg bg-white/5 group-hover:bg-accent/20 transition-colors mt-0 md:mt-0.5">
                   <Phone size={16} className="text-accent" />
                 </div>
-                <span className="text-white/80 text-sm group-hover:text-white transition-colors">+8801733-272445</span>
+                <span className="text-white/80 text-sm group-hover:text-white transition-colors">{phone}</span>
               </li>
               <li className="flex items-center md:items-start justify-center md:justify-start space-x-3 group cursor-pointer text-left md:text-left">
                 <div className="p-2 rounded-lg bg-white/5 group-hover:bg-accent/20 transition-colors mt-0 md:mt-0.5 flex-shrink-0">
                   <MapPin size={16} className="text-accent" />
                 </div>
                 <span className="text-white/80 text-sm leading-relaxed group-hover:text-white transition-colors">
-                  2nd Floor, Afroza Tower,<br className="hidden md:block" />
-                  <span className="md:hidden"> </span>Uposhohor Newmarket,<br className="hidden md:block" />
-                  <span className="md:hidden"> </span>Rajshahi-6000
+                  {addressLine1}<br className="hidden md:block" />
+                  <span className="md:hidden"> </span>{addressLine2}<br className="hidden md:block" />
+                  <span className="md:hidden"> </span>{addressLine3}
                 </span>
               </li>
             </ul>
@@ -100,8 +109,8 @@ const Footer = () => {
         <div className="border-t border-white/10 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-white/60">
           <p>© {currentYear} MaxIT Solution. All rights reserved.</p>
           <div className="flex space-x-6 mt-4 md:mt-0">
-            <Link href="#" className="hover:text-white transition-colors">Privacy Policy</Link>
-            <Link href="#" className="hover:text-white transition-colors">Terms of Service</Link>
+            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
           </div>
         </div>
       </div>

@@ -1,25 +1,31 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { withAuth } from "next-auth/middleware";
+import { NextResponse } from "next/server";
 
-export function middleware(request: NextRequest) {
-  // If the user is trying to access the login page, let them through
-  if (request.nextUrl.pathname === '/admin/login') {
-    return NextResponse.next();
+export default withAuth(
+  function middleware(req) {
+    // If the user is authenticated and trying to access the login page, redirect them to the admin dashboard
+    if (req.nextUrl.pathname === "/admin/login" && req.nextauth.token) {
+      return NextResponse.redirect(new URL("/admin", req.url));
+    }
+  },
+  {
+    callbacks: {
+      authorized: ({ req, token }) => {
+        // The /admin/login and /admin/setup pages should be accessible to everyone (no token required)
+        if (req.nextUrl.pathname === "/admin/login" || req.nextUrl.pathname === "/admin/setup") {
+          return true;
+        }
+        // All other /admin routes require a valid token
+        return !!token;
+      },
+    },
+    pages: {
+      signIn: "/admin/login",
+    }
   }
+);
 
-  // Check for the dummy auth cookie
-  const authCookie = request.cookies.get('admin_auth');
-
-  // If the cookie is not present or invalid, redirect to login
-  if (!authCookie || authCookie.value !== 'true') {
-    return NextResponse.redirect(new URL('/admin/login', request.url));
-  }
-
-  // If authorized, continue
-  return NextResponse.next();
-}
-
-// See "Matching Paths" below to learn more
+// Apply this middleware to everything under /admin
 export const config = {
-  matcher: ['/admin/:path*'],
+  matcher: ["/admin/:path*"],
 };

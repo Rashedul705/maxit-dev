@@ -2,11 +2,54 @@ import Hero from '../components/Hero';
 import SolarInnovation from '../components/SolarInnovation';
 import ServiceCard from '../components/ServiceCard';
 import TestimonialCard from '../components/TestimonialCard';
-import { Settings, ArrowRight, Sun, Sprout, Zap, Leaf, Cpu, Headphones, TrendingDown, Wifi, Cctv, Droplets, RadioTower, Lightbulb } from 'lucide-react';
+import { Settings, ArrowRight, Sun, Sprout, Zap, Leaf, Cpu, Headphones, TrendingDown, Wifi, Cctv, Droplets, RadioTower, Lightbulb, Activity, Target, Home, Building2, Factory, GraduationCap, Landmark, Shield, Briefcase, Phone } from 'lucide-react';
 import Link from "next/link";
 import Partners from '../components/Partners';
+import dbConnect from '@/lib/mongodb';
+import Testimonial from '@/models/Testimonial';
+import Reason from '@/models/Reason';
+import HeroContent from '@/models/HeroContent';
 
-const Index = () => {
+export const dynamic = 'force-dynamic';
+
+async function getTestimonials() {
+  try {
+    await dbConnect();
+    const docs = await Testimonial.find({}).sort({ order: 1 }).lean();
+    return JSON.parse(JSON.stringify(docs));
+  } catch (error) {
+    console.error('Error fetching testimonials:', error);
+    return [];
+  }
+}
+
+async function getReasons() {
+  try {
+    await dbConnect();
+    const docs = await Reason.find({}).sort({ order: 1 }).lean();
+    return JSON.parse(JSON.stringify(docs));
+  } catch (error) {
+    console.error('Error fetching reasons:', error);
+    return [];
+  }
+}
+
+async function getHeroContent() {
+  try {
+    await dbConnect();
+    const doc = await HeroContent.findOne().lean();
+    if (!doc) return null;
+    return JSON.parse(JSON.stringify(doc));
+  } catch (error) {
+    console.error('Error fetching hero content:', error);
+    return null;
+  }
+}
+
+const Index = async () => {
+  const testimonials = await getTestimonials();
+  const reasonsData = await getReasons();
+  const heroContent = await getHeroContent();
   const services = [
     {
       title: "Solar Home Systems (SHS)",
@@ -73,72 +116,10 @@ const Index = () => {
     }
   ];
 
-  const testimonials = [
-    {
-      name: "Sarah Ahmed",
-      company: "Green Farms Ltd",
-      testimonial: "MaxIT Solution's solar irrigation system transformed our farming efficiency. Highly professional and reliable implementation.",
-      rating: 5,
-      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=600&auto=format&fit=crop"
-    },
-    {
-      name: "Mohammad Rahman",
-      company: "Industrial Complex",
-      testimonial: "Their automation solutions have significantly reduced our operational costs. Excellent technical expertise.",
-      rating: 5,
-      image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=600&auto=format&fit=crop"
-    },
-    {
-      name: "Fatima Khan",
-      company: "Eco Home Owner",
-      testimonial: "The solar home system installation was smooth and the team was very knowledgeable. Great service!",
-      rating: 5,
-      image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=600&auto=format&fit=crop"
-    }
-  ];
-
-  const reasons = [
-    {
-      title: "Sustainable Energy",
-      description: "Harnessing the power of the sun for a greener, cost-effective, and highly efficient future.",
-      icon: <Sun className="w-8 h-8" />,
-      gradient: "from-amber-400 to-orange-500",
-    },
-    {
-      title: "Technical Expertise",
-      description: "Reliable technical solutions backed by years of robust experience in automation and precise engineering.",
-      icon: <Settings className="w-8 h-8" />,
-      gradient: "from-blue-400 to-indigo-500",
-    },
-    {
-      title: "Agro Innovation",
-      description: "Modernizing agriculture with smart irrigation and cutting-edge technology-driven solutions.",
-      icon: <Leaf className="w-8 h-8" />,
-      gradient: "from-green-400 to-emerald-500",
-    },
-    {
-      title: "Smart Automation",
-      description: "Seamlessly connect and control industrial and home environments with intelligent IoT systems.",
-      icon: <Cpu className="w-8 h-8" />,
-      gradient: "from-purple-400 to-pink-500",
-    },
-    {
-      title: "24/7 Premium Support",
-      description: "Our dedicated support team ensures your systems run flawlessly around the clock without interruption.",
-      icon: <Headphones className="w-8 h-8" />,
-      gradient: "from-rose-400 to-red-500",
-    },
-    {
-      title: "Cost Efficiency",
-      description: "Optimized energy and automation systems designed to significantly lower your operational expenses.",
-      icon: <TrendingDown className="w-8 h-8" />,
-      gradient: "from-teal-400 to-cyan-500",
-    }
-  ];
 
   return (
     <div className="min-h-screen flex flex-col overflow-x-hidden w-full max-w-[100vw]"><main className="flex-1 animate-slide-up overflow-hidden w-full">
-      <Hero />
+      <Hero content={heroContent} />
       <SolarInnovation />
 
       {/* About Section */}
@@ -157,21 +138,39 @@ const Index = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 xl:gap-10 mb-16">
-            {reasons.map((reason, index) => (
+            {reasonsData.map((reason: any, index: number) => {
+              const iconMap: Record<string, React.ReactNode> = {
+                Sun: <Sun className="w-8 h-8" />,
+                Settings: <Settings className="w-8 h-8" />,
+                Leaf: <Leaf className="w-8 h-8" />,
+                Cpu: <Cpu className="w-8 h-8" />,
+                Headphones: <Headphones className="w-8 h-8" />,
+                TrendingDown: <TrendingDown className="w-8 h-8" />,
+                Activity: <Activity className="w-8 h-8" />,
+                Cctv: <Cctv className="w-8 h-8" />,
+                Target: <Target className="w-8 h-8" />,
+                Home: <Home className="w-8 h-8" />,
+                Sprout: <Sprout className="w-8 h-8" />,
+                Building2: <Building2 className="w-8 h-8" />,
+                Factory: <Factory className="w-8 h-8" />,
+                GraduationCap: <GraduationCap className="w-8 h-8" />,
+                Landmark: <Landmark className="w-8 h-8" />
+              };
+              return (
               <div 
-                key={index} 
+                key={reason._id} 
                 className="group relative bg-white rounded-3xl p-8 border border-gray-100 shadow-xl shadow-primary/5 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 transform hover:-translate-y-2 overflow-hidden"
               >
                 <div className={`absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br ${reason.gradient} opacity-10 rounded-full group-hover:scale-150 transition-transform duration-700 ease-out`} />
                 
                 <div className={`relative z-10 w-16 h-16 rounded-2xl bg-gradient-to-br ${reason.gradient} flex items-center justify-center text-white mb-6 shadow-md transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
-                  {reason.icon}
+                  {iconMap[reason.iconCategory] || <Settings className="w-8 h-8" />}
                 </div>
                 
                 <h3 className="relative z-10 text-2xl font-bold font-heading text-primary mb-3">{reason.title}</h3>
                 <p className="relative z-10 text-gray-700 leading-relaxed font-medium">{reason.description}</p>
               </div>
-            ))}
+            )})}
           </div>
 
           <div className="text-center">
@@ -233,8 +232,15 @@ const Index = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <TestimonialCard key={index} {...testimonial} />
+            {testimonials.map((testimonial: any) => (
+              <TestimonialCard 
+                key={testimonial._id} 
+                name={testimonial.name}
+                company={testimonial.company}
+                testimonial={testimonial.testimonial}
+                rating={testimonial.rating}
+                image={testimonial.imageUrl}
+              />
             ))}
           </div>
         </div>

@@ -4,7 +4,35 @@ import {
   Settings, Users, Leaf, ThumbsUp, Wrench, CheckCircle2 
 } from 'lucide-react';
 
-const About = () => {
+import dbConnect from '@/lib/mongodb';
+import AboutContent from '@/models/AboutContent';
+
+export const dynamic = 'force-dynamic';
+
+async function getAboutData() {
+  try {
+    await dbConnect();
+    let about = await AboutContent.findOne({}).lean();
+    if (!about) {
+      about = {
+        journey: "Founded with a passion for innovation, MaxIT Solution began with a simple goal: to make industrial-grade engineering and sustainable energy accessible. Over the years, we have grown from a small technical startup into a trusted regional leader, driven by a commitment to reliability and engineering excellence.",
+        mission: "To empower businesses, industries, and communities by delivering robust, scalable, and sustainable technology solutions. We strive to solve complex engineering challenges with innovation, ensuring efficiency and long-term value for every client we serve.",
+        vision: "To be the region's most trusted engineering and technology partner, driving the transition towards smart automation, renewable energy, and intelligent infrastructure on a global scale.",
+      };
+    }
+    return about;
+  } catch (error) {
+    console.error('Error fetching about data:', error);
+    return {
+      journey: "Founded with a passion for innovation, MaxIT Solution began with a simple goal: to make industrial-grade engineering and sustainable energy accessible.",
+      mission: "To empower businesses, industries, and communities by delivering robust, scalable, and sustainable technology solutions.",
+      vision: "To be the region's most trusted engineering and technology partner, driving the transition towards smart automation.",
+    };
+  }
+}
+
+export default async function About() {
+  const aboutData = await getAboutData();
   return (
     <div className="min-h-screen flex flex-col overflow-x-hidden w-full max-w-[100vw]">
       <main className="flex-1 animate-slide-up overflow-hidden w-full">
@@ -22,7 +50,7 @@ const About = () => {
                 The Story Behind <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-red-400">MaxIT</span>
               </h1>
               <p className="text-xl text-gray-700 max-w-3xl mx-auto font-medium leading-relaxed">
-                Founded with a passion for innovation, MaxIT Solution began with a simple goal: to make industrial-grade engineering and sustainable energy accessible. Over the years, we have grown from a small technical startup into a trusted regional leader, driven by a commitment to reliability and engineering excellence.
+                {aboutData.journey}
               </p>
             </div>
             
@@ -48,7 +76,7 @@ const About = () => {
                 </div>
                 <h3 className="text-3xl font-bold font-heading text-primary mb-4">Our Mission</h3>
                 <p className="text-gray-700 text-lg leading-relaxed font-medium">
-                  To empower businesses, industries, and communities by delivering robust, scalable, and sustainable technology solutions. We strive to solve complex engineering challenges with innovation, ensuring efficiency and long-term value for every client we serve.
+                  {aboutData.mission}
                 </p>
               </div>
 
@@ -59,7 +87,7 @@ const About = () => {
                 </div>
                 <h3 className="text-3xl font-bold font-heading mb-4">Our Vision</h3>
                 <p className="text-white/90 text-lg leading-relaxed font-medium">
-                  To be the region's most trusted engineering and technology partner, driving the transition towards smart automation, renewable energy, and intelligent infrastructure on a global scale.
+                  {aboutData.vision}
                 </p>
               </div>
             </div>
@@ -192,4 +220,4 @@ const About = () => {
   );
 };
 
-export default About;
+

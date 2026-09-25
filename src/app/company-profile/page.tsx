@@ -5,11 +5,16 @@ import {
   Target, Shield, Settings, Home, Factory, Building2,
   GraduationCap, Activity, Landmark, Briefcase, FileCheck, Download
 } from 'lucide-react';
-import { projects } from '@/lib/projects';
+import { projects } from '@/lib/projects'; // Left this here in case other parts of the page still use it, wait I will just remove it.
 import Partners from '@/components/Partners';
 
 import dbConnect from '@/lib/mongodb';
 import TeamMember from '@/models/TeamMember';
+import Service from '@/models/Service';
+import Project from '@/models/Project';
+import GlobalContact from '@/models/GlobalContact';
+import CompanyProfileData from '@/models/CompanyProfileData';
+import SiteSettings from '@/models/SiteSettings';
 
 export const dynamic = 'force-dynamic';
 
@@ -30,10 +35,88 @@ async function getTeamData() {
   }
 }
 
+async function getServicesData() {
+  try {
+    await dbConnect();
+    const servicesDocs = await Service.find({}).sort({ order: 1 }).lean();
+    return JSON.parse(JSON.stringify(servicesDocs));
+  } catch (error) {
+    console.error('Error fetching services:', error);
+    return [];
+  }
+}
+
+async function getProjectsData() {
+  try {
+    await dbConnect();
+    const docs = await Project.find({}).sort({ order: 1 }).lean();
+    return JSON.parse(JSON.stringify(docs));
+  } catch (error) {
+    console.error('Error fetching projects:', error);
+    return [];
+  }
+}
+
+async function getContactInfo() {
+  try {
+    await dbConnect();
+    const doc = await GlobalContact.findOne().lean();
+    return doc ? JSON.parse(JSON.stringify(doc)) : null;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+async function getCompanyProfileData() {
+  try {
+    await dbConnect();
+    const doc = await CompanyProfileData.findOne().lean();
+    return doc ? JSON.parse(JSON.stringify(doc)) : {
+      stats: [], howWeWork: [], industries: []
+    };
+  } catch (error) {
+    console.error(error);
+    return { stats: [], howWeWork: [], industries: [], capabilities: [], whyChooseUs: [] };
+  }
+}
+
+async function getSiteSettings() {
+  try {
+    await dbConnect();
+    const settings = await SiteSettings.findOne().lean();
+    return settings ? JSON.parse(JSON.stringify(settings)) : null;
+  } catch (error) {
+    console.error('Error fetching site settings:', error);
+    return null;
+  }
+}
+
 export default async function CompanyProfile() {
-  const teamData = await getTeamData();
+  const [teamData, services, projectsList, contact, profileData, settings] = await Promise.all([getTeamData(), getServicesData(), getProjectsData(), getContactInfo(), getCompanyProfileData(), getSiteSettings()]);
   const { ceo, members = [] } = teamData;
-  members.sort((a, b) => (a.order || 0) - (b.order || 0));
+  const { stats, howWeWork, industries, capabilities, whyChooseUs } = profileData;
+  
+  const featuredTitle = settings?.featuredServiceTitle || "Comprehensive Solar Solutions";
+  const featuredDescription = settings?.featuredServiceDescription || "Leading the transition to sustainable energy with end-to-end solar engineering, ensuring maximum efficiency and reliability for industrial and commercial sectors.";
+  const featuredPoints = settings?.featuredServicePoints && settings.featuredServicePoints.length > 0 
+    ? settings.featuredServicePoints 
+    : [
+        { name: "Solar Installation", desc: "End-to-end design & setup" },
+        { name: "Roof Top Solar", desc: "Commercial optimization" },
+        { name: "Complete Solar Setup", desc: "Turnkey off-grid & on-grid" },
+        { name: "Net Metering", desc: "Grid synchronization" },
+        { name: "Solar Lift Integration", desc: "Heavy industrial power" }
+      ];
+  
+  const addressLine1 = contact?.addressLine1 || "2nd Floor, Afroza Tower,";
+  const addressLine2 = contact?.addressLine2 || "Uposhohor Newmarket,";
+  const addressLine3 = contact?.addressLine3 || "Rajshahi-6000";
+  const phone = contact?.phoneNumber || "+8801733-272445";
+  const email = contact?.email || "sales@m4xit.com";
+  const facebook = contact?.facebookUrl || "#";
+  const linkedin = contact?.linkedinUrl || "#";
+  members.sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
 
   const sectionsOrder = [
     "Board of Directors",
@@ -112,12 +195,12 @@ export default async function CompanyProfile() {
             
             <div className="w-full lg:w-1/2">
               <div className="grid grid-cols-2 gap-6">
-                {[
+                {(stats && stats.length > 0 ? stats : [
                   { value: "10+", label: "Years of Experience" },
                   { value: "250+", label: "Projects Completed" },
                   { value: "100+", label: "Clients Served" },
                   { value: "20+", label: "Technical Professionals" }
-                ].map((stat, i) => (
+                ]).map((stat: any, i: number) => (
                   <div key={i} className="bg-gray-50 p-8 rounded-2xl border border-gray-100">
                     <div className="text-4xl font-bold text-primary mb-2 font-heading">{stat.value}</div>
                     <div className="text-gray-600 font-medium uppercase text-sm tracking-wide">{stat.label}</div>
@@ -163,23 +246,17 @@ export default async function CompanyProfile() {
                   <div className="w-16 h-16 bg-accent/20 rounded-2xl flex items-center justify-center text-accent shadow-inner shrink-0">
                     <Sun className="w-8 h-8" />
                   </div>
-                  <h3 className="text-3xl md:text-4xl font-bold font-heading text-white leading-tight">Comprehensive Solar Solutions</h3>
+                  <h3 className="text-3xl md:text-4xl font-bold font-heading text-white leading-tight">{featuredTitle}</h3>
                 </div>
                 
                 <p className="text-white/80 font-medium leading-relaxed text-lg mb-8">
-                  Leading the transition to sustainable energy with end-to-end solar engineering, ensuring maximum efficiency and reliability for industrial and commercial sectors.
+                  {featuredDescription}
                 </p>
                 
                 <div className="bg-black/10 rounded-2xl p-6 md:p-8 border border-white/5">
                   <h4 className="text-xl font-bold text-white mb-6">Key Solar Expertise:</h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-8">
-                    {[
-                      { name: "Solar Installation", desc: "End-to-end design & setup" },
-                      { name: "Roof Top Solar", desc: "Commercial optimization" },
-                      { name: "Complete Solar Setup", desc: "Turnkey off-grid & on-grid" },
-                      { name: "Net Metering", desc: "Grid synchronization" },
-                      { name: "Solar Lift Integration", desc: "Heavy industrial power" }
-                    ].map((item, idx) => (
+                    {featuredPoints.map((item: any, idx: number) => (
                       <div key={idx} className="flex items-start space-x-3 group">
                         <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center text-accent group-hover:bg-accent group-hover:text-white transition-colors shrink-0 mt-1">
                           <ArrowRight className="w-4 h-4" />
@@ -206,27 +283,38 @@ export default async function CompanyProfile() {
           <div className="pt-8">
             <h3 className="text-2xl font-bold font-heading text-primary mb-8 text-center md:text-left border-b border-gray-200 pb-4">Technology & Infrastructure Services</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[
-                { icon: <Cpu className="w-6 h-6" />, title: "Computer & Accessories", desc: "Enterprise-grade IT hardware supply and comprehensive computer accessories.", img: "https://images.unsplash.com/photo-1517430816045-df4b7de11d1d?w=800&q=80" },
-                { icon: <Activity className="w-6 h-6" />, title: "Data Logger & IoT R&D", desc: "Custom research, development, and deployment of intelligent IoT devices and data logging systems.", img: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80" },
-                { icon: <Settings className="w-6 h-6" />, title: "Server & Security Systems", desc: "Robust server infrastructure setup and advanced cybersecurity implementations.", img: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80" },
-                { icon: <Cctv className="w-6 h-6" />, title: "CCTV Surveillance", desc: "High-definition, continuous monitoring camera systems for total premises security.", img: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?w=800&q=80" },
-                { icon: <Target className="w-6 h-6" />, title: "AI-Based Camera Models", desc: "Next-generation smart cameras with artificial intelligence for automated threat detection and analytics.", img: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80" }
-              ].map((service, idx) => (
-                <div key={idx} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-100 flex flex-col group">
+              {services.map((service: any, idx: number) => {
+                const iconMap: Record<string, React.ReactNode> = {
+                  Cpu: <Cpu className="w-6 h-6" />,
+                  Activity: <Activity className="w-6 h-6" />,
+                  Settings: <Settings className="w-6 h-6" />,
+                  Cctv: <Cctv className="w-6 h-6" />,
+                  Target: <Target className="w-6 h-6" />,
+                  Home: <Home className="w-6 h-6" />,
+                  Sprout: <Sprout className="w-6 h-6" />,
+                  Building2: <Building2 className="w-6 h-6" />,
+                  Factory: <Factory className="w-6 h-6" />,
+                  GraduationCap: <GraduationCap className="w-6 h-6" />,
+                  Landmark: <Landmark className="w-6 h-6" />,
+                  Sun: <Sun className="w-6 h-6" />
+                };
+                return (
+                <div key={service._id} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-100 flex flex-col group">
                   <div className="h-48 overflow-hidden relative">
                     <div className="absolute inset-0 bg-primary/20 mix-blend-multiply z-10 group-hover:bg-transparent transition-colors duration-500"></div>
-                    <img src={service.img} alt={service.title} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
+                    {service.imageUrl && (
+                      <img src={service.imageUrl} alt={service.title} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
+                    )}
                     <div className="absolute bottom-4 left-4 z-20 w-12 h-12 bg-white rounded-xl flex items-center justify-center text-primary shadow-lg group-hover:bg-primary group-hover:text-white transition-colors duration-300">
-                      {service.icon}
+                      {iconMap[service.iconCategory] || <Settings className="w-6 h-6" />}
                     </div>
                   </div>
                   <div className="p-8 flex flex-col flex-grow">
                     <h4 className="text-xl font-bold font-heading text-gray-900 mb-3 group-hover:text-primary transition-colors">{service.title}</h4>
-                    <p className="text-gray-600 font-medium leading-relaxed">{service.desc}</p>
+                    <p className="text-gray-600 font-medium leading-relaxed">{service.description}</p>
                   </div>
                 </div>
-              ))}
+              )})}
             </div>
           </div>
           
@@ -239,7 +327,7 @@ export default async function CompanyProfile() {
           <h2 className="text-3xl md:text-4xl font-bold font-heading text-primary mb-12">One Partner. Multiple Engineering Capabilities.</h2>
           
           <div className="flex flex-wrap justify-center items-center gap-4 md:gap-8 mb-16">
-            {['Energy', 'Automation', 'Agriculture', 'Security', 'Networking', 'Infrastructure'].map((cap, i, arr) => (
+            {(capabilities && capabilities.length > 0 ? capabilities : ['Energy', 'Automation', 'Agriculture', 'Security', 'Networking', 'Infrastructure']).map((cap: string, i: number, arr: string[]) => (
               <div key={i} className="flex items-center">
                 <div className="px-6 py-3 bg-gray-50 border border-gray-200 rounded-full text-primary font-bold text-lg shadow-sm">
                   {cap}
@@ -264,20 +352,29 @@ export default async function CompanyProfile() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              { icon: <Target />, title: "Integrated Solutions", desc: "Multiple technology and engineering capabilities under one roof." },
-              { icon: <Settings />, title: "Customized Approach", desc: "Solutions designed according to each client's technical and operational requirements." },
-              { icon: <Shield />, title: "Quality Equipment", desc: "Reliable equipment and technologies selected for performance and long-term use." },
-              { icon: <Briefcase />, title: "Professional Installation", desc: "Experienced technical teams for installation, configuration and commissioning." },
-              { icon: <Phone />, title: "End-to-End Support", desc: "Support from consultation through implementation and maintenance." },
-              { icon: <Sprout />, title: "Sustainable Solutions", desc: "Technology focused on efficiency, resource optimization and long-term value." }
-            ].map((reason, i) => (
+            {(whyChooseUs && whyChooseUs.length > 0 ? whyChooseUs : [
+              { icon: "Target", title: "Integrated Solutions", description: "Multiple technology and engineering capabilities under one roof." },
+              { icon: "Settings", title: "Customized Approach", description: "Solutions designed according to each client's technical and operational requirements." },
+              { icon: "Shield", title: "Quality Equipment", description: "Reliable equipment and technologies selected for performance and long-term use." },
+              { icon: "Briefcase", title: "Professional Installation", description: "Experienced technical teams for installation, configuration and commissioning." },
+              { icon: "Phone", title: "End-to-End Support", description: "Support from consultation through implementation and maintenance." },
+              { icon: "Sprout", title: "Sustainable Solutions", description: "Technology focused on efficiency, resource optimization and long-term value." }
+            ]).map((reason: any, i: number) => {
+              const iconMap: Record<string, React.ReactNode> = {
+                  Target: <Target />,
+                  Settings: <Settings />,
+                  Shield: <Shield />,
+                  Briefcase: <Briefcase />,
+                  Phone: <Phone />,
+                  Sprout: <Sprout />
+              };
+              return (
               <div key={i} className="bg-white/5 border border-white/10 p-8 rounded-2xl hover:bg-white/10 transition-colors">
-                <div className="text-accent mb-4">{reason.icon}</div>
+                <div className="text-accent mb-4">{iconMap[reason.icon] || <Target />}</div>
                 <h3 className="text-xl font-bold font-heading mb-3">{reason.title}</h3>
-                <p className="text-white/70 font-medium leading-relaxed">{reason.desc}</p>
+                <p className="text-white/70 font-medium leading-relaxed">{reason.description || reason.desc}</p>
               </div>
-            ))}
+            )})}
           </div>
         </div>
       </section>
@@ -291,17 +388,17 @@ export default async function CompanyProfile() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
+            {(howWeWork && howWeWork.length > 0 ? howWeWork : [
               { num: "01", title: "Consultation", desc: "We understand your requirements and objectives." },
               { num: "02", title: "Site Assessment", desc: "Our team evaluates the site, infrastructure and technical requirements." },
               { num: "03", title: "Solution Design", desc: "We develop a suitable technical solution tailored to your exact needs." },
               { num: "04", title: "Proposal", desc: "We provide specifications, scope and a transparent commercial proposal." },
               { num: "05", title: "Installation & Commissioning", desc: "Our team implements, tests and commissions the system." },
               { num: "06", title: "Support", desc: "We provide ongoing technical support and proactive maintenance." }
-            ].map((step, i) => (
+            ]).map((step: any, i: number) => (
               <div key={i} className="flex flex-col relative group bg-gradient-to-br from-primary to-[#0f605a] p-8 rounded-3xl shadow-lg border border-white/10 hover:-translate-y-2 hover:shadow-xl transition-all duration-300 overflow-hidden">
                 <div className="absolute top-4 right-4 text-[100px] font-bold font-heading text-white/5 leading-none select-none transition-transform group-hover:scale-110 duration-500 origin-bottom-right">
-                  {step.num}
+                  {String(i + 1).padStart(2, '0')}
                 </div>
                 <div className="relative z-10 h-full flex flex-col">
                   <div className="flex items-center mb-6">
@@ -313,7 +410,7 @@ export default async function CompanyProfile() {
                     </h3>
                   </div>
                   <p className="text-white/80 font-medium leading-relaxed mt-auto">
-                    {step.desc}
+                    {step.desc || step.description}
                   </p>
                 </div>
               </div>
@@ -336,10 +433,10 @@ export default async function CompanyProfile() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {projects.slice(0, 4).map((project) => (
-              <div key={project.id} className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col sm:flex-row group">
+            {projectsList.slice(0, 4).map((project: any) => (
+              <div key={project._id} className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col sm:flex-row group">
                 <div className="w-full sm:w-2/5 h-64 sm:h-auto overflow-hidden relative">
-                  <img src={project.image} alt={project.title} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" />
+                  <img src={project.imageUrl} alt={project.title} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" />
                   <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-primary text-xs font-bold px-3 py-1 rounded-full shadow-sm">
                     {project.category}
                   </div>
@@ -350,7 +447,7 @@ export default async function CompanyProfile() {
                     <MapPin className="w-4 h-4 mr-1 text-accent" /> Location Verified
                   </div>
                   <p className="text-gray-600 mb-6 line-clamp-2">{project.shortDescription}</p>
-                  <Link href={`/projects/${project.id}`} className="inline-flex items-center text-accent font-bold mt-auto group-hover:translate-x-2 transition-transform w-fit">
+                  <Link href={`/projects/${project._id}`} className="inline-flex items-center text-accent font-bold mt-auto group-hover:translate-x-2 transition-transform w-fit">
                     View Project <ArrowRight className="ml-2 w-4 h-4" />
                   </Link>
                 </div>
@@ -369,21 +466,38 @@ export default async function CompanyProfile() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {[
-              { icon: <Home className="w-8 h-8"/>, name: "Residential" },
-              { icon: <Sprout className="w-8 h-8"/>, name: "Agriculture" },
-              { icon: <Building2 className="w-8 h-8"/>, name: "Commercial" },
-              { icon: <Factory className="w-8 h-8"/>, name: "Industrial" },
-              { icon: <GraduationCap className="w-8 h-8"/>, name: "Educational" },
-              { icon: <Activity className="w-8 h-8"/>, name: "Healthcare" },
-              { icon: <Settings className="w-8 h-8"/>, name: "Construction" },
-              { icon: <Landmark className="w-8 h-8"/>, name: "Government" }
-            ].map((ind, i) => (
+            {(industries && industries.length > 0 ? industries : [
+              { icon: "Home", name: "Residential" },
+              { icon: "Sprout", name: "Agriculture" },
+              { icon: "Building2", name: "Commercial" },
+              { icon: "Factory", name: "Industrial" },
+              { icon: "GraduationCap", name: "Educational" },
+              { icon: "Activity", name: "Healthcare" },
+              { icon: "Settings", name: "Construction" },
+              { icon: "Landmark", name: "Government" }
+            ]).map((ind: any, i: number) => {
+              const iconMap: Record<string, React.ReactNode> = {
+                  Cpu: <Cpu className="w-8 h-8" />,
+                  Activity: <Activity className="w-8 h-8" />,
+                  Settings: <Settings className="w-8 h-8" />,
+                  Cctv: <Cctv className="w-8 h-8" />,
+                  Target: <Target className="w-8 h-8" />,
+                  Home: <Home className="w-8 h-8" />,
+                  Sprout: <Sprout className="w-8 h-8" />,
+                  Building2: <Building2 className="w-8 h-8" />,
+                  Factory: <Factory className="w-8 h-8" />,
+                  GraduationCap: <GraduationCap className="w-8 h-8" />,
+                  Landmark: <Landmark className="w-8 h-8" />,
+                  Sun: <Sun className="w-8 h-8" />
+              };
+              return (
               <div key={i} className="flex flex-col items-center justify-center p-8 bg-gray-50 rounded-2xl border border-gray-100 hover:border-primary hover:bg-primary/5 transition-colors group cursor-default">
-                <div className="text-gray-400 group-hover:text-primary transition-colors mb-4">{ind.icon}</div>
+                <div className="text-gray-400 group-hover:text-primary transition-colors mb-4">
+                  {iconMap[ind.icon] || <Settings className="w-8 h-8" />}
+                </div>
                 <h4 className="font-bold text-gray-800 group-hover:text-primary">{ind.name}</h4>
               </div>
-            ))}
+            )})}
           </div>
         </div>
       </section>
@@ -610,26 +724,25 @@ export default async function CompanyProfile() {
             <div className="flex flex-col items-center">
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4"><MapPin /></div>
               <h4 className="font-bold text-gray-900 mb-2">Office Address</h4>
-              <p className="text-gray-600 font-medium">2nd Floor, Afroza Tower,<br/>Uposhohor Newmarket, Rajshahi-6000</p>
+              <p className="text-gray-600 font-medium">{addressLine1}<br/>{addressLine2} {addressLine3}</p>
             </div>
             
             <div className="flex flex-col items-center">
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4"><Phone /></div>
               <h4 className="font-bold text-gray-900 mb-2">Phone</h4>
-              <p className="text-gray-600 font-medium">+8801733-272445</p>
+              <p className="text-gray-600 font-medium">{phone}</p>
             </div>
             
             <div className="flex flex-col items-center">
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4"><Mail /></div>
               <h4 className="font-bold text-gray-900 mb-2">Email</h4>
-              <p className="text-gray-600 font-medium">sales@m4xit.com</p>
+              <p className="text-gray-600 font-medium">{email}</p>
             </div>
           </div>
           
           <div className="flex justify-center space-x-6">
-            <a href="#" className="font-bold text-gray-600 hover:text-accent transition-colors flex items-center">Google Maps <ArrowRight className="w-4 h-4 ml-1"/></a>
-            <a href="#" className="font-bold text-gray-600 hover:text-accent transition-colors flex items-center">Facebook <ArrowRight className="w-4 h-4 ml-1"/></a>
-            <a href="#" className="font-bold text-gray-600 hover:text-accent transition-colors flex items-center">LinkedIn <ArrowRight className="w-4 h-4 ml-1"/></a>
+            <a href={facebook} className="font-bold text-gray-600 hover:text-accent transition-colors flex items-center">Facebook <ArrowRight className="w-4 h-4 ml-1"/></a>
+            <a href={linkedin} className="font-bold text-gray-600 hover:text-accent transition-colors flex items-center">LinkedIn <ArrowRight className="w-4 h-4 ml-1"/></a>
           </div>
         </div>
       </section>

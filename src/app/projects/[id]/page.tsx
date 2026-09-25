@@ -1,11 +1,24 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Calendar, User, Tag, CheckCircle2 } from 'lucide-react';
-import { projects } from '@/lib/projects';
+import dbConnect from '@/lib/mongodb';
+import Project from '@/models/Project';
+
+export const dynamic = 'force-dynamic';
 
 export default async function ProjectDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const project = projects.find((p) => p.id === id);
+  
+  await dbConnect();
+  let project = null;
+  try {
+    const doc = await Project.findById(id).lean();
+    if (doc) {
+      project = JSON.parse(JSON.stringify(doc));
+    }
+  } catch (error) {
+    console.error('Error fetching project:', error);
+  }
 
   if (!project) {
     notFound();
@@ -17,7 +30,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
       <div className="w-full h-[40vh] md:h-[60vh] relative">
         <div className="absolute inset-0 bg-black/40 z-10"></div>
         <img 
-          src={project.image} 
+          src={project.imageUrl} 
           alt={project.title} 
           className="w-full h-full object-cover"
         />
@@ -51,7 +64,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
               <div>
                 <h2 className="text-3xl font-bold text-gray-900 mb-6 font-heading border-b pb-4">Project Overview</h2>
                 <p className="text-lg text-gray-700 leading-relaxed font-sans whitespace-pre-line">
-                  {project.fullDescription}
+                  {project.description}
                 </p>
               </div>
             </div>

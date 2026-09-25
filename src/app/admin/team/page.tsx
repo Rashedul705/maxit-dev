@@ -14,7 +14,7 @@ type CEO = {
   nickname?: string;
   officialTitle: string;
   functionalDesignation: string;
-  image: string;
+  photoUrl: string;
   message: string;
   socialLinks: SocialLinks;
 };
@@ -27,7 +27,7 @@ type TeamMember = {
   department: string;
   section: string;
   bio: string;
-  image: string;
+  photoUrl: string;
   socialLinks: SocialLinks;
   order: number;
 };
@@ -55,7 +55,7 @@ export default function TeamManagement() {
     department: "",
     section: "Board of Directors",
     bio: "",
-    image: "",
+    photoUrl: "",
     socialLinks: { linkedin: "", email: "", whatsapp: "" }
   });
 
@@ -103,9 +103,9 @@ export default function TeamManagement() {
       if (res.ok) {
         const data = await res.json();
         if (isCeo && ceoData) {
-          setCeoData({ ...ceoData, image: data.url });
+          setCeoData({ ...ceoData, photoUrl: data.url });
         } else {
-          setMemberForm({ ...memberForm, image: data.url });
+          setMemberForm({ ...memberForm, photoUrl: data.url });
         }
       } else {
         alert("Image upload failed");
@@ -147,7 +147,7 @@ export default function TeamManagement() {
       department: "",
       section: "Board of Directors",
       bio: "",
-      image: "",
+      photoUrl: "",
       socialLinks: { linkedin: "", email: "", whatsapp: "" }
     });
     setError("");
@@ -163,7 +163,7 @@ export default function TeamManagement() {
       department: member.department || "",
       section: member.section || "Board of Directors",
       bio: member.bio || "",
-      image: member.image || "",
+      photoUrl: member.photoUrl || "",
       socialLinks: {
         linkedin: member.socialLinks?.linkedin || "",
         email: member.socialLinks?.email || "",
@@ -293,8 +293,8 @@ export default function TeamManagement() {
                   <div className="flex-shrink-0 flex flex-col items-center">
                     <label className="block text-sm font-medium text-gray-700 mb-2">Profile Image</label>
                     <div className="w-32 h-32 rounded-full border-2 border-dashed border-gray-300 overflow-hidden relative group cursor-pointer hover:border-primary transition-colors">
-                      {ceoData.image ? (
-                        <img src={ceoData.image} alt="CEO" className="w-full h-full object-cover" />
+                      {ceoData.photoUrl ? (
+                        <img src={ceoData.photoUrl} alt="CEO" className="w-full h-full object-cover" />
                       ) : (
                         <div className="w-full h-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:text-primary">
                           <ImageIcon className="w-8 h-8" />
@@ -435,8 +435,8 @@ export default function TeamManagement() {
                       <tr key={member._id} className="hover:bg-gray-50/50 transition-colors">
                         <td className="px-6 py-4">
                           <div className="w-10 h-10 rounded-full bg-gray-100 overflow-hidden border border-gray-200 flex items-center justify-center">
-                            {member.image ? (
-                              <img src={member.image} alt={member.name} className="w-full h-full object-cover" />
+                            {member.photoUrl ? (
+                              <img src={member.photoUrl} alt={member.name} className="w-full h-full object-cover" />
                             ) : (
                               <ImageIcon className="w-5 h-5 text-gray-400" />
                             )}
@@ -504,8 +504,8 @@ export default function TeamManagement() {
                 <div className="flex-shrink-0 flex flex-col items-center pt-2">
                   <label className="block text-sm font-medium text-gray-700 mb-2">Profile Image</label>
                   <div className="w-32 h-32 rounded-full border-2 border-dashed border-gray-300 overflow-hidden relative group cursor-pointer hover:border-primary transition-colors">
-                    {memberForm.image ? (
-                      <img src={memberForm.image} alt="Preview" className="w-full h-full object-cover" />
+                    {memberForm.photoUrl ? (
+                      <img src={memberForm.photoUrl} alt="Preview" className="w-full h-full object-cover" />
                     ) : (
                       <div className="w-full h-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:text-primary">
                         <ImageIcon className="w-8 h-8" />

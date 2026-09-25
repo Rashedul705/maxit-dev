@@ -1,9 +1,54 @@
 import Link from "next/link";
 import { 
-  Sun, ArrowRight, Cpu, Activity, Settings, Cctv, Target, Droplets, Sprout, Leaf, Wifi, RadioTower, Lightbulb 
+  Sun, ArrowRight, Cpu, Activity, Settings, Cctv, Target, Droplets, Sprout, Leaf, Wifi, RadioTower, Lightbulb, Home, Building2, Factory, GraduationCap, Landmark 
 } from 'lucide-react';
 
-const Services = () => {
+import dbConnect from '@/lib/mongodb';
+import Service from '@/models/Service';
+import SiteSettings from '@/models/SiteSettings';
+
+export const dynamic = 'force-dynamic';
+
+async function getServicesData() {
+  try {
+    await dbConnect();
+    const servicesDocs = await Service.find({}).sort({ order: 1 }).lean();
+    return JSON.parse(JSON.stringify(servicesDocs));
+  } catch (error) {
+    console.error('Error fetching services:', error);
+    return [];
+  }
+}
+
+async function getSiteSettings() {
+  try {
+    await dbConnect();
+    const settings = await SiteSettings.findOne().lean();
+    return settings ? JSON.parse(JSON.stringify(settings)) : null;
+  } catch (error) {
+    console.error('Error fetching site settings:', error);
+    return null;
+  }
+}
+
+export default async function Services() {
+  const [services, settings] = await Promise.all([getServicesData(), getSiteSettings()]);
+  
+  const headerTitle = settings?.servicesHeaderTitle || "Our Services";
+  const headerSubtitle = settings?.servicesHeaderSubtitle || "Comprehensive technology and engineering solutions designed for efficiency, sustainability, and growth.";
+  
+  const featuredTitle = settings?.featuredServiceTitle || "Solar & Renewable Energy";
+  const featuredDescription = settings?.featuredServiceDescription || "Leading the transition to sustainable energy with end-to-end solar engineering, ensuring maximum efficiency and reliability for industrial, commercial, and residential sectors.";
+  const featuredPoints = settings?.featuredServicePoints && settings.featuredServicePoints.length > 0 
+    ? settings.featuredServicePoints 
+    : [
+        { name: "Solar Installation", desc: "End-to-end design and setup." },
+        { name: "Roof Top Solar", desc: "Optimizing commercial rooftops." },
+        { name: "Complete Solar Setup", desc: "Turnkey off-grid & on-grid." },
+        { name: "Net Metering", desc: "Grid synchronization & setup." },
+        { name: "Solar Lift Integration", desc: "Powering heavy industrial lifts." },
+        { name: "Maintenance & Support", desc: "24/7 technical assistance." }
+      ];
   return (
     <div className="min-h-screen flex flex-col overflow-x-hidden w-full max-w-[100vw]">
       <main className="flex-1 animate-slide-up overflow-hidden w-full">
@@ -14,10 +59,12 @@ const Services = () => {
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
             <h1 className="text-4xl md:text-6xl font-bold font-heading text-primary mb-6 tracking-tight">
-              Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-red-400">Services</span>
+              {headerTitle.split(' ').map((word: string, i: number, arr: string[]) => 
+                i === arr.length - 1 ? <span key={i} className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-red-400">{word}</span> : <span key={i}>{word} </span>
+              )}
             </h1>
             <p className="text-xl text-gray-700 max-w-2xl mx-auto font-medium leading-relaxed mb-12">
-              Comprehensive technology and engineering solutions designed for efficiency, sustainability, and growth.
+              {headerSubtitle}
             </p>
           </div>
         </section>
@@ -53,24 +100,17 @@ const Services = () => {
                     <div className="w-16 h-16 md:w-20 md:h-20 bg-accent/20 rounded-2xl flex items-center justify-center text-accent shadow-inner shrink-0">
                       <Sun className="w-8 h-8 md:w-10 md:h-10" />
                     </div>
-                    <h3 className="text-3xl md:text-5xl font-bold font-heading text-white leading-tight">Solar & Renewable Energy</h3>
+                    <h3 className="text-3xl md:text-5xl font-bold font-heading text-white leading-tight">{featuredTitle}</h3>
                   </div>
                   
                   <p className="text-white/80 font-medium leading-relaxed text-lg mb-10">
-                    Leading the transition to sustainable energy with end-to-end solar engineering, ensuring maximum efficiency and reliability for industrial, commercial, and residential sectors.
+                    {featuredDescription}
                   </p>
                   
                   <div className="bg-black/10 rounded-3xl p-8 md:p-10 border border-white/5">
                     <h4 className="text-2xl font-bold text-white mb-8">Comprehensive Solar Capabilities:</h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-8 gap-x-8">
-                      {[
-                        { name: "Solar Installation", desc: "End-to-end design and setup." },
-                        { name: "Roof Top Solar", desc: "Optimizing commercial rooftops." },
-                        { name: "Complete Solar Setup", desc: "Turnkey off-grid & on-grid." },
-                        { name: "Net Metering", desc: "Grid synchronization & setup." },
-                        { name: "Solar Lift Integration", desc: "Powering heavy industrial lifts." },
-                        { name: "Maintenance & Support", desc: "24/7 technical assistance." }
-                      ].map((item, idx) => (
+                      {featuredPoints.map((item: any, idx: number) => (
                         <div key={idx} className="flex items-start space-x-4 group">
                           <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center text-accent group-hover:bg-accent group-hover:text-white transition-colors shrink-0 mt-1">
                             <ArrowRight className="w-5 h-5" />
@@ -101,56 +141,42 @@ const Services = () => {
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {[
-                  { 
-                    icon: <Cpu className="w-8 h-8" />, 
-                    title: "Computer & Accessories", 
-                    desc: "Enterprise-grade IT hardware supply, network components, and comprehensive computer accessories for modern businesses.",
-                    img: "https://images.unsplash.com/photo-1517430816045-df4b7de11d1d?w=800&q=80"
-                  },
-                  { 
-                    icon: <Activity className="w-8 h-8" />, 
-                    title: "Data Logger & IoT R&D", 
-                    desc: "Custom research, development, and deployment of intelligent IoT devices and data logging systems for agriculture and industry.",
-                    img: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80"
-                  },
-                  { 
-                    icon: <Settings className="w-8 h-8" />, 
-                    title: "Server & Security Systems", 
-                    desc: "Robust server infrastructure setup, maintenance, and advanced cybersecurity implementations to protect your data.",
-                    img: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80"
-                  },
-                  { 
-                    icon: <Cctv className="w-8 h-8" />, 
-                    title: "CCTV Surveillance", 
-                    desc: "High-definition, continuous monitoring IP camera systems for total premises security and remote viewing.",
-                    img: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?w=800&q=80"
-                  },
-                  { 
-                    icon: <Target className="w-8 h-8" />, 
-                    title: "AI-Based Camera Models", 
-                    desc: "Next-generation smart cameras equipped with artificial intelligence for automated threat detection and smart analytics.",
-                    img: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80"
-                  }
-                ].map((service, idx) => (
-                  <div key={idx} className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-100 flex flex-col group">
+              {services.map((service: any, idx: number) => {
+                const iconMap: Record<string, React.ReactNode> = {
+                  Cpu: <Cpu className="w-8 h-8" />,
+                  Activity: <Activity className="w-8 h-8" />,
+                  Settings: <Settings className="w-8 h-8" />,
+                  Cctv: <Cctv className="w-8 h-8" />,
+                  Target: <Target className="w-8 h-8" />,
+                  Home: <Home className="w-8 h-8" />,
+                  Sprout: <Sprout className="w-8 h-8" />,
+                  Building2: <Building2 className="w-8 h-8" />,
+                  Factory: <Factory className="w-8 h-8" />,
+                  GraduationCap: <GraduationCap className="w-8 h-8" />,
+                  Landmark: <Landmark className="w-8 h-8" />,
+                  Sun: <Sun className="w-8 h-8" />
+                };
+                return (
+                  <div key={service._id} className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-100 flex flex-col group">
                     <div className="h-48 overflow-hidden relative">
                       <div className="absolute inset-0 bg-primary/20 mix-blend-multiply z-10 group-hover:bg-transparent transition-colors duration-500"></div>
-                      <img src={service.img} alt={service.title} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
+                      {service.imageUrl && (
+                        <img src={service.imageUrl} alt={service.title} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
+                      )}
                       <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-gray-900/80 to-transparent z-10"></div>
                       <div className="absolute bottom-4 left-4 z-20 w-12 h-12 bg-white rounded-xl flex items-center justify-center text-primary shadow-lg group-hover:bg-primary group-hover:text-white transition-colors duration-300">
-                        {service.icon}
+                        {iconMap[service.iconCategory] || <Settings className="w-8 h-8" />}
                       </div>
                     </div>
                     <div className="p-8 flex flex-col flex-grow">
                       <h4 className="text-2xl font-bold font-heading text-gray-900 mb-4 group-hover:text-primary transition-colors">{service.title}</h4>
-                      <p className="text-gray-600 font-medium leading-relaxed mb-8 flex-grow">{service.desc}</p>
+                      <p className="text-gray-600 font-medium leading-relaxed mb-8 flex-grow">{service.description}</p>
                       <Link href="/contact" className="inline-flex items-center text-primary font-bold hover:text-accent transition-colors mt-auto">
                         Consult with us <ArrowRight className="ml-2 w-5 h-5" />
                       </Link>
                     </div>
                   </div>
-                ))}
+                )})}
               </div>
             </div>
           </div>
@@ -160,4 +186,4 @@ const Services = () => {
   );
 };
 
-export default Services;
+

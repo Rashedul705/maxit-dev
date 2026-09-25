@@ -1,71 +1,206 @@
 "use client";
 
-import { useState } from "react";
-import { Plus, Edit2, Trash2, X, Search, Image as ImageIcon } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Plus, Edit2, Trash2, X, Image as ImageIcon } from "lucide-react";
 
-const initialProjects = [
-  { id: 1, title: "50kW Commercial Rooftop Solar", category: "Solar Energy", status: "Completed", location: "Rajshahi, BD" },
-  { id: 2, title: "Smart Agro IoT Automation", category: "Agro Tech", status: "In Progress", location: "Natore, BD" },
-  { id: 3, title: "Enterprise Network Setup", category: "Networking", status: "Completed", location: "Dhaka, BD" },
-  { id: 4, title: "CCTV Surveillance System", category: "Security", status: "Completed", location: "Pabna, BD" },
-  { id: 5, title: "Hybrid Inverter Installation", category: "Solar Energy", status: "In Progress", location: "Rajshahi, BD" },
-];
+type Project = {
+  _id: string;
+  title: string;
+  description: string;
+  shortDescription: string;
+  category: string;
+  client: string;
+  date: string;
+  technologies: string[];
+  imageUrl: string;
+  order: number;
+};
 
 export default function ProjectManagement() {
-  const [projects, setProjects] = useState(initialProjects);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editId, setEditId] = useState<number | null>(null);
-  
-  const [formData, setFormData] = useState({
+  const [editId, setEditId] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
+
+  const [form, setForm] = useState({
     title: "",
-    category: "",
-    status: "Completed",
-    location: ""
+    description: "",
+    shortDescription: "",
+    category: "Solar Energy",
+    client: "",
+    date: "",
+    technologies: "",
+    imageUrl: "",
+    order: 0
   });
+
+  const categoryOptions = [
+    "Solar Energy", "Smart Home & Solar", "Agro Tech", "Networking", "Security", "Automation"
+  ];
+
+  useEffect(() => {
+    fetchProjects();
+  }, []);
+
+  const fetchProjects = async () => {
+    setIsLoading(true);
+    try {
+      const res = await fetch('/api/admin/projects');
+      if (res.ok) {
+        setProjects(await res.json());
+      }
+    } catch (err) {
+      console.error("Failed to fetch projects", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setForm({ ...form, imageUrl: data.url });
+      } else {
+        alert("Image upload failed");
+      }
+    } catch (err) {
+      console.error("Upload failed", err);
+      alert("Image upload failed");
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   const openAddModal = () => {
     setEditId(null);
-    setFormData({ title: "", category: "Solar Energy", status: "Completed", location: "" });
-    setIsModalOpen(true);
-  };
-
-  const openEditModal = (project: any) => {
-    setEditId(project.id);
-    setFormData({ 
-      title: project.title, 
-      category: project.category, 
-      status: project.status, 
-      location: project.location 
+    setForm({
+      title: "",
+      description: "",
+      shortDescription: "",
+      category: "Solar Energy",
+      client: "",
+      date: "",
+      technologies: "",
+      imageUrl: "",
+      order: 0
     });
+    setError("");
     setIsModalOpen(true);
   };
 
-  const handleDelete = (id: number) => {
+  const openEditModal = (project: Project) => {
+    setEditId(project._id);
+    setForm({
+      title: project.title,
+      description: project.description || "",
+      shortDescription: project.shortDescription || "",
+      category: project.category || "Solar Energy",
+      client: project.client || "",
+      date: project.date || "",
+      technologies: project.technologies ? project.technologies.join(", ") : "",
+      imageUrl: project.imageUrl || "",
+      order: project.order || 0
+    });
+    setError("");
+    setIsModalOpen(true);
+  };
+
+  const handleDelete = async (id: string) => {
     if (confirm("Are you sure you want to delete this project?")) {
-      setProjects(projects.filter(p => p.id !== id));
+      try {
+        const res = await fetch(`/api/admin/projects/${id}`, { method: 'DELETE' });
+        if (res.ok) {
+          setProjects(projects.filter(p => p._id !== id));
+        } else {
+          alert("Failed to delete project");
+        }
+      } catch (err) {
+        console.error(err);
+      }
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (editId) {
-      setProjects(projects.map(p => p.id === editId ? { ...formData, id: editId } : p));
-    } else {
-      setProjects([...projects, { ...formData, id: Date.now() }]);
+    setError("");
+    
+    if (!form.title.trim() || !form.imageUrl) {
+      setError("Title and Image are required");
+      return;
     }
-    setIsModalOpen(false);
+
+    const submitData = {
+      ...form,
+      technologies: form.technologies.split(',').map(t => t.trim()).filter(Boolean)
+    };
+
+    setIsSubmitting(true);
+    try {
+      if (editId) {
+        const res = await fetch(`/api/admin/projects/${editId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(submitData)
+        });
+        
+        if (res.ok) {
+          const updated = await res.json();
+          setProjects(projects.map(p => p._id === editId ? updated : p));
+          setIsModalOpen(false);
+        } else {
+          const data = await res.json();
+          setError(data.error || "Failed to update project");
+        }
+      } else {
+        const res = await fetch('/api/admin/projects', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(submitData)
+        });
+        
+        if (res.ok) {
+          const newProject = await res.json();
+          setProjects([...projects, newProject]);
+          setIsModalOpen(false);
+        } else {
+          const data = await res.json();
+          setError(data.error || "Failed to add project");
+        }
+      }
+    } catch (err) {
+      console.error(err);
+      setError("An unexpected error occurred");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div className="max-w-6xl mx-auto">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+      <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-3xl font-bold font-heading text-primary mb-2">Project Management</h1>
-          <p className="text-gray-500">Manage your portfolio of engineering and tech projects.</p>
+          <h1 className="text-3xl font-bold font-heading text-primary mb-2">Projects Management</h1>
+          <p className="text-gray-500">Manage recent projects portfolio shown on the public site.</p>
         </div>
         <button 
           onClick={openAddModal}
-          className="flex items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors shrink-0"
+          className="flex items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
         >
           <Plus className="w-5 h-5 mr-2" />
           Add Project
@@ -73,163 +208,223 @@ export default function ProjectManagement() {
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-        <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
-          <div className="relative w-64">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input 
-              type="text" 
-              placeholder="Search projects..." 
-              className="w-full pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
-            />
-          </div>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-gray-50 text-gray-500 text-sm border-b border-gray-100">
-                <th className="px-6 py-4 font-medium">Project Title</th>
-                <th className="px-6 py-4 font-medium">Category</th>
-                <th className="px-6 py-4 font-medium">Location</th>
-                <th className="px-6 py-4 font-medium">Status</th>
-                <th className="px-6 py-4 font-medium text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {projects.map((project) => (
-                <tr key={project.id} className="hover:bg-gray-50/50 transition-colors">
-                  <td className="px-6 py-4 font-medium text-gray-900">
-                    <div className="flex items-center">
-                      <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center mr-3 text-gray-400">
-                        <ImageIcon className="w-5 h-5" />
-                      </div>
-                      {project.title}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-gray-600">{project.category}</td>
-                  <td className="px-6 py-4 text-gray-600">{project.location}</td>
-                  <td className="px-6 py-4">
-                    <span className={`px-3 py-1 text-xs rounded-full font-medium ${
-                      project.status === "Completed" 
-                        ? "bg-green-100 text-green-700" 
-                        : "bg-blue-100 text-blue-700"
-                    }`}>
-                      {project.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="flex justify-end space-x-2">
-                      <button 
-                        onClick={() => openEditModal(project)}
-                        className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                      >
-                        <Edit2 className="w-4 h-4" />
-                      </button>
-                      <button 
-                        onClick={() => handleDelete(project.id)}
-                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </td>
+        <div className="overflow-x-auto min-h-[300px]">
+          {isLoading ? (
+            <div className="flex items-center justify-center h-64 text-gray-400">Loading projects...</div>
+          ) : projects.length === 0 ? (
+            <div className="flex items-center justify-center h-64 text-gray-400">No projects found. Add one to get started.</div>
+          ) : (
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-gray-50 text-gray-500 text-sm border-b border-gray-100">
+                  <th className="px-6 py-4 font-medium">Image</th>
+                  <th className="px-6 py-4 font-medium">Title</th>
+                  <th className="px-6 py-4 font-medium">Category</th>
+                  <th className="px-6 py-4 font-medium">Client</th>
+                  <th className="px-6 py-4 font-medium text-right">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {projects.map((project) => (
+                  <tr key={project._id} className="hover:bg-gray-50/50 transition-colors">
+                    <td className="px-6 py-4">
+                      <div className="w-20 h-14 rounded-lg bg-gray-100 overflow-hidden border border-gray-200 flex items-center justify-center">
+                        {project.imageUrl ? (
+                          <img src={project.imageUrl} alt={project.title} className="w-full h-full object-cover" />
+                        ) : (
+                          <ImageIcon className="w-5 h-5 text-gray-400" />
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 font-medium text-gray-900">{project.title}</td>
+                    <td className="px-6 py-4 text-gray-600">
+                      <span className="px-3 py-1 bg-primary/10 text-primary text-xs rounded-full font-medium">
+                        {project.category}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-gray-600">
+                      {project.client}
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <div className="flex items-center justify-end space-x-2">
+                        <button 
+                          onClick={() => openEditModal(project)}
+                          className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                        >
+                          <Edit2 className="w-4 h-4" />
+                        </button>
+                        <button 
+                          onClick={() => handleDelete(project._id)}
+                          className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
 
-      {/* Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden animate-slide-up max-h-[90vh] flex flex-col">
-            <div className="flex justify-between items-center p-6 border-b border-gray-100">
-              <h3 className="text-xl font-bold text-primary">
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => !isSubmitting && setIsModalOpen(false)} />
+          <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-2xl p-6 m-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-6 sticky top-0 bg-white z-10 pb-2 border-b border-gray-100">
+              <h2 className="text-xl font-bold text-gray-900">
                 {editId ? "Edit Project" : "Add New Project"}
-              </h3>
-              <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-600">
+              </h2>
+              <button 
+                onClick={() => setIsModalOpen(false)}
+                disabled={isSubmitting}
+                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+              >
                 <X className="w-5 h-5" />
               </button>
             </div>
-            
-            <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto flex-1">
+
+            <form onSubmit={handleSubmit} className="space-y-5">
+              
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Project Title</label>
-                <input 
-                  type="text" 
+                <label className="block text-sm font-medium text-gray-700 mb-2">Project Image *</label>
+                <div className="w-full h-40 rounded-xl border-2 border-dashed border-gray-300 overflow-hidden relative group cursor-pointer hover:border-primary transition-colors">
+                  {form.imageUrl ? (
+                    <img src={form.imageUrl} alt="Preview" className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full bg-gray-50 flex flex-col items-center justify-center text-gray-400 group-hover:text-primary">
+                      <ImageIcon className="w-8 h-8 mb-2" />
+                      <span className="text-sm font-medium">Click to upload image</span>
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span className="text-white font-medium">{isUploading ? "Uploading..." : "Change Image"}</span>
+                  </div>
+                  <input 
+                    type="file" 
+                    accept="image/*" 
+                    disabled={isUploading}
+                    className="absolute inset-0 opacity-0 cursor-pointer"
+                    onChange={handleImageUpload}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Project Title *</label>
+                <input
+                  type="text"
                   required
-                  value={formData.title}
-                  onChange={(e) => setFormData({...formData, title: e.target.value})}
-                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
-                  placeholder="e.g. 50kW Commercial Rooftop Solar"
+                  value={form.title}
+                  onChange={(e) => setForm({ ...form, title: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20"
                 />
               </div>
-              
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
                   <select
-                    value={formData.category}
-                    onChange={(e) => setFormData({...formData, category: e.target.value})}
-                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 bg-white"
+                    value={form.category}
+                    onChange={(e) => setForm({ ...form, category: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 bg-white"
                   >
-                    <option>Solar Energy</option>
-                    <option>Agro Tech</option>
-                    <option>Networking</option>
-                    <option>Security</option>
-                    <option>Automation</option>
+                    {categoryOptions.map(cat => (
+                      <option key={cat} value={cat}>{cat}</option>
+                    ))}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                  <select
-                    value={formData.status}
-                    onChange={(e) => setFormData({...formData, status: e.target.value})}
-                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 bg-white"
-                  >
-                    <option>Completed</option>
-                    <option>In Progress</option>
-                    <option>Upcoming</option>
-                  </select>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Client</label>
+                  <input
+                    type="text"
+                    value={form.client}
+                    onChange={(e) => setForm({ ...form, client: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                  <input
+                    type="text"
+                    value={form.date}
+                    placeholder="e.g. August 2026"
+                    onChange={(e) => setForm({ ...form, date: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Order</label>
+                  <input
+                    type="number"
+                    value={form.order}
+                    onChange={(e) => setForm({ ...form, order: parseInt(e.target.value) || 0 })}
+                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20"
+                  />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
-                <input 
-                  type="text" 
-                  required
-                  value={formData.location}
-                  onChange={(e) => setFormData({...formData, location: e.target.value})}
-                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
-                  placeholder="e.g. Rajshahi, BD"
+                <label className="block text-sm font-medium text-gray-700 mb-1">Technologies (Comma-separated)</label>
+                <input
+                  type="text"
+                  value={form.technologies}
+                  placeholder="e.g. KNX Automation, SolarEdge, Tesla Powerwall"
+                  onChange={(e) => setForm({ ...form, technologies: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Project Image</label>
-                <div className="border-2 border-dashed border-gray-200 rounded-lg p-6 flex flex-col items-center justify-center text-gray-500 hover:border-primary hover:bg-primary/5 transition-colors cursor-pointer">
-                  <ImageIcon className="w-8 h-8 mb-2 text-gray-400" />
-                  <span className="text-sm">Click to upload image (Demo only)</span>
-                </div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Short Description</label>
+                <textarea
+                  rows={2}
+                  value={form.shortDescription}
+                  onChange={(e) => setForm({ ...form, shortDescription: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20"
+                />
               </div>
 
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Full Description *</label>
+                <textarea
+                  required
+                  rows={4}
+                  value={form.description}
+                  onChange={(e) => setForm({ ...form, description: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20"
+                />
+              </div>
+
+              {error && (
+                <div className="p-3 bg-red-50 text-red-600 text-sm rounded-lg border border-red-100">
+                  {error}
+                </div>
+              )}
+
+              <div className="flex justify-end space-x-3 pt-4 border-t border-gray-100">
+                <button
+                  type="button"
+                  onClick={() => setIsModalOpen(false)}
+                  disabled={isSubmitting}
+                  className="px-4 py-2 text-gray-600 font-medium hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="px-6 py-2 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50"
+                >
+                  {isSubmitting ? "Saving..." : "Save Project"}
+                </button>
+              </div>
             </form>
-            <div className="p-6 border-t border-gray-100 flex justify-end space-x-3 bg-gray-50">
-              <button 
-                type="button"
-                onClick={() => setIsModalOpen(false)}
-                className="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded-lg transition-colors font-medium"
-              >
-                Cancel
-              </button>
-              <button 
-                type="submit"
-                className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-medium"
-              >
-                {editId ? "Save Changes" : "Create Project"}
-              </button>
-            </div>
           </div>
         </div>
       )}

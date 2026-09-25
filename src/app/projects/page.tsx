@@ -1,8 +1,39 @@
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { projects } from '@/lib/projects';
+import dbConnect from '@/lib/mongodb';
+import Project from '@/models/Project';
+import SiteSettings from '@/models/SiteSettings';
 
-export default function ProjectsPage() {
+export const dynamic = 'force-dynamic';
+
+async function getProjectsData() {
+  try {
+    await dbConnect();
+    const docs = await Project.find({}).sort({ order: 1 }).lean();
+    return JSON.parse(JSON.stringify(docs));
+  } catch (error) {
+    console.error('Error fetching projects:', error);
+    return [];
+  }
+}
+
+async function getSiteSettings() {
+  try {
+    await dbConnect();
+    const settings = await SiteSettings.findOne().lean();
+    return settings ? JSON.parse(JSON.stringify(settings)) : null;
+  } catch (error) {
+    console.error('Error fetching site settings:', error);
+    return null;
+  }
+}
+
+export default async function ProjectsPage() {
+  const [projects, settings] = await Promise.all([getProjectsData(), getSiteSettings()]);
+  
+  const headerTitle = settings?.projectsHeaderTitle || "Our Recent Projects";
+  const headerSubtitle = settings?.projectsHeaderSubtitle || "Explore our portfolio of successful implementations across solar energy, smart home automation, and agro tech.";
+  
   return (
     <div className="min-h-screen bg-gray-50 pt-24 pb-16">
       {/* Page Header */}
@@ -14,10 +45,12 @@ export default function ProjectsPage() {
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 font-heading">
-            Our Recent <span className="text-accent">Projects</span>
+            {headerTitle.split(' ').map((word: string, i: number, arr: string[]) => 
+              i === arr.length - 1 ? <span key={i} className="text-accent">{word}</span> : <span key={i}>{word} </span>
+            )}
           </h1>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto font-sans">
-            Explore our portfolio of successful implementations across solar energy, smart home automation, and agro tech.
+            {headerSubtitle}
           </p>
         </div>
       </div>
@@ -25,14 +58,14 @@ export default function ProjectsPage() {
       {/* Projects Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project) => (
-            <Link href={`/projects/${project.id}`} key={project.id} className="group h-full">
+          {projects.map((project: any) => (
+            <Link href={`/projects/${project._id}`} key={project._id} className="group h-full">
               <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 h-full flex flex-col border border-gray-100 transform hover:-translate-y-1">
                 {/* Image Container */}
                 <div className="relative h-64 overflow-hidden">
                   <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors z-10"></div>
                   <img 
-                    src={project.image} 
+                    src={project.imageUrl} 
                     alt={project.title}
                     className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                   />

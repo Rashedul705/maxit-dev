@@ -2,7 +2,30 @@ import { ArrowRight, Sun, Zap, Sprout } from 'lucide-react';
 import Link from "next/link";
 import CountUp from "@/components/ui/CountUp";
 
-const Hero = () => {
+interface HeroProps {
+  content?: {
+    brandingText: string;
+    titleLine1: string;
+    titleLine2: string;
+    description: string;
+    stats: { end: number; suffix: string; label: string }[];
+  }
+}
+
+const Hero = ({ content }: HeroProps) => {
+  const defaultStats = [
+    { end: 50, suffix: '+', label: 'Projects' },
+    { end: 30, suffix: '+', label: 'Clients' },
+    { end: 10, suffix: '+', label: 'Years Exp' },
+    { end: 24, suffix: '/7', label: 'Support' }
+  ];
+
+  const stats = content?.stats || defaultStats;
+  const brandingText = content?.brandingText || "MAXIT";
+  const titleLine1 = content?.titleLine1 || "Solar Energy &";
+  const titleLine2 = content?.titleLine2 || "Smart Automation";
+  const description = content?.description || "Empowering your future with sustainable energy solutions, advanced agro-technology, and intelligent industrial automation.";
+
   return (
     <section className="relative pt-32 pb-20 lg:pt-40 lg:pb-32 overflow-hidden">
       {/* Background Image & Overlays */}
@@ -19,20 +42,20 @@ const Hero = () => {
           {/* Stylish MAXIT Branding */}
           <div className="mb-8">
             <h2 className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-gray-400 tracking-[0.2em] uppercase drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)]">
-              MAXIT
+              {brandingText}
             </h2>
             <div className="w-24 h-1.5 bg-accent mx-auto mt-4 rounded-full shadow-lg shadow-accent/50" />
           </div>
 
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-8 leading-tight font-heading tracking-tight drop-shadow-xl">
-            Solar Energy & <br className="hidden md:block" />
+            {titleLine1} <br className="hidden md:block" />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-red-400 drop-shadow-md">
-              Smart Automation
+              {titleLine2}
             </span>
           </h1>
 
           <p className="text-xl md:text-2xl text-gray-100 mb-10 max-w-3xl mx-auto leading-relaxed font-medium drop-shadow-lg">
-            Empowering your future with sustainable energy solutions, advanced agro-technology, and intelligent industrial automation.
+            {description}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-5 justify-center mb-16 px-4">
@@ -53,22 +76,14 @@ const Hero = () => {
 
           {/* Stats Section with Glassmorphism */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto pt-8">
-            <div className="text-center p-6 bg-white/60 backdrop-blur-md rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-              <div className="text-4xl font-bold text-primary mb-2 font-heading"><CountUp end={50} /><span className="text-accent">+</span></div>
-              <div className="text-sm text-gray-700 font-medium uppercase tracking-wider">Projects</div>
-            </div>
-            <div className="text-center p-6 bg-white/60 backdrop-blur-md rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-              <div className="text-4xl font-bold text-primary mb-2 font-heading"><CountUp end={30} /><span className="text-accent">+</span></div>
-              <div className="text-sm text-gray-700 font-medium uppercase tracking-wider">Clients</div>
-            </div>
-            <div className="text-center p-6 bg-white/60 backdrop-blur-md rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-              <div className="text-4xl font-bold text-primary mb-2 font-heading"><CountUp end={10} /><span className="text-accent">+</span></div>
-              <div className="text-sm text-gray-700 font-medium uppercase tracking-wider">Years Exp</div>
-            </div>
-            <div className="text-center p-6 bg-white/60 backdrop-blur-md rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-              <div className="text-4xl font-bold text-primary mb-2 font-heading"><CountUp end={24} /><span className="text-accent">/7</span></div>
-              <div className="text-sm text-gray-700 font-medium uppercase tracking-wider">Support</div>
-            </div>
+            {stats.map((stat, index) => (
+              <div key={index} className="text-center p-6 bg-white/60 backdrop-blur-md rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                <div className="text-4xl font-bold text-primary mb-2 font-heading">
+                  <CountUp end={stat.end} /><span className="text-accent">{stat.suffix}</span>
+                </div>
+                <div className="text-sm text-gray-700 font-medium uppercase tracking-wider">{stat.label}</div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

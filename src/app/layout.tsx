@@ -4,6 +4,8 @@ import "./globals.css";
 import { Providers } from "@/components/Providers";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import dbConnect from "@/lib/mongodb";
+import GlobalContact from "@/models/GlobalContact";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
@@ -25,18 +27,21 @@ export const metadata: Metadata = {
   }
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  await dbConnect();
+  const contactDoc = await GlobalContact.findOne().lean();
+  const contactInfo = contactDoc ? JSON.parse(JSON.stringify(contactDoc)) : null;
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${outfit.variable} font-sans antialiased`} suppressHydrationWarning>
         <Providers>
           <Header />
             {children}
-          <Footer />
+          <Footer contactInfo={contactInfo} />
         </Providers>
       </body>
     </html>

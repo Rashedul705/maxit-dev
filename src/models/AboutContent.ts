@@ -2,27 +2,17 @@ import mongoose from 'mongoose';
 
 const AboutContentSchema = new mongoose.Schema(
   {
-    title: {
+    journey: {
       type: String,
       required: true,
     },
-    subtitle: {
-      type: String,
-    },
-    content: {
+    mission: {
       type: String,
       required: true,
     },
-    imageUrl: {
+    vision: {
       type: String,
-    },
-    stats: [{
-      label: String,
-      value: String
-    }],
-    active: {
-      type: Boolean,
-      default: true
+      required: true,
     }
   },
   { timestamps: true }

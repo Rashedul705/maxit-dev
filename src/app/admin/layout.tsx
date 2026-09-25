@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { signOut } from 'next-auth/react';
 import { 
   LayoutDashboard, 
   Users, 
@@ -12,7 +13,13 @@ import {
   LogOut,
   Menu,
   X,
-  Building2
+  Building2,
+  Wrench,
+  Star,
+  HelpCircle,
+  Image as ImageIcon,
+  Phone,
+  Shield
 } from 'lucide-react';
 
 export default function AdminLayout({
@@ -27,9 +34,16 @@ export default function AdminLayout({
     { name: 'Dashboard', path: '/admin', icon: LayoutDashboard },
     { name: 'Team Members', path: '/admin/team', icon: Users },
     { name: 'About Section', path: '/admin/about', icon: FileText },
+    { name: 'Company Profile Data', path: '/admin/company-profile-data', icon: FileText },
     { name: 'Projects', path: '/admin/projects', icon: Briefcase },
+    { name: 'Services', path: '/admin/services', icon: Wrench },
     { name: 'Partners', path: '/admin/partners', icon: Building2 },
-    { name: 'Settings', path: '/admin/settings', icon: Settings, disabled: true },
+    { name: 'Homepage Hero', path: '/admin/hero', icon: ImageIcon },
+    { name: 'Why Choose Us', path: '/admin/reasons', icon: HelpCircle },
+    { name: 'Testimonials', path: '/admin/testimonials', icon: Star },
+    { name: 'Contact Info', path: '/admin/contact', icon: Phone },
+    { name: 'Legal Pages', path: '/admin/legal', icon: Shield },
+    { name: 'Site Settings', path: '/admin/settings', icon: Settings },
   ];
 
   const SidebarContent = () => (
@@ -66,10 +80,7 @@ export default function AdminLayout({
 
       <div className="p-4 border-t border-gray-100">
         <button 
-          onClick={() => {
-            document.cookie = "admin_auth=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-            window.location.href = "/";
-          }}
+          onClick={() => signOut({ callbackUrl: '/' })}
           className="flex items-center justify-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors font-medium"
         >
           <LogOut className="w-4 h-4 mr-2" />
@@ -79,7 +90,7 @@ export default function AdminLayout({
     </>
   );
 
-  if (pathname === '/admin/login') {
+  if (pathname === '/admin/login' || pathname === '/admin/setup') {
     return <>{children}</>;
   }
 

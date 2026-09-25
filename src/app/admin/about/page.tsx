@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Save, CheckCircle2 } from "lucide-react";
 
 export default function AboutManagement() {
@@ -8,24 +8,61 @@ export default function AboutManagement() {
   const [showToast, setShowToast] = useState(false);
 
   const [formData, setFormData] = useState({
-    journey: "Founded with a passion for innovation, MaxIT Solution began with a simple goal: to make industrial-grade engineering and sustainable energy accessible.",
-    mission: "To empower businesses, industries, and communities by delivering robust, scalable, and sustainable technology solutions.",
-    vision: "To be the region's most trusted engineering and technology partner, driving the transition towards smart automation.",
+    journey: "",
+    mission: "",
+    vision: "",
   });
+  const [isLoading, setIsLoading] = useState(true);
 
-  const handleSave = (e: React.FormEvent) => {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch("/api/admin/about");
+        if (res.ok) {
+          const data = await res.json();
+          setFormData({
+            journey: data.journey || "",
+            mission: data.mission || "",
+            vision: data.vision || ""
+          });
+        }
+      } catch (err) {
+        console.error("Failed to fetch about data", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
     
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const res = await fetch("/api/admin/about", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (res.ok) {
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000);
+      } else {
+        alert("Failed to save changes");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Failed to save changes");
+    } finally {
       setIsSaving(false);
-      setShowToast(true);
-      
-      // Hide toast after 3 seconds
-      setTimeout(() => setShowToast(false), 3000);
-    }, 1000);
+    }
   };
+
+  if (isLoading) {
+    return <div className="p-8 text-center text-gray-500">Loading...</div>;
+  }
 
   return (
     <div className="max-w-4xl mx-auto relative pb-20">

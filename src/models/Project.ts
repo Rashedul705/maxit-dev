@@ -16,6 +16,16 @@ const ProjectSchema = new mongoose.Schema(
     category: {
       type: String,
     },
+    client: {
+      type: String,
+    },
+    date: {
+      type: String,
+    },
+    technologies: {
+      type: [String],
+      default: [],
+    },
     imageUrl: {
       type: String,
       required: true,
