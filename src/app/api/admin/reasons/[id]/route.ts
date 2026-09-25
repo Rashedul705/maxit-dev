@@ -11,10 +11,10 @@ export async function PUT(
     await dbConnect();
     const body = await request.json();
 
-    const updated = await Reason.findByIdAndUpdate(
+    const updated = await (Reason.findByIdAndUpdate as any)(
       id,
       { $set: body },
-      { new: true, runValidators: true }
+      { new: true, runValidators: true } as any
     );
 
     if (!updated) {
@@ -35,7 +35,7 @@ export async function DELETE(
   const { id } = await context.params;
   try {
     await dbConnect();
-    const deleted = await Reason.findByIdAndDelete(id);
+    const deleted = await (Reason.findByIdAndDelete as any)(id as any);
 
     if (!deleted) {
       return NextResponse.json({ error: 'Reason not found' }, { status: 404 });

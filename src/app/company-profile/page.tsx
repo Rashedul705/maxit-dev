@@ -5,7 +5,7 @@ import {
   Target, Shield, Settings, Home, Factory, Building2,
   GraduationCap, Activity, Landmark, Briefcase, FileCheck, Download
 } from 'lucide-react';
-import { projects } from '@/lib/projects'; // Left this here in case other parts of the page still use it, wait I will just remove it.
+
 import Partners from '@/components/Partners';
 
 import dbConnect from '@/lib/mongodb';
@@ -21,8 +21,8 @@ export const dynamic = 'force-dynamic';
 async function getTeamData() {
   try {
     await dbConnect();
-    const ceoDoc = await TeamMember.findOne({ isCeo: true }).lean();
-    const membersDocs = await TeamMember.find({ isCeo: false }).sort({ order: 1 }).lean();
+    const ceoDoc = await (TeamMember.findOne as any)({ isCeo: true }).lean();
+    const membersDocs = await (TeamMember.find as any)({ isCeo: false }).sort({ order: 1 }).lean();
     
     // Parse to stringify ObjectIds for Next.js
     const ceo = JSON.parse(JSON.stringify(ceoDoc || {}));
@@ -38,7 +38,7 @@ async function getTeamData() {
 async function getServicesData() {
   try {
     await dbConnect();
-    const servicesDocs = await Service.find({}).sort({ order: 1 }).lean();
+    const servicesDocs = await (Service.find as any)({}).sort({ order: 1 }).lean();
     return JSON.parse(JSON.stringify(servicesDocs));
   } catch (error) {
     console.error('Error fetching services:', error);
@@ -49,7 +49,7 @@ async function getServicesData() {
 async function getProjectsData() {
   try {
     await dbConnect();
-    const docs = await Project.find({}).sort({ order: 1 }).lean();
+    const docs = await (Project.find as any)({}).sort({ order: 1 }).lean();
     return JSON.parse(JSON.stringify(docs));
   } catch (error) {
     console.error('Error fetching projects:', error);
@@ -60,7 +60,7 @@ async function getProjectsData() {
 async function getContactInfo() {
   try {
     await dbConnect();
-    const doc = await GlobalContact.findOne().lean();
+    const doc = await (GlobalContact.findOne as any)().lean();
     return doc ? JSON.parse(JSON.stringify(doc)) : null;
   } catch (error) {
     console.error(error);
@@ -71,7 +71,7 @@ async function getContactInfo() {
 async function getCompanyProfileData() {
   try {
     await dbConnect();
-    const doc = await CompanyProfileData.findOne().lean();
+    const doc = await (CompanyProfileData.findOne as any)().lean();
     return doc ? JSON.parse(JSON.stringify(doc)) : {
       stats: [], howWeWork: [], industries: []
     };
@@ -84,7 +84,7 @@ async function getCompanyProfileData() {
 async function getSiteSettings() {
   try {
     await dbConnect();
-    const settings = await SiteSettings.findOne().lean();
+    const settings = await (SiteSettings.findOne as any)().lean();
     return settings ? JSON.parse(JSON.stringify(settings)) : null;
   } catch (error) {
     console.error('Error fetching site settings:', error);

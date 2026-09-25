@@ -22,7 +22,7 @@ export async function PUT(request: Request, context: { params: Promise<{ id: str
     
     console.log(`Updating member with ID: ${id}`);
     
-    const member = await TeamMember.findByIdAndUpdate(id, body, { new: true });
+    const member = await (TeamMember.findByIdAndUpdate as any)(id as any, body, { new: true } as any);
     if (!member) {
       return NextResponse.json({ error: 'Team member not found' }, { status: 404 });
     }
@@ -38,7 +38,7 @@ export async function DELETE(request: Request, context: { params: Promise<{ id: 
   try {
     await dbConnect();
     const { id } = await context.params;
-    const member = await TeamMember.findByIdAndDelete(id);
+    const member = await (TeamMember.findByIdAndDelete as any)(id as any);
     
     if (!member) {
       return NextResponse.json({ error: 'Team member not found' }, { status: 404 });

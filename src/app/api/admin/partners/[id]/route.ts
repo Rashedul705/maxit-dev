@@ -10,7 +10,7 @@ export async function PUT(request: Request, context: { params: Promise<{ id: str
     const { id } = await context.params;
     const body = await request.json();
     
-    const partner = await Partner.findByIdAndUpdate(params.id, body, { new: true, runValidators: true });
+    const partner = await (Partner.findByIdAndUpdate as any)(id as any, body, { new: true, runValidators: true } as any);
     if (!partner) {
       return NextResponse.json({ error: 'Partner not found' }, { status: 404 });
     }
@@ -26,7 +26,7 @@ export async function DELETE(request: Request, context: { params: Promise<{ id: 
   try {
     await dbConnect();
     const { id } = await context.params;
-    const partner = await Partner.findByIdAndDelete(id);
+    const partner = await (Partner.findByIdAndDelete as any)(id as any);
     
     if (!partner) {
       return NextResponse.json({ error: 'Partner not found' }, { status: 404 });

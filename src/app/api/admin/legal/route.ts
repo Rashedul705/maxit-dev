@@ -5,7 +5,7 @@ import LegalPage from '@/models/LegalPage';
 export async function GET() {
   try {
     await dbConnect();
-    let legal = await LegalPage.findOne().lean();
+    let legal = await (LegalPage.findOne as any)().lean();
     if (!legal) {
       legal = {
         privacyPolicy: 'Privacy Policy content goes here...',
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     await dbConnect();
     const body = await request.json();
     
-    let legal = await LegalPage.findOne();
+    let legal = await (LegalPage.findOne as any)();
     if (legal) {
       legal.privacyPolicy = body.privacyPolicy;
       legal.termsOfService = body.termsOfService;

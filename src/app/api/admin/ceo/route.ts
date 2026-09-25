@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   try {
     await dbConnect();
-    let ceo = await TeamMember.findOne({ isCeo: true } as any);
+    let ceo = await (TeamMember.findOne as any)({ isCeo: true } as any);
     return NextResponse.json(ceo || {});
   } catch (error) {
     console.error('Error fetching CEO:', error);
@@ -25,7 +25,7 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: 'Name is required' }, { status: 400 });
     }
     
-    let ceo = await TeamMember.findOne({ isCeo: true } as any);
+    let ceo = await (TeamMember.findOne as any)({ isCeo: true } as any);
     
     const updateData = {
       name,
@@ -40,7 +40,7 @@ export async function PUT(request: Request) {
     };
     
     if (ceo) {
-      ceo = await TeamMember.findByIdAndUpdate(ceo._id, updateData, { new: true });
+      ceo = await (TeamMember.findByIdAndUpdate as any)(ceo._id as any, updateData, { new: true } as any);
     } else {
       ceo = await TeamMember.create(updateData);
     }

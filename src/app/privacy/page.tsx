@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 async function getPrivacyPolicy() {
   try {
     await dbConnect();
-    const doc = await LegalPage.findOne().lean();
+    const doc = await (LegalPage.findOne as any)().lean();
     return doc?.privacyPolicy || "Privacy Policy content goes here...";
   } catch (error) {
     console.error(error);

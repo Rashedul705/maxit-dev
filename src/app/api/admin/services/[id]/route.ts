@@ -11,10 +11,10 @@ export async function PUT(
     await dbConnect();
     const body = await request.json();
 
-    const updatedService = await Service.findByIdAndUpdate(
+    const updatedService = await (Service.findByIdAndUpdate as any)(
       id,
       { $set: body },
-      { new: true, runValidators: true }
+      { new: true, runValidators: true } as any
     );
 
     if (!updatedService) {
@@ -36,7 +36,7 @@ export async function DELETE(
   try {
     await dbConnect();
     
-    const deletedService = await Service.findByIdAndDelete(id);
+    const deletedService = await (Service.findByIdAndDelete as any)(id as any);
 
     if (!deletedService) {
       return NextResponse.json({ error: 'Service not found' }, { status: 404 });

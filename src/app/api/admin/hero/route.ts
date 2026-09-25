@@ -5,7 +5,7 @@ import HeroContent from '@/models/HeroContent';
 export async function GET() {
   try {
     await dbConnect();
-    let content = await HeroContent.findOne().lean();
+    let content = await (HeroContent.findOne as any)().lean();
     if (!content) {
       // Return default values if nothing in DB yet
       content = {
@@ -34,7 +34,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     
     // Upsert since it's a singleton
-    let content = await HeroContent.findOne();
+    let content = await (HeroContent.findOne as any)();
     if (content) {
       content.brandingText = body.brandingText;
       content.titleLine1 = body.titleLine1;

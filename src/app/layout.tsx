@@ -33,7 +33,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   await dbConnect();
-  const contactDoc = await GlobalContact.findOne().lean();
+  const contactDoc = await (GlobalContact.findOne as any)().lean();
   const contactInfo = contactDoc ? JSON.parse(JSON.stringify(contactDoc)) : null;
   return (
     <html lang="en" suppressHydrationWarning>

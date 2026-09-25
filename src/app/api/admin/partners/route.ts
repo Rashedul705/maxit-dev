@@ -8,7 +8,7 @@ export async function GET(request: Request) {
   try {
     await dbConnect();
     let query = {};
-    const partners = await Partner.find(query).sort({ order: 1 });
+    const partners = await (Partner.find as any)(query).sort({ order: 1 });
     return NextResponse.json(partners);
   } catch (error) {
     console.error('Error fetching partners:', error);
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Name is required' }, { status: 400 });
     }
     
-    const maxOrderDoc = await Partner.findOne().sort({ order: -1 }).select('order');
+    const maxOrderDoc = await (Partner.findOne as any)().sort({ order: -1 }).select('order');
     const order = maxOrderDoc && maxOrderDoc.order !== undefined ? maxOrderDoc.order + 1 : 1;
     
     const partner = await Partner.create({

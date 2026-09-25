@@ -5,7 +5,7 @@ import Testimonial from '@/models/Testimonial';
 export async function GET() {
   try {
     await dbConnect();
-    const docs = await Testimonial.find({}).sort({ order: 1 }).lean();
+    const docs = await (Testimonial.find as any)({}).sort({ order: 1 }).lean();
     return NextResponse.json(docs);
   } catch (error) {
     console.error('Error fetching testimonials:', error);

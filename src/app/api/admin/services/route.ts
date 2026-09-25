@@ -5,7 +5,7 @@ import Service from '@/models/Service';
 export async function GET() {
   try {
     await dbConnect();
-    const services = await Service.find({}).sort({ order: 1 }).lean();
+    const services = await (Service.find as any)({}).sort({ order: 1 }).lean();
     return NextResponse.json(services);
   } catch (error) {
     console.error('Error fetching services:', error);

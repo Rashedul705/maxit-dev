@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 async function getTermsOfService() {
   try {
     await dbConnect();
-    const doc = await LegalPage.findOne().lean();
+    const doc = await (LegalPage.findOne as any)().lean();
     return doc?.termsOfService || "Terms of Service content goes here...";
   } catch (error) {
     console.error(error);

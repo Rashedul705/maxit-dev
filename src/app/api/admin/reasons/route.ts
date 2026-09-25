@@ -5,7 +5,7 @@ import Reason from '@/models/Reason';
 export async function GET() {
   try {
     await dbConnect();
-    const docs = await Reason.find({}).sort({ order: 1 }).lean();
+    const docs = await (Reason.find as any)({}).sort({ order: 1 }).lean();
     return NextResponse.json(docs);
   } catch (error) {
     console.error('Error fetching reasons:', error);

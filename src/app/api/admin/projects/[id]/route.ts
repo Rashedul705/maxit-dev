@@ -11,10 +11,10 @@ export async function PUT(
     await dbConnect();
     const body = await request.json();
 
-    const updatedProject = await Project.findByIdAndUpdate(
+    const updatedProject = await (Project.findByIdAndUpdate as any)(
       id,
       { $set: body },
-      { new: true, runValidators: true }
+      { new: true, runValidators: true } as any
     );
 
     if (!updatedProject) {
@@ -36,7 +36,7 @@ export async function DELETE(
   try {
     await dbConnect();
     
-    const deletedProject = await Project.findByIdAndDelete(id);
+    const deletedProject = await (Project.findByIdAndDelete as any)(id as any);
 
     if (!deletedProject) {
       return NextResponse.json({ error: 'Project not found' }, { status: 404 });

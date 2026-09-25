@@ -5,7 +5,7 @@ import GlobalContact from '@/models/GlobalContact';
 export async function GET() {
   try {
     await dbConnect();
-    let contact = await GlobalContact.findOne().lean();
+    let contact = await (GlobalContact.findOne as any)().lean();
     if (!contact) {
       contact = {
         addressLine1: '2nd Floor, Afroza Tower,',
@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     await dbConnect();
     const body = await request.json();
     
-    let contact = await GlobalContact.findOne();
+    let contact = await (GlobalContact.findOne as any)();
     if (contact) {
       contact.addressLine1 = body.addressLine1;
       contact.addressLine2 = body.addressLine2;

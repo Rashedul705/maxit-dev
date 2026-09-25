@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build && npx start-server-and-test start http://localhost:3000 generate-pdf",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "generate-pdf": "rm -rf .cache/puppeteer && npx puppeteer browsers install chrome && node scripts/generate-web-pdf.cjs"

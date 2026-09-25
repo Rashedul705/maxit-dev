@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic';
 async function getAboutData() {
   try {
     await dbConnect();
-    let about = await AboutContent.findOne().lean();
+    let about = await (AboutContent.findOne as any)().lean();
     if (!about) {
       about = {
         journey: "Founded with a passion for innovation, MaxIT Solution began with a simple goal: to make industrial-grade engineering and sustainable energy accessible. Over the years, we have grown from a small technical startup into a trusted regional leader, driven by a commitment to reliability and engineering excellence.",

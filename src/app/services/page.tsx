@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic';
 async function getServicesData() {
   try {
     await dbConnect();
-    const servicesDocs = await Service.find({}).sort({ order: 1 }).lean();
+    const servicesDocs = await (Service.find as any)({}).sort({ order: 1 }).lean();
     return JSON.parse(JSON.stringify(servicesDocs));
   } catch (error) {
     console.error('Error fetching services:', error);
@@ -23,7 +23,7 @@ async function getServicesData() {
 async function getSiteSettings() {
   try {
     await dbConnect();
-    const settings = await SiteSettings.findOne().lean();
+    const settings = await (SiteSettings.findOne as any)().lean();
     return settings ? JSON.parse(JSON.stringify(settings)) : null;
   } catch (error) {
     console.error('Error fetching site settings:', error);

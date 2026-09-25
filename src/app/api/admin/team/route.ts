@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   try {
     await dbConnect();
-    const members = await TeamMember.find({ isCeo: false }).sort({ order: 1 });
+    const members = await (TeamMember.find as any)({ isCeo: false }).sort({ order: 1 });
     return NextResponse.json(members);
   } catch (error) {
     console.error('Error fetching team members:', error);
@@ -25,7 +25,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Name and official title are required' }, { status: 400 });
     }
     
-    const maxOrderDoc = await TeamMember.findOne({ isCeo: false } as any).sort({ order: -1 }).select('order');
+    const maxOrderDoc = await (TeamMember.findOne as any)({ isCeo: false } as any).sort({ order: -1 }).select('order');
     const order = maxOrderDoc && maxOrderDoc.order !== undefined ? maxOrderDoc.order + 1 : 1;
     
     // In our model, we named it 'photoUrl' but the frontend might be sending 'image' 

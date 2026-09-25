@@ -41,7 +41,7 @@ const DEFAULT_DATA = {
 export async function GET() {
   try {
     await dbConnect();
-    let data = await CompanyProfileData.findOne().lean();
+    let data = await (CompanyProfileData.findOne as any)().lean();
     if (!data) {
       data = DEFAULT_DATA;
     }
@@ -57,7 +57,7 @@ export async function POST(request: Request) {
     await dbConnect();
     const body = await request.json();
     
-    let data = await CompanyProfileData.findOne();
+    let data = await (CompanyProfileData.findOne as any)();
     if (data) {
       data.stats = body.stats;
       data.howWeWork = body.howWeWork;

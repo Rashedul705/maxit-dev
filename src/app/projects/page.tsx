@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 async function getProjectsData() {
   try {
     await dbConnect();
-    const docs = await Project.find({}).sort({ order: 1 }).lean();
+    const docs = await (Project.find as any)({}).sort({ order: 1 }).lean();
     return JSON.parse(JSON.stringify(docs));
   } catch (error) {
     console.error('Error fetching projects:', error);
@@ -20,7 +20,7 @@ async function getProjectsData() {
 async function getSiteSettings() {
   try {
     await dbConnect();
-    const settings = await SiteSettings.findOne().lean();
+    const settings = await (SiteSettings.findOne as any)().lean();
     return settings ? JSON.parse(JSON.stringify(settings)) : null;
   } catch (error) {
     console.error('Error fetching site settings:', error);

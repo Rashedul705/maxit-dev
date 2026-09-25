@@ -12,7 +12,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
   await dbConnect();
   let project = null;
   try {
-    const doc = await Project.findById(id).lean();
+    const doc = await (Project.findById as any)(id).lean();
     if (doc) {
       project = JSON.parse(JSON.stringify(doc));
     }

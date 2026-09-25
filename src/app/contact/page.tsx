@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 async function getContactInfo() {
   try {
     await dbConnect();
-    const doc = await GlobalContact.findOne().lean();
+    const doc = await (GlobalContact.findOne as any)().lean();
     return doc ? JSON.parse(JSON.stringify(doc)) : null;
   } catch (error) {
     console.error(error);
@@ -20,7 +20,7 @@ async function getContactInfo() {
 async function getSiteSettings() {
   try {
     await dbConnect();
-    const settings = await SiteSettings.findOne().lean();
+    const settings = await (SiteSettings.findOne as any)().lean();
     return settings ? JSON.parse(JSON.stringify(settings)) : null;
   } catch (error) {
     console.error('Error fetching site settings:', error);

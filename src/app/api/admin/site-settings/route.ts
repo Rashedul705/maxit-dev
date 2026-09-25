@@ -25,7 +25,7 @@ const DEFAULT_SETTINGS = {
 export async function GET() {
   try {
     await dbConnect();
-    let settings = await SiteSettings.findOne().lean();
+    let settings = await (SiteSettings.findOne as any)().lean();
     if (!settings) {
       settings = DEFAULT_SETTINGS;
     }
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
     await dbConnect();
     const body = await request.json();
     
-    let settings = await SiteSettings.findOne();
+    let settings = await (SiteSettings.findOne as any)();
     if (settings) {
       settings.servicesHeaderTitle = body.servicesHeaderTitle;
       settings.servicesHeaderSubtitle = body.servicesHeaderSubtitle;

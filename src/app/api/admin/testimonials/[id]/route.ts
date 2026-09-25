@@ -11,10 +11,10 @@ export async function PUT(
     await dbConnect();
     const body = await request.json();
 
-    const updated = await Testimonial.findByIdAndUpdate(
+    const updated = await (Testimonial.findByIdAndUpdate as any)(
       id,
       { $set: body },
-      { new: true, runValidators: true }
+      { new: true, runValidators: true } as any
     );
 
     if (!updated) {
@@ -35,7 +35,7 @@ export async function DELETE(
   const { id } = await context.params;
   try {
     await dbConnect();
-    const deleted = await Testimonial.findByIdAndDelete(id);
+    const deleted = await (Testimonial.findByIdAndDelete as any)(id as any);
 
     if (!deleted) {
       return NextResponse.json({ error: 'Testimonial not found' }, { status: 404 });

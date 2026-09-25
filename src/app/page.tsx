@@ -15,7 +15,7 @@ export const dynamic = 'force-dynamic';
 async function getTestimonials() {
   try {
     await dbConnect();
-    const docs = await Testimonial.find({}).sort({ order: 1 }).lean();
+    const docs = await (Testimonial.find as any)({}).sort({ order: 1 }).lean();
     return JSON.parse(JSON.stringify(docs));
   } catch (error) {
     console.error('Error fetching testimonials:', error);
@@ -26,7 +26,7 @@ async function getTestimonials() {
 async function getReasons() {
   try {
     await dbConnect();
-    const docs = await Reason.find({}).sort({ order: 1 }).lean();
+    const docs = await (Reason.find as any)({}).sort({ order: 1 }).lean();
     return JSON.parse(JSON.stringify(docs));
   } catch (error) {
     console.error('Error fetching reasons:', error);
@@ -37,7 +37,7 @@ async function getReasons() {
 async function getHeroContent() {
   try {
     await dbConnect();
-    const doc = await HeroContent.findOne().lean();
+    const doc = await (HeroContent.findOne as any)().lean();
     if (!doc) return null;
     return JSON.parse(JSON.stringify(doc));
   } catch (error) {
