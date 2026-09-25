@@ -19,8 +19,7 @@ const Partners = ({ isGrid = false }: { isGrid?: boolean }) => {
   useEffect(() => {
     const fetchPartners = async () => {
       try {
-        const section = isGrid ? 'profile' : 'home';
-        const res = await fetch(`/api/admin/partners?section=${section}`);
+        const res = await fetch(`/api/admin/partners`);
         if (res.ok) {
           const data: Partner[] = await res.json();
           setPartnersList(data);

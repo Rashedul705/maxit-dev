@@ -4,9 +4,10 @@ import Partner from '@/models/Partner';
 
 export const dynamic = 'force-dynamic';
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, context: { params: Promise<{ id: string }> }) {
   try {
     await dbConnect();
+    const { id } = await context.params;
     const body = await request.json();
     
     const partner = await Partner.findByIdAndUpdate(params.id, body, { new: true, runValidators: true });
@@ -21,10 +22,11 @@ export async function PUT(request: Request, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, context: { params: Promise<{ id: string }> }) {
   try {
     await dbConnect();
-    const partner = await Partner.findByIdAndDelete(params.id);
+    const { id } = await context.params;
+    const partner = await Partner.findByIdAndDelete(id);
     
     if (!partner) {
       return NextResponse.json({ error: 'Partner not found' }, { status: 404 });

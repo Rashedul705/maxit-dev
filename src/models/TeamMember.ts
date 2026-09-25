@@ -11,7 +11,6 @@ const TeamMemberSchema = new mongoose.Schema(
     },
     position: {
       type: String,
-      required: true,
     },
     officialTitle: {
       type: String,

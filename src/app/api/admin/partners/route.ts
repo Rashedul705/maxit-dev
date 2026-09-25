@@ -7,14 +7,7 @@ export const dynamic = 'force-dynamic';
 export async function GET(request: Request) {
   try {
     await dbConnect();
-    const { searchParams } = new URL(request.url);
-    const listType = searchParams.get('listType');
-    
     let query = {};
-    if (listType === 'homepage' || listType === 'company-profile') {
-      query = { listType };
-    }
-    
     const partners = await Partner.find(query).sort({ order: 1 });
     return NextResponse.json(partners);
   } catch (error) {
@@ -27,21 +20,18 @@ export async function POST(request: Request) {
   try {
     await dbConnect();
     const body = await request.json();
-    const { name, listType, logo, description } = body;
+    const { name, logo, description } = body;
     
     if (!name || name.trim() === '') {
       return NextResponse.json({ error: 'Name is required' }, { status: 400 });
     }
-    if (listType !== 'homepage' && listType !== 'company-profile') {
-      return NextResponse.json({ error: 'Invalid listType' }, { status: 400 });
-    }
     
-    const maxOrderDoc = await Partner.findOne({ listType }).sort({ order: -1 }).select('order');
+    const maxOrderDoc = await Partner.findOne().sort({ order: -1 }).select('order');
     const order = maxOrderDoc && maxOrderDoc.order !== undefined ? maxOrderDoc.order + 1 : 1;
     
     const partner = await Partner.create({
       name: name.trim(),
-      listType,
+      listType: 'global',
       order,
       ...(logo && { logo }),
       ...(description && { description })

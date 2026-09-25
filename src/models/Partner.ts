@@ -9,8 +9,7 @@ const PartnerSchema = new mongoose.Schema(
     },
     listType: {
       type: String,
-      enum: ['homepage', 'company-profile'],
-      required: true,
+      default: 'global'
     },
     logo: {
       type: String,

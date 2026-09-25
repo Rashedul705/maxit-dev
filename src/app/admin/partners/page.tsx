@@ -6,12 +6,10 @@ import { Plus, Edit2, Trash2, X, Search, Building2 } from "lucide-react";
 type Partner = {
   _id: string;
   name: string;
-  listType: "homepage" | "company-profile";
   order: number;
 };
 
 export default function PartnersManagement() {
-  const [activeTab, setActiveTab] = useState<"homepage" | "company-profile">("homepage");
   const [partners, setPartners] = useState<Partner[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   
@@ -23,12 +21,12 @@ export default function PartnersManagement() {
 
   useEffect(() => {
     fetchPartners();
-  }, [activeTab]);
+  }, []);
 
   const fetchPartners = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch(`/api/admin/partners?listType=${activeTab}`);
+      const res = await fetch(`/api/admin/partners`);
       if (res.ok) {
         const data = await res.json();
         setPartners(data);
@@ -103,7 +101,7 @@ export default function PartnersManagement() {
         const res = await fetch('/api/admin/partners', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: formData.name, listType: activeTab })
+          body: JSON.stringify({ name: formData.name })
         });
         
         if (res.ok) {
@@ -140,29 +138,6 @@ export default function PartnersManagement() {
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-        <div className="flex border-b border-gray-100">
-          <button
-            onClick={() => setActiveTab("homepage")}
-            className={`flex-1 py-4 px-6 text-center font-medium transition-colors ${
-              activeTab === "homepage" 
-                ? "text-primary border-b-2 border-primary bg-primary/5" 
-                : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
-            }`}
-          >
-            Homepage partners
-          </button>
-          <button
-            onClick={() => setActiveTab("company-profile")}
-            className={`flex-1 py-4 px-6 text-center font-medium transition-colors ${
-              activeTab === "company-profile" 
-                ? "text-primary border-b-2 border-primary bg-primary/5" 
-                : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
-            }`}
-          >
-            Company profile partners
-          </button>
-        </div>
-
         <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
           <div className="relative w-full max-w-sm">
             <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -193,21 +168,12 @@ export default function PartnersManagement() {
                   <tr key={partner._id} className="hover:bg-gray-50/50 transition-colors">
                     <td className="px-6 py-4 font-medium text-gray-900">{partner.name}</td>
                     <td className="px-6 py-4">
-                      {activeTab === 'homepage' ? (
-                        <div className="flex items-center space-x-2 text-sm text-gray-500">
-                          <div className="w-6 h-6 bg-primary/10 rounded-md flex items-center justify-center text-primary">
-                            <Building2 className="w-3 h-3" />
-                          </div>
-                          <span>White Card Component</span>
+                      <div className="flex items-center space-x-2 text-sm text-gray-500">
+                        <div className="w-6 h-6 bg-primary/10 rounded-md flex items-center justify-center text-primary">
+                          <Building2 className="w-3 h-3" />
                         </div>
-                      ) : (
-                        <div className="flex items-center space-x-2 text-sm text-gray-500">
-                          <div className="w-6 h-6 bg-primary rounded-sm flex items-center justify-center text-accent" style={{ clipPath: 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)' }}>
-                            <Building2 className="w-3 h-3" />
-                          </div>
-                          <span>Teal Hexagon Component</span>
-                        </div>
-                      )}
+                        <span>Global (All Pages)</span>
+                      </div>
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end space-x-2">
@@ -267,7 +233,7 @@ export default function PartnersManagement() {
                   placeholder="e.g. NESCO"
                 />
                 <p className="text-xs text-gray-500 mt-1 flex justify-between">
-                  <span>Used for {activeTab === 'homepage' ? 'Homepage' : 'Company Profile'} section</span>
+                  <span>Used on both Homepage and Company Profile</span>
                   <span>{formData.name.length}/50</span>
                 </p>
               </div>
