@@ -594,10 +594,10 @@ export default async function CompanyProfile() {
                           {member.name}
                         </h4>
                         {member.officialTitle && (
-                          <p className="text-accent font-semibold tracking-wider uppercase text-sm mb-1">{member.officialTitle}</p>
+                          <p className="text-accent font-semibold tracking-wider capitalize text-sm mb-1">{member.officialTitle.toLowerCase()}</p>
                         )}
                         {member.functionalDesignation && (
-                          <p className="text-gray-500 font-medium tracking-wide text-xs mb-1 uppercase">{member.functionalDesignation}</p>
+                          <p className="text-gray-500 font-medium tracking-wide text-xs mb-1 capitalize">{member.functionalDesignation.toLowerCase()}</p>
                         )}
                         {member.department && (
                           <p className="text-gray-600 font-medium tracking-wide text-sm mb-4">

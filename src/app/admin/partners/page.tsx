@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Edit2, Trash2, X, Search, Building2 } from "lucide-react";
+import { Plus, Edit2, Trash2, X, Search, Building2, Image as ImageIcon } from "lucide-react";
 
 type Partner = {
   _id: string;
   name: string;
+  logo?: string;
   order: number;
 };
 
@@ -15,9 +16,10 @@ export default function PartnersManagement() {
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
-  const [formData, setFormData] = useState({ name: "" });
+  const [formData, setFormData] = useState({ name: "", logo: "" });
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     fetchPartners();
@@ -40,14 +42,14 @@ export default function PartnersManagement() {
 
   const openAddModal = () => {
     setEditId(null);
-    setFormData({ name: "" });
+    setFormData({ name: "", logo: "" });
     setError("");
     setIsModalOpen(true);
   };
 
   const openEditModal = (partner: Partner) => {
     setEditId(partner._id);
-    setFormData({ name: partner.name });
+    setFormData({ name: partner.name, logo: partner.logo || "" });
     setError("");
     setIsModalOpen(true);
   };
@@ -64,6 +66,34 @@ export default function PartnersManagement() {
       } catch (err) {
         console.error(err);
       }
+    }
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    const formPayload = new FormData();
+    formPayload.append("image", file);
+
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formPayload,
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setFormData({ ...formData, logo: data.url });
+      } else {
+        alert("Image upload failed");
+      }
+    } catch (err) {
+      console.error("Upload failed", err);
+      alert("Image upload failed");
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -86,7 +116,7 @@ export default function PartnersManagement() {
         const res = await fetch(`/api/admin/partners/${editId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: formData.name })
+          body: JSON.stringify({ name: formData.name, logo: formData.logo })
         });
         
         if (res.ok) {
@@ -101,7 +131,7 @@ export default function PartnersManagement() {
         const res = await fetch('/api/admin/partners', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: formData.name })
+          body: JSON.stringify({ name: formData.name, logo: formData.logo })
         });
         
         if (res.ok) {
@@ -168,10 +198,16 @@ export default function PartnersManagement() {
                   <tr key={partner._id} className="hover:bg-gray-50/50 transition-colors">
                     <td className="px-6 py-4 font-medium text-gray-900">{partner.name}</td>
                     <td className="px-6 py-4">
-                      <div className="flex items-center space-x-2 text-sm text-gray-500">
-                        <div className="w-6 h-6 bg-primary/10 rounded-md flex items-center justify-center text-primary">
-                          <Building2 className="w-3 h-3" />
-                        </div>
+                      <div className="flex items-center space-x-3 text-sm text-gray-500">
+                        {partner.logo ? (
+                          <div className="w-10 h-10 rounded-md bg-white border border-gray-100 flex items-center justify-center overflow-hidden p-1">
+                            <img src={partner.logo} alt={partner.name} className="w-full h-full object-contain" />
+                          </div>
+                        ) : (
+                          <div className="w-8 h-8 bg-primary/10 rounded-md flex items-center justify-center text-primary">
+                            <Building2 className="w-4 h-4" />
+                          </div>
+                        )}
                         <span>Global (All Pages)</span>
                       </div>
                     </td>
@@ -219,6 +255,31 @@ export default function PartnersManagement() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
+              
+              <div className="flex flex-col items-center pt-2 mb-6">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Partner Logo</label>
+                <div className="w-32 h-32 rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center relative group cursor-pointer hover:border-primary transition-colors p-2">
+                  {formData.logo ? (
+                    <img src={formData.logo} alt="Logo preview" className="w-full h-full object-contain" />
+                  ) : (
+                    <div className="text-gray-400 group-hover:text-primary flex flex-col items-center">
+                      <ImageIcon className="w-8 h-8 mb-1" />
+                      <span className="text-xs">Upload Logo</span>
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-black/50 rounded-xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span className="text-white text-xs font-medium">{isUploading ? "Uploading..." : "Change Logo"}</span>
+                  </div>
+                  <input 
+                    type="file" 
+                    accept="image/*" 
+                    disabled={isUploading}
+                    className="absolute inset-0 opacity-0 cursor-pointer"
+                    onChange={handleImageUpload}
+                  />
+                </div>
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Partner Name *
