@@ -20,7 +20,7 @@ type CEO = {
 };
 
 type TeamMember = {
-  id: string;
+  _id: string;
   name: string;
   officialTitle: string;
   functionalDesignation: string;
@@ -84,20 +84,38 @@ export default function TeamManagement() {
     }
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, isCeo: boolean) => {
+  const [isUploading, setIsUploading] = useState(false);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, isCeo: boolean) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const base64String = reader.result as string;
-      if (isCeo && ceoData) {
-        setCeoData({ ...ceoData, image: base64String });
+    setIsUploading(true);
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (isCeo && ceoData) {
+          setCeoData({ ...ceoData, image: data.url });
+        } else {
+          setMemberForm({ ...memberForm, image: data.url });
+        }
       } else {
-        setMemberForm({ ...memberForm, image: base64String });
+        alert("Image upload failed");
       }
-    };
-    reader.readAsDataURL(file);
+    } catch (err) {
+      console.error("Upload failed", err);
+      alert("Image upload failed");
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const handleSaveCeo = async () => {
@@ -137,7 +155,7 @@ export default function TeamManagement() {
   };
 
   const openEditModal = (member: TeamMember) => {
-    setEditId(member.id);
+    setEditId(member._id);
     setMemberForm({
       name: member.name,
       officialTitle: member.officialTitle,
@@ -161,7 +179,7 @@ export default function TeamManagement() {
       try {
         const res = await fetch(`/api/admin/team/${id}`, { method: 'DELETE' });
         if (res.ok) {
-          setMembers(members.filter(m => m.id !== id));
+          setMembers(members.filter(m => m._id !== id));
         } else {
           alert("Failed to delete member");
         }
@@ -191,7 +209,7 @@ export default function TeamManagement() {
         
         if (res.ok) {
           const updated = await res.json();
-          setMembers(members.map(m => m.id === editId ? updated : m));
+          setMembers(members.map(m => m._id === editId ? updated : m));
           setIsModalOpen(false);
         } else {
           const data = await res.json();
@@ -283,11 +301,12 @@ export default function TeamManagement() {
                         </div>
                       )}
                       <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <span className="text-white text-xs font-medium">Upload Image</span>
+                        <span className="text-white text-xs font-medium">{isUploading ? "Uploading..." : "Upload Image"}</span>
                       </div>
                       <input 
                         type="file" 
                         accept="image/*" 
+                        disabled={isUploading}
                         className="absolute inset-0 opacity-0 cursor-pointer"
                         onChange={(e) => handleImageUpload(e, true)}
                       />
@@ -413,7 +432,7 @@ export default function TeamManagement() {
                   </thead>
                   <tbody className="divide-y divide-gray-100">
                     {members.map((member) => (
-                      <tr key={member.id} className="hover:bg-gray-50/50 transition-colors">
+                      <tr key={member._id} className="hover:bg-gray-50/50 transition-colors">
                         <td className="px-6 py-4">
                           <div className="w-10 h-10 rounded-full bg-gray-100 overflow-hidden border border-gray-200 flex items-center justify-center">
                             {member.image ? (
@@ -444,7 +463,7 @@ export default function TeamManagement() {
                               <Edit2 className="w-4 h-4" />
                             </button>
                             <button 
-                              onClick={() => handleDelete(member.id)}
+                              onClick={() => handleDelete(member._id)}
                               className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                             >
                               <Trash2 className="w-4 h-4" />
@@ -493,11 +512,12 @@ export default function TeamManagement() {
                       </div>
                     )}
                     <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                      <span className="text-white text-xs font-medium">Upload Image</span>
+                      <span className="text-white text-xs font-medium">{isUploading ? "Uploading..." : "Upload Image"}</span>
                     </div>
                     <input 
                       type="file" 
                       accept="image/*" 
+                      disabled={isUploading}
                       className="absolute inset-0 opacity-0 cursor-pointer"
                       onChange={(e) => handleImageUpload(e, false)}
                     />

@@ -1,69 +1,43 @@
 import { NextResponse } from 'next/server';
-import { getTeamData, saveTeamData } from '../route';
-import { triggerPDFRegeneration } from '@/lib/pdfGenerator';
+import dbConnect from '@/lib/mongodb';
+import TeamMember from '@/models/TeamMember';
 
-export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
+export const dynamic = 'force-dynamic';
+
+export async function PUT(request: Request, { params }: { params: { id: string } }) {
   try {
-    const { id } = await params;
+    await dbConnect();
     const body = await request.json();
-    const { name, officialTitle, functionalDesignation, section, department, bio, image, socialLinks } = body;
     
-    if (!name || !officialTitle) {
-      return NextResponse.json({ error: 'Name and official title are required' }, { status: 400 });
+    // Map image to photoUrl if present
+    if (body.image) {
+      body.photoUrl = body.image;
     }
     
-    const team = await getTeamData();
-    const members = team.members || [];
-    const index = members.findIndex((p: any) => p.id === id);
-    
-    if (index === -1) {
-      return NextResponse.json({ error: 'Member not found' }, { status: 404 });
+    const member = await TeamMember.findByIdAndUpdate(params.id, body, { new: true, runValidators: true });
+    if (!member) {
+      return NextResponse.json({ error: 'Team member not found' }, { status: 404 });
     }
     
-    members[index] = {
-      ...members[index],
-      name,
-      officialTitle,
-      functionalDesignation: functionalDesignation || '',
-      section: section || members[index].section || 'Board of Directors',
-      department: department || members[index].department || '',
-      bio: bio || '',
-      image: image || members[index].image, // retain old if empty
-      socialLinks: socialLinks || members[index].socialLinks
-    };
-    
-    team.members = members;
-    await saveTeamData(team);
-    
-    triggerPDFRegeneration();
-    
-    return NextResponse.json(members[index]);
+    return NextResponse.json(member);
   } catch (error) {
-    console.error('Error updating member:', error);
+    console.error('Error updating team member:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function DELETE(request: Request, { params }: { params: { id: string } }) {
   try {
-    const { id } = await params;
+    await dbConnect();
+    const member = await TeamMember.findByIdAndDelete(params.id);
     
-    const team = await getTeamData();
-    const members = team.members || [];
-    const filteredMembers = members.filter((p: any) => p.id !== id);
-    
-    if (members.length === filteredMembers.length) {
-      return NextResponse.json({ error: 'Member not found' }, { status: 404 });
+    if (!member) {
+      return NextResponse.json({ error: 'Team member not found' }, { status: 404 });
     }
     
-    team.members = filteredMembers;
-    await saveTeamData(team);
-    
-    triggerPDFRegeneration();
-    
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ message: 'Team member deleted successfully' });
   } catch (error) {
-    console.error('Error deleting member:', error);
+    console.error('Error deleting team member:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

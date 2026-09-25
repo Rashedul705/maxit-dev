@@ -8,18 +8,24 @@ import {
 import { projects } from '@/lib/projects';
 import Partners from '@/components/Partners';
 
-import fs from 'fs/promises';
-import path from 'path';
+import dbConnect from '@/lib/mongodb';
+import TeamMember from '@/models/TeamMember';
 
 export const dynamic = 'force-dynamic';
 
 async function getTeamData() {
   try {
-    const dataFilePath = path.join(process.cwd(), 'data', 'team.json');
-    const data = await fs.readFile(dataFilePath, 'utf-8');
-    return JSON.parse(data);
+    await dbConnect();
+    const ceoDoc = await TeamMember.findOne({ isCeo: true }).lean();
+    const membersDocs = await TeamMember.find({ isCeo: false }).sort({ order: 1 }).lean();
+    
+    // Parse to stringify ObjectIds for Next.js
+    const ceo = JSON.parse(JSON.stringify(ceoDoc || {}));
+    const members = JSON.parse(JSON.stringify(membersDocs));
+    
+    return { ceo, members };
   } catch (error) {
-    console.error('Error reading team data:', error);
+    console.error('Error fetching team data:', error);
     return { ceo: {}, members: [] };
   }
 }
@@ -395,8 +401,12 @@ export default async function CompanyProfile() {
               <p className="text-gray-400 font-medium mb-10">We integrate equipment from trusted, world-class manufacturers to ensure long-term reliability.</p>
               <div className="grid grid-cols-2 gap-4">
                 {[1,2,3,4].map((i) => (
-                  <div key={i} className="h-20 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center text-gray-500 font-bold uppercase tracking-widest text-sm hover:bg-white/10 hover:text-white transition-colors cursor-default">
-                    Brand {String.fromCharCode(64 + i)}
+                  <div key={i} className="h-24 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center overflow-hidden hover:bg-white/10 transition-colors p-3 group">
+                    <img 
+                      src={`/partners/tech${i}.png`} 
+                      alt={`Technology Partner ${i}`} 
+                      className="max-w-full max-h-full object-contain rounded opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300" 
+                    />
                   </div>
                 ))}
               </div>
@@ -443,16 +453,16 @@ export default async function CompanyProfile() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 xl:gap-12">
                   {group.members.map((member: any) => (
                     <div 
-                      key={member.id} 
+                      key={member._id} 
                       className="group relative bg-white rounded-3xl flex flex-col h-full shadow-md hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 overflow-hidden transform hover:-translate-y-2 border-2 border-gray-200 hover:border-accent/40"
                     >
                       <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                       
                       {/* Image Wrapper */}
                       <div className="relative w-48 h-48 mx-auto mt-8 overflow-hidden rounded-full border-4 border-gray-100 shadow-sm group-hover:border-accent/30 transition-colors duration-500 z-10 flex items-center justify-center bg-gray-50">
-                        {member.image ? (
+                        {member.photoUrl || member.image ? (
                           <img
-                            src={member.image}
+                            src={member.photoUrl || member.image}
                             alt={member.name}
                             className="w-full h-full object-cover filter grayscale-[20%] group-hover:grayscale-0 transform group-hover:scale-110 transition-all duration-700 ease-in-out"
                           />

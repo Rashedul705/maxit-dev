@@ -1,16 +1,23 @@
 import { NextResponse } from 'next/server';
-import { getTeamData, saveTeamData } from '../team/route';
-import { triggerPDFRegeneration } from '@/lib/pdfGenerator';
+import dbConnect from '@/lib/mongodb';
+import TeamMember from '@/models/TeamMember';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
-  const team = await getTeamData();
-  return NextResponse.json(team.ceo || {});
+  try {
+    await dbConnect();
+    let ceo = await TeamMember.findOne({ isCeo: true });
+    return NextResponse.json(ceo || {});
+  } catch (error) {
+    console.error('Error fetching CEO:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
 }
 
 export async function PUT(request: Request) {
   try {
+    await dbConnect();
     const body = await request.json();
     const { name, nickname, officialTitle, functionalDesignation, image, message, socialLinks } = body;
     
@@ -18,24 +25,27 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: 'Name is required' }, { status: 400 });
     }
     
-    const team = await getTeamData();
+    let ceo = await TeamMember.findOne({ isCeo: true });
     
-    team.ceo = {
-      ...team.ceo,
+    const updateData = {
       name,
-      nickname: nickname || team.ceo.nickname || '',
-      officialTitle: officialTitle || team.ceo.officialTitle || '',
-      functionalDesignation: functionalDesignation || team.ceo.functionalDesignation || '',
-      image: image || team.ceo.image || '',
-      message: message || team.ceo.message || '',
-      socialLinks: socialLinks || team.ceo.socialLinks || { linkedin: '', email: '' }
+      nickname: nickname || '',
+      position: officialTitle || 'CEO',
+      officialTitle: officialTitle || '',
+      functionalDesignation: functionalDesignation || '',
+      photoUrl: image || body.photoUrl || '',
+      message: message || '',
+      socialLinks: socialLinks || { linkedin: '', email: '' },
+      isCeo: true
     };
     
-    await saveTeamData(team);
+    if (ceo) {
+      ceo = await TeamMember.findByIdAndUpdate(ceo._id, updateData, { new: true });
+    } else {
+      ceo = await TeamMember.create(updateData);
+    }
     
-    triggerPDFRegeneration();
-    
-    return NextResponse.json(team.ceo);
+    return NextResponse.json(ceo);
   } catch (error) {
     console.error('Error updating CEO:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
