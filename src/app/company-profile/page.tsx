@@ -284,7 +284,7 @@ export default async function CompanyProfile() {
             <h2 className="text-4xl font-bold font-heading text-primary mt-2">How We Work</h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               { num: "01", title: "Consultation", desc: "We understand your requirements and objectives." },
               { num: "02", title: "Site Assessment", desc: "Our team evaluates the site, infrastructure and technical requirements." },
@@ -293,16 +293,23 @@ export default async function CompanyProfile() {
               { num: "05", title: "Installation & Commissioning", desc: "Our team implements, tests and commissions the system." },
               { num: "06", title: "Support", desc: "We provide ongoing technical support and proactive maintenance." }
             ].map((step, i) => (
-              <div key={i} className="relative pl-8 md:pl-0">
-                <div className="md:hidden absolute left-0 top-2 bottom-[-3rem] w-px bg-gray-200"></div>
-                <div className="md:hidden absolute left-[-4px] top-2 w-2 h-2 rounded-full bg-accent"></div>
-                
-                <div className="text-5xl font-bold font-heading text-gray-100 mb-4">{step.num}</div>
-                <h3 className="text-xl font-bold text-primary mb-3 flex items-center">
-                  <span className="hidden md:flex w-8 h-8 rounded-full bg-primary/5 items-center justify-center text-primary text-sm mr-3">{i+1}</span>
-                  {step.title}
-                </h3>
-                <p className="text-gray-600 font-medium leading-relaxed">{step.desc}</p>
+              <div key={i} className="flex flex-col relative group bg-gradient-to-br from-primary to-[#0f605a] p-8 rounded-3xl shadow-lg border border-white/10 hover:-translate-y-2 hover:shadow-xl transition-all duration-300 overflow-hidden">
+                <div className="absolute top-4 right-4 text-[100px] font-bold font-heading text-white/5 leading-none select-none transition-transform group-hover:scale-110 duration-500 origin-bottom-right">
+                  {step.num}
+                </div>
+                <div className="relative z-10 h-full flex flex-col">
+                  <div className="flex items-center mb-6">
+                    <span className="flex-shrink-0 w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white text-lg font-bold mr-4 backdrop-blur-md border border-white/20 shadow-inner">
+                      {i + 1}
+                    </span>
+                    <h3 className="text-xl font-bold text-white font-heading leading-tight">
+                      {step.title}
+                    </h3>
+                  </div>
+                  <p className="text-white/80 font-medium leading-relaxed mt-auto">
+                    {step.desc}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
