@@ -30,3 +30,6 @@ build
 
 # Puppeteer Cache
 .cache/
+
+# TypeScript Build Info
+tsconfig.tsbuildinfo

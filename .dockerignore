@@ -1,0 +1,10 @@
+.git
+node_modules
+.next
+out
+build
+.cache
+tsconfig.tsbuildinfo
+.env.local
+.env.development
+.env.test
