@@ -22,7 +22,7 @@ async function generatePDF() {
 
     console.log('Navigating to page...');
     // Wait until network is fully idle (all images/fonts loaded)
-    await page.goto(url, { waitUntil: 'networkidle0', timeout: 30000 });
+    await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
 
     // Scroll to the bottom to trigger any lazy-loaded images or animations
     console.log('Scrolling to trigger lazy loads...');
