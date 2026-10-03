@@ -46,7 +46,7 @@ export default async function ProjectsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 font-heading">
             {headerTitle.split(' ').map((word: string, i: number, arr: string[]) => 
-              i === arr.length - 1 ? <span key={i} className="text-accent">{word}</span> : <span key={i}>{word} </span>
+              i === arr.length - 1 ? <span key={i} className="text-gray-100">{word}</span> : <span key={i}>{word} </span>
             )}
           </h1>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto font-sans">
@@ -78,13 +78,13 @@ export default async function ProjectsPage() {
                 
                 {/* Content */}
                 <div className="p-6 flex flex-col flex-grow relative">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3 font-heading group-hover:text-accent transition-colors">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3 font-heading group-hover:text-primary transition-colors">
                     {project.title}
                   </h3>
                   <p className="text-gray-800 mb-6 flex-grow font-sans">
                     {project.shortDescription}
                   </p>
-                  <div className="flex items-center text-accent font-medium mt-auto group-hover:translate-x-2 transition-transform">
+                  <div className="flex items-center text-primary font-medium mt-auto group-hover:translate-x-2 transition-transform">
                     <span>View Details</span>
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </div>

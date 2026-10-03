@@ -60,7 +60,7 @@ export default async function Services() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
             <h1 className="text-4xl md:text-6xl font-bold font-heading text-primary mb-6 tracking-tight">
               {headerTitle.split(' ').map((word: string, i: number, arr: string[]) => 
-                i === arr.length - 1 ? <span key={i} className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-red-400">{word}</span> : <span key={i}>{word} </span>
+                i === arr.length - 1 ? <span key={i} className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">{word}</span> : <span key={i}>{word} </span>
               )}
             </h1>
             <p className="text-xl text-gray-700 max-w-2xl mx-auto font-medium leading-relaxed mb-12">
@@ -82,7 +82,7 @@ export default async function Services() {
                   <img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?w=1200&q=80" alt="Solar Installation" className="absolute inset-0 w-full h-full object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-t from-primary to-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-primary" />
                   <div className="absolute top-6 left-6 z-10 lg:hidden">
-                    <div className="inline-block px-4 py-1.5 bg-accent text-white font-bold text-xs uppercase tracking-widest rounded-full shadow-lg">
+                    <div className="inline-block px-4 py-1.5 bg-white text-primary font-bold text-xs uppercase tracking-widest rounded-full shadow-lg">
                       Core Service
                     </div>
                   </div>
@@ -90,14 +90,14 @@ export default async function Services() {
 
                 {/* Content Half */}
                 <div className="lg:w-7/12 p-8 md:p-14 relative z-10 flex flex-col justify-center bg-primary">
-                  <div className="absolute top-0 right-0 w-64 h-64 bg-accent/20 rounded-full blur-[80px] pointer-events-none -translate-y-1/2 translate-x-1/4"></div>
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-[80px] pointer-events-none -translate-y-1/2 translate-x-1/4"></div>
                   
-                  <div className="hidden lg:inline-block px-4 py-1.5 bg-accent text-white font-bold text-xs uppercase tracking-widest rounded-full mb-8 w-fit shadow-lg">
+                  <div className="hidden lg:inline-block px-4 py-1.5 bg-white text-primary font-bold text-xs uppercase tracking-widest rounded-full mb-8 w-fit shadow-lg">
                     Core Service
                   </div>
 
                   <div className="flex items-center space-x-4 mb-6">
-                    <div className="w-16 h-16 md:w-20 md:h-20 bg-accent/20 rounded-2xl flex items-center justify-center text-accent shadow-inner shrink-0">
+                    <div className="w-16 h-16 md:w-20 md:h-20 bg-white/10 rounded-2xl flex items-center justify-center text-white shadow-inner shrink-0">
                       <Sun className="w-8 h-8 md:w-10 md:h-10" />
                     </div>
                     <h3 className="text-3xl md:text-5xl font-bold font-heading text-white leading-tight">{featuredTitle}</h3>
@@ -112,11 +112,11 @@ export default async function Services() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-8 gap-x-8">
                       {featuredPoints.map((item: any, idx: number) => (
                         <div key={idx} className="flex items-start space-x-4 group">
-                          <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center text-accent group-hover:bg-accent group-hover:text-white transition-colors shrink-0 mt-1">
+                          <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white group-hover:bg-white group-hover:text-primary transition-colors shrink-0 mt-1">
                             <ArrowRight className="w-5 h-5" />
                           </div>
                           <div>
-                            <h5 className="text-white font-bold text-lg mb-1 group-hover:text-accent transition-colors">{item.name}</h5>
+                            <h5 className="text-white font-bold text-lg mb-1 group-hover:text-gray-200 transition-colors">{item.name}</h5>
                             <p className="text-white/70 text-sm font-medium">{item.desc}</p>
                           </div>
                         </div>
@@ -125,7 +125,7 @@ export default async function Services() {
                   </div>
                   
                   <div className="mt-10 flex flex-wrap gap-4">
-                    <Link href="/contact" className="inline-flex items-center px-8 py-4 bg-accent text-white font-bold rounded-xl hover:bg-accent/90 transition-all shadow-lg hover:shadow-accent/30">
+                    <Link href="/contact" className="inline-flex items-center px-8 py-4 bg-white text-primary font-bold rounded-xl hover:bg-gray-100 transition-all shadow-lg hover:shadow-white/20">
                       Request Solar Quote
                     </Link>
                   </div>

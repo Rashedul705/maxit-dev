@@ -76,7 +76,7 @@ export default async function Team() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="text-center max-w-4xl mx-auto mb-0">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-primary mb-6 tracking-tight leading-tight">
-                Complete Corporate Governance and <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-red-400">Web Team Directory</span>
+                Complete Corporate Governance and <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Web Team Directory</span>
               </h1>
               <p className="text-2xl text-gray-800 font-bold mb-4">
                 Max IT Solution Ltd.
@@ -99,7 +99,7 @@ export default async function Team() {
                 {/* CEO Image */}
                 <div className="flex-shrink-0 w-56 md:w-64 relative mt-4">
                   {/* Glow Effect */}
-                  <div className="absolute inset-0 bg-[#E74C3C]/20 rounded-[4rem] blur-2xl transform scale-110"></div>
+                  <div className="absolute inset-0 bg-accent/20 rounded-[4rem] blur-2xl transform scale-110"></div>
                   {/* Image Container */}
                   <div className="relative z-10 w-full aspect-[3/4] rounded-[4rem] border-4 border-white shadow-lg overflow-hidden bg-gray-50 flex items-center justify-center">
                     {ceo.photoUrl || ceo.image ? (
@@ -127,7 +127,7 @@ export default async function Team() {
                       const [main, rest] = ceo.name.split('(');
                       return (
                         <h2 className="text-3xl md:text-4xl font-bold font-heading text-primary mb-6">
-                          {main.trim()} <span className="text-[#E74C3C]">({rest}</span>
+                          {main.trim()} <span className="text-accent">({rest}</span>
                         </h2>
                       );
                     }
@@ -139,7 +139,7 @@ export default async function Team() {
                   })()}
                   
                   <div className="relative">
-                    <span className="text-[#E74C3C] text-5xl font-serif absolute -top-2 -left-6 leading-none">"</span>
+                    <span className="text-accent text-5xl font-serif absolute -top-2 -left-6 leading-none">"</span>
                     <div className="text-gray-500 space-y-4 text-base md:text-[15px] leading-relaxed relative z-10 pl-2">
                       {ceo.message ? (
                         <div className="whitespace-pre-wrap">{ceo.message}</div>
@@ -156,7 +156,7 @@ export default async function Team() {
                   <div className="mt-8 flex justify-end w-full">
                     <div className="text-right inline-block">
                       <div 
-                        className="text-2xl text-gray-600 pb-1 px-2 border-b-2 border-[#E74C3C]/60 italic" 
+                        className="text-2xl text-gray-600 pb-1 px-2 border-b-2 border-accent/60 italic" 
                         style={{ fontFamily: "'Dancing Script', 'Caveat', 'Segoe Script', cursive" }}
                       >
                         {ceo.name?.split('(')[0].replace('Engr.', '').trim() || 'Zahangir Alam'}

@@ -9,6 +9,10 @@ import dbConnect from '@/lib/mongodb';
 import Testimonial from '@/models/Testimonial';
 import Reason from '@/models/Reason';
 import HeroContent from '@/models/HeroContent';
+import AboutContent from '@/models/AboutContent';
+import CompanyProfileData from '@/models/CompanyProfileData';
+import Service from '@/models/Service';
+import TeamMember from '@/models/TeamMember';
 
 export const dynamic = 'force-dynamic';
 
@@ -46,80 +50,151 @@ async function getHeroContent() {
   }
 }
 
+async function getAboutData() {
+  try {
+    await dbConnect();
+    const doc = await (AboutContent.findOne as any)().lean();
+    return doc ? JSON.parse(JSON.stringify(doc)) : { journey: 'Leading technology and engineering solutions provider.' };
+  } catch (error) {
+    return { journey: 'Leading technology and engineering solutions provider.' };
+  }
+}
+
+async function getCompanyProfileData() {
+  try {
+    await dbConnect();
+    const doc = await (CompanyProfileData.findOne as any)().lean();
+    return doc ? JSON.parse(JSON.stringify(doc)) : { stats: [] };
+  } catch (error) {
+    return { stats: [] };
+  }
+}
+
+async function getServicesData() {
+  try {
+    await dbConnect();
+    const docs = await (Service.find as any)({}).sort({ order: 1 }).lean();
+    return JSON.parse(JSON.stringify(docs));
+  } catch (error) {
+    return [];
+  }
+}
+
+async function getTeamData() {
+  try {
+    await dbConnect();
+    let ceoDoc = await (TeamMember.findOne as any)({ isCeo: true }).lean();
+    let allMembers = await (TeamMember.find as any)({ isCeo: false }).sort({ order: 1 }).lean();
+    
+    // Fallback: extract CEO
+    if (!ceoDoc) {
+      const ceoIndex = allMembers.findIndex((m: any) => m.name.toLowerCase().includes('zahangir') || (m.officialTitle && m.officialTitle.toLowerCase().includes('ceo')));
+      if (ceoIndex !== -1) {
+        ceoDoc = allMembers[ceoIndex];
+        allMembers.splice(ceoIndex, 1);
+      }
+    }
+
+    const chairman = allMembers.find((m: any) => m.name.toLowerCase().includes('subnom') || (m.officialTitle && m.officialTitle.toLowerCase().includes('chair')));
+    const sarwer = allMembers.find((m: any) => m.name.toLowerCase().includes('sarwer') || (m.officialTitle && m.officialTitle.toLowerCase().includes('director') && m.officialTitle.toLowerCase().includes('iot')));
+    
+    // Fallback for third member if Sarwer Jahan is not found
+    const thirdMember = sarwer || allMembers.find((m: any) => m.officialTitle && m.officialTitle.toLowerCase().includes('director')) || allMembers[0];
+    
+    const ceo = JSON.parse(JSON.stringify(ceoDoc || null));
+    if (ceo) {
+      ceo.officialTitle = "Chief Executive Officer (CEO)";
+      ceo.functionalDesignation = " "; // Prevent fallback text
+    }
+
+    const chairmanObj = JSON.parse(JSON.stringify(chairman || null));
+    if (chairmanObj) {
+      chairmanObj.officialTitle = "Chairperson Of The Board";
+      chairmanObj.functionalDesignation = " ";
+    }
+
+    const thirdMemberObj = JSON.parse(JSON.stringify(thirdMember || null));
+    if (thirdMemberObj) {
+      thirdMemberObj.officialTitle = "Director - Automation & IoT";
+      thirdMemberObj.functionalDesignation = " ";
+    }
+
+    const others = [chairmanObj, thirdMemberObj].filter(Boolean);
+    
+    return [ceo, ...others].filter(Boolean);
+  } catch (error) {
+    return [];
+  }
+}
+
 const Index = async () => {
   const testimonials = await getTestimonials();
   const reasonsData = await getReasons();
   const heroContent = await getHeroContent();
-  const services = [
-    {
-      title: "Solar Home Systems (SHS)",
-      description: "Complete solar energy solutions for residential use, reducing grid dependency and promoting green energy throughout the community.",
-      icon: <Sun className="w-8 h-8" />,
-      features: ["Rooftop Installation", "Battery Storage", "Grid Independence"],
-      image: "/images/slides/hybrid_inverter_slide_1789677816112.jpg"
-    },
-    {
-      title: "Solar Pump & Smart Irrigation",
-      description: "Advanced solar-powered pumping systems integrated with smart irrigation technology for efficient water management in agriculture.",
-      icon: <Sprout className="w-8 h-8" />,
-      features: ["Automated Watering", "Solar Powered", "High Efficiency"],
-      image: "/images/slides/agro_solar_slide_1789677870674.jpg"
-    },
-    {
-      title: "Agro Technology",
-      description: "Innovative agricultural tech solutions including IoT monitoring, soil sensors, and automated climate control for greenhouses.",
-      icon: <Leaf className="w-8 h-8" />,
-      features: ["IoT Monitoring", "Soil Sensors", "Climate Control"],
-      image: "/images/slides/agro_tech_service_1789678968707.jpg"
-    },
-    {
-      title: "Industrial & Home Automation",
-      description: "Smart control systems for industries and homes, improving efficiency, safety, and convenience through electric automation.",
-      icon: <Cpu className="w-8 h-8" />,
-      features: ["Smart Controls", "IoT Integration", "Energy Tracking"],
-      image: "/images/slides/iot_smart_home_slide_1789677856585.jpg"
-    },
-    {
-      title: "Networking & Internet Services",
-      description: "Robust network infrastructure design and reliable high-speed internet connectivity for businesses and rural areas.",
-      icon: <Wifi className="w-8 h-8" />,
-      features: ["High-speed Setup", "Network Security", "Infrastructure Design"],
-      image: "/images/slides/networking_service_1789678979212.jpg"
-    },
-    {
-      title: "CCTV Security Systems",
-      description: "Professional installation of IP camera systems and surveillance solutions for 24/7 security monitoring.",
-      icon: <Cctv className="w-8 h-8" />,
-      features: ["24/7 Monitoring", "IP Cameras", "Cloud Storage"],
-      image: "/images/slides/cctv_service_1789678989455.jpg"
-    },
-    {
-      title: "Water Treatment Solutions",
-      description: "Comprehensive water treatment plants ensuring clean and safe water for communities and industries.",
-      icon: <Droplets className="w-8 h-8" />,
-      features: ["Purification Plants", "Filtration", "Quality Monitoring"],
-      image: "/images/slides/water_treatment_service_1789679001434.jpg"
-    },
-    {
-      title: "Communication Infrastructure",
-      description: "Construction and maintenance of radio communication towers and related infrastructure.",
-      icon: <RadioTower className="w-8 h-8" />,
-      features: ["Radio Towers", "Maintenance", "Signal Optimization"],
-      image: "/images/slides/solar_automation_slide_1789677805531.jpg"
-    },
-    {
-      title: "Building Electrical Engineering",
-      description: "Expert electrical planning and wiring services for commercial and residential construction projects.",
-      icon: <Lightbulb className="w-8 h-8" />,
-      features: ["Wiring Planning", "Safety Compliance", "Commercial Projects"],
-      image: "/images/slides/commercial_rooftop_slide_1789677880098.jpg"
-    }
-  ];
+  const aboutData = await getAboutData();
+  const profileData = await getCompanyProfileData();
+  const teamMembers = await getTeamData();
+  let services = await getServicesData();
+  if (services.length === 0) {
+    services = [
+      { title: "Solar Home Systems", description: "Complete solar energy solutions for residential use.", iconCategory: "Sun" },
+      { title: "Solar Pump & Smart Irrigation", description: "Advanced solar-powered pumping systems.", iconCategory: "Sprout" },
+      { title: "Industrial Automation", description: "Smart control systems for industries.", iconCategory: "Cpu" },
+      { title: "Networking Services", description: "Robust network infrastructure design.", iconCategory: "Wifi" }
+    ];
+  }
 
+  const stats = profileData?.stats?.length > 0 ? profileData.stats : [
+    { value: "50+", label: "Total Rooftop Solar Power" },
+    { value: "30+", label: "Solar Irrigation Pumps" },
+    { value: "10+", label: "Off-Grid Solar Systems" },
+    { value: "24/7", label: "Nationwide Support" }
+  ];
 
   return (
     <div className="min-h-screen flex flex-col overflow-x-hidden w-full max-w-[100vw]"><main className="flex-1 animate-slide-up overflow-hidden w-full">
       <Hero content={heroContent} />
+
+      {/* How We Power Your Journey (Services Preview) */}
+      <section className="py-20 bg-gray-50 border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold font-heading text-primary mb-12">How We Power Your Journey</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {services.slice(0, 4).map((service: any, index: number) => {
+              const iconMap: Record<string, React.ReactNode> = {
+                Sun: <Sun className="w-10 h-10" />,
+                Sprout: <Sprout className="w-10 h-10" />,
+                Cpu: <Cpu className="w-10 h-10" />,
+                Wifi: <Wifi className="w-10 h-10" />
+              };
+              return (
+              <div key={index} className="flex flex-col items-center group cursor-pointer">
+                <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300 mb-6 shadow-sm">
+                  {iconMap[service.iconCategory] || <Sun className="w-10 h-10" />}
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 group-hover:text-primary transition-colors">{service.title}</h3>
+              </div>
+            )})}
+          </div>
+        </div>
+      </section>
+
+      {/* Milestones / Stats */}
+      <section className="py-20 bg-primary text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold font-heading mb-12">Milestones That Define Our Impact</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {stats.map((stat: any, index: number) => (
+              <div key={index} className="flex flex-col items-center">
+                <div className="text-5xl font-bold text-accent mb-4 font-heading">{stat.value}</div>
+                <div className="text-white/80 font-medium uppercase tracking-wider text-sm">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Solutions We Deliver */}
       <SolarInnovation />
 
       {/* About Section */}
@@ -185,48 +260,55 @@ const Index = async () => {
         </div>
       </section>
 
-      {/* Services Section */}
-      <section className="py-24 bg-gray-50/50 relative">
+      {/* About Summary Section */}
+      <section className="py-24 bg-gray-50 relative overflow-hidden border-t border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-5xl font-bold font-heading text-primary mb-6">
-              Our Premium Services
-            </h2>
-            <p className="text-xl text-gray-700 max-w-3xl mx-auto font-medium leading-relaxed">
-              From solar energy systems to smart industrial automation, we offer the robust technologies you need to power your future.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-            {services.slice(0, 3).map((service, index) => (
-              <ServiceCard key={index} {...service} />
-            ))}
-          </div>
-
-          <div className="text-center">
-            <Link
-              href="/services"
-              className="inline-flex items-center px-8 py-4 border-2 border-accent text-accent font-semibold rounded-2xl hover:bg-accent hover:text-white transition-all duration-300 shadow-sm group transform hover:-translate-y-1"
-            >
-              View All Services
-              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Link>
+          <div className="flex flex-col lg:flex-row gap-16 items-center">
+            <div className="w-full lg:w-1/2 relative">
+              <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl">
+                <img src="/images/slides/agro_solar_slide_1789677870674.jpg" alt="About MaxIT" className="w-full h-full object-cover" />
+              </div>
+              <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-accent/10 rounded-full blur-[40px] -z-10"></div>
+            </div>
+            
+            <div className="w-full lg:w-1/2">
+              <h2 className="text-4xl md:text-5xl font-bold font-heading text-primary mb-6">About MaxIT Solution</h2>
+              <p className="text-xl text-gray-700 font-medium leading-relaxed mb-10">
+                {aboutData.journey || "We are dedicated to empowering businesses and homes with sustainable energy, advanced agricultural technology, and smart automation solutions."}
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link
+                  href="/about"
+                  className="inline-flex items-center px-8 py-4 bg-primary text-white font-semibold rounded-xl hover:bg-primary/90 transition-all duration-300 shadow-lg hover:shadow-primary/30 group transform hover:-translate-y-1"
+                >
+                  Discover Our Journey
+                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </Link>
+                <Link
+                  href="/company-profile"
+                  className="inline-flex items-center px-8 py-4 bg-white border border-gray-200 text-gray-800 font-semibold rounded-xl hover:bg-gray-50 transition-all duration-300 shadow-sm group transform hover:-translate-y-1"
+                >
+                  Company Profile
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-32 bg-[#0F172A] relative overflow-hidden">
+      <section className="py-24 bg-white relative overflow-hidden">
         {/* Dynamic Background */}
-        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-accent/5 rounded-full blur-[150px] pointer-events-none transform translate-x-1/2 -translate-y-1/2" />
-        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-primary/20 rounded-full blur-[120px] pointer-events-none transform -translate-x-1/2 translate-y-1/2" />
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-secondary/50 rounded-full blur-[150px] pointer-events-none transform translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] pointer-events-none transform -translate-x-1/2 translate-y-1/2" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-24">
-            <h2 className="text-4xl md:text-5xl font-bold font-heading text-white mb-6">
-              Client Success <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-orange-400">Stories</span>
+          <div className="text-center mb-20">
+            <h2 className="text-4xl md:text-5xl font-bold font-heading text-primary mb-6">
+              Client Success Stories
             </h2>
-            <p className="text-xl text-gray-400 font-medium max-w-2xl mx-auto">
+            <p className="text-xl text-gray-600 font-medium max-w-2xl mx-auto">
               Don't just take our word for it — hear from the visionaries who have experienced the MaxIT difference firsthand.
             </p>
           </div>
@@ -249,38 +331,82 @@ const Index = async () => {
       {/* Partners Section */}
       <Partners />
 
+      {/* Team Preview Section */}
+      {teamMembers && teamMembers.length > 0 && (
+        <section className="py-24 bg-[#141F4E] relative overflow-hidden">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl font-bold font-heading text-white mb-6">
+                MaxIT Management
+              </h2>
+              <p className="text-xl text-gray-300 max-w-3xl mx-auto font-medium leading-relaxed">
+                Meet the visionary leaders driving our technology and engineering solutions forward.
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-4 sm:px-10">
+              {teamMembers.map((member: any) => (
+                <div key={member._id} className="bg-white rounded-[2rem] p-8 border border-gray-200 shadow-sm hover:shadow-xl transition-shadow duration-300 flex flex-col items-center text-center">
+                  <div className="w-48 h-48 sm:w-56 sm:h-56 mb-8 rounded-full border-[8px] border-gray-50 overflow-hidden shadow-sm">
+                    <img 
+                      src={member.photoUrl || member.image || "/images/placeholder.jpg"} 
+                      alt={member.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <h3 className="text-2xl font-bold text-primary mb-2">{member.name}</h3>
+                  <p className="text-base font-semibold text-[#0f52ba] mb-1">{member.officialTitle}</p>
+                  {member.functionalDesignation?.trim() && (
+                    <p className="text-sm text-gray-500">{member.functionalDesignation}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            <div className="text-center mt-12">
+              <Link
+                href="/team"
+                className="inline-flex items-center px-8 py-4 border-2 border-primary text-primary font-semibold rounded-xl hover:bg-primary hover:text-white transition-all duration-300 shadow-sm group"
+              >
+                View Full Team
+                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* CTA Section */}
-      <section className="py-32 relative overflow-hidden flex items-center justify-center min-h-[600px] bg-[#0F172A]">
+      <section className="py-24 relative overflow-hidden flex items-center justify-center min-h-[500px] bg-primary">
         {/* Background Image with Parallax-like effect */}
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-[url('/images/slides/commercial_rooftop_slide_1789677880098.jpg')] bg-cover bg-center opacity-20 mix-blend-luminosity" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A] via-[#0F172A]/80 to-transparent" />
+          <div className="absolute inset-0 bg-[url('/images/slides/commercial_rooftop_slide_1789677880098.jpg')] bg-cover bg-center opacity-10 mix-blend-luminosity" />
+          <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/90 to-transparent" />
         </div>
 
         {/* Dynamic Glowing Orbs */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/40 rounded-full blur-[120px] animate-[pulse_8s_ease-in-out_infinite]" />
-        <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-primary/60 rounded-full blur-[150px] animate-[pulse_12s_ease-in-out_infinite]" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/10 rounded-full blur-[120px] animate-[pulse_8s_ease-in-out_infinite]" />
         
         {/* Glassmorphism Container */}
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-          <div className="bg-white/5 backdrop-blur-2xl border border-white/10 p-12 md:p-20 rounded-[3rem] shadow-2xl text-center transform transition-all duration-700 hover:border-white/20 hover:bg-white/10">
-            <h2 className="text-4xl md:text-6xl font-bold font-heading text-white mb-8 tracking-tight">
-              Ready to Power Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-orange-400">Future?</span>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+          <div className="bg-white/10 backdrop-blur-md border border-white/20 p-10 md:p-16 rounded-[2rem] shadow-2xl text-center">
+            <h2 className="text-4xl md:text-5xl font-bold font-heading text-white mb-6 tracking-tight">
+              Ready to Power Your Future?
             </h2>
-            <p className="text-xl text-gray-300 mb-12 max-w-2xl mx-auto font-medium leading-relaxed">
+            <p className="text-xl text-white/90 mb-10 max-w-2xl mx-auto font-medium leading-relaxed">
               Let's work together to implement sustainable and intelligent solutions that scale with your ambitions. Get in touch with us today!
             </p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Link
                 href="/contact"
-                className="group relative inline-flex items-center justify-center px-10 py-5 bg-gradient-to-r from-accent to-orange-500 text-white font-bold rounded-2xl transition-all duration-300 shadow-[0_0_40px_rgba(249,115,22,0.4)] hover:shadow-[0_0_60px_rgba(249,115,22,0.6)] transform hover:-translate-y-1 hover:scale-105 w-full sm:w-auto"
+                className="group relative inline-flex items-center justify-center px-8 py-4 bg-white text-primary hover:bg-gray-50 font-bold rounded-xl transition-all duration-300 shadow-lg transform hover:-translate-y-1 w-full sm:w-auto"
               >
                 <span className="relative z-10 text-lg">Get Started Today</span>
-                <ArrowRight className="relative z-10 ml-3 w-6 h-6 group-hover:translate-x-2 transition-transform" />
+                <ArrowRight className="relative z-10 ml-3 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
                 href="/services"
-                className="inline-flex items-center justify-center px-10 py-5 border-2 border-white/20 bg-transparent text-white font-semibold rounded-2xl hover:bg-white/10 hover:border-white/40 transition-all duration-300 backdrop-blur-sm transform hover:-translate-y-1 w-full sm:w-auto text-lg"
+                className="inline-flex items-center justify-center px-8 py-4 border-2 border-white/30 text-white font-semibold rounded-xl hover:bg-white/10 hover:border-white/50 transition-all duration-300 transform hover:-translate-y-1 w-full sm:w-auto text-lg"
               >
                 View Our Work
               </Link>

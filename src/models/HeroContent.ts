@@ -24,6 +24,10 @@ const HeroContentSchema = new mongoose.Schema(
       type: String,
       default: 'Empowering your future with sustainable energy solutions, advanced agro-technology, and intelligent industrial automation.',
     },
+    backgroundImage: {
+      type: String,
+      default: '/images/hero-bg.jpg',
+    },
     stats: {
       type: [StatSchema],
       default: [

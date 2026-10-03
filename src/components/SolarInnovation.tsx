@@ -69,22 +69,22 @@ const SolarInnovation = () => {
   ];
 
   return (
-    <section className="pt-12 pb-24 bg-primary relative overflow-hidden">
+    <section className="pt-12 pb-24 bg-white relative overflow-hidden">
       {/* Dynamic Background Effect */}
-      <div className="absolute inset-0 bg-[#1a2040]">
-        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-accent/20 rounded-full blur-[150px] animate-[spin_20s_linear_infinite] transform-origin-center pointer-events-none" />
+      <div className="absolute inset-0 bg-secondary/30">
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[150px] animate-[spin_20s_linear_infinite] transform-origin-center pointer-events-none" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
           <div className="max-w-2xl">
-            <h2 className="text-4xl md:text-6xl font-bold font-heading text-white mb-6">
+            <h2 className="text-4xl md:text-6xl font-bold font-heading text-foreground mb-6">
               Pioneering the <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-orange-300">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
                 Solar Frontier
               </span>
             </h2>
-            <p className="text-xl text-primary-foreground/80 font-medium leading-relaxed">
+            <p className="text-xl text-gray-600 font-medium leading-relaxed">
               Explore our state-of-the-art videography and see how MaxIT Solution is reshaping the energy landscape with break-through technologies.
             </p>
           </div>
@@ -92,13 +92,13 @@ const SolarInnovation = () => {
           <div className="flex space-x-4">
             <button 
               onClick={scrollPrev}
-              className="w-14 h-14 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-primary transition-all duration-300 backdrop-blur-sm"
+              className="w-14 h-14 rounded-full border-2 border-primary/20 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all duration-300 backdrop-blur-sm"
             >
               <ChevronLeft className="w-6 h-6" />
             </button>
             <button 
               onClick={scrollNext}
-              className="w-14 h-14 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-primary transition-all duration-300 backdrop-blur-sm"
+              className="w-14 h-14 rounded-full border-2 border-primary/20 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all duration-300 backdrop-blur-sm"
             >
               <ChevronRight className="w-6 h-6" />
             </button>
@@ -117,11 +117,11 @@ const SolarInnovation = () => {
                 />
                 
                 {/* Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/50 to-transparent opacity-90" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-90" />
                 
                 {/* Videography Play Button */}
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div className="w-24 h-24 rounded-full bg-accent/90 flex items-center justify-center backdrop-blur-md text-white shadow-[0_0_40px_rgba(232,87,70,0.4)] transform group-hover:scale-110 group-hover:bg-accent transition-all duration-500 cursor-pointer pointer-events-auto">
+                  <div className="w-24 h-24 rounded-full bg-primary/90 flex items-center justify-center backdrop-blur-md text-white shadow-[0_0_40px_rgba(4,107,210,0.4)] transform group-hover:scale-110 group-hover:bg-primary transition-all duration-500 cursor-pointer pointer-events-auto">
                     <Play fill="currentColor" className="w-8 h-8 ml-2" />
                   </div>
                 </div>

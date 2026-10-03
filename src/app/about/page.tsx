@@ -47,7 +47,7 @@ export default async function About() {
                 <span className="text-primary font-semibold text-sm tracking-wider uppercase">Our Journey</span>
               </div>
               <h1 className="text-4xl md:text-6xl font-bold font-heading text-primary mb-6 tracking-tight">
-                The Story Behind <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-red-400">MaxIT</span>
+                The Story Behind <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">MaxIT</span>
               </h1>
               <p className="text-xl text-gray-700 max-w-3xl mx-auto font-medium leading-relaxed">
                 {aboutData.journey}
@@ -122,15 +122,15 @@ export default async function About() {
         </section>
 
         {/* 4. Core Values */}
-        <section className="py-24 bg-[#0B1120] text-white">
+        <section className="py-24 bg-gray-50 text-foreground">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col md:flex-row gap-16">
               <div className="md:w-1/3">
-                <h2 className="text-4xl font-bold font-heading mb-6">Our Core Values</h2>
-                <p className="text-gray-400 text-lg leading-relaxed mb-8">
+                <h2 className="text-4xl font-bold font-heading mb-6 text-primary">Our Core Values</h2>
+                <p className="text-gray-600 text-lg leading-relaxed mb-8 font-medium">
                   These guiding principles shape our culture, drive our decisions, and define how we interact with our clients and the world.
                 </p>
-                <div className="w-20 h-1 bg-accent rounded-full"></div>
+                <div className="w-20 h-1 bg-primary rounded-full"></div>
               </div>
               
               <div className="md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-8">
@@ -142,13 +142,13 @@ export default async function About() {
                 ].map((val, idx) => (
                   <div key={idx} className="flex gap-4">
                     <div className="flex-shrink-0 mt-1">
-                      <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center">
-                        <val.icon className="w-6 h-6 text-accent" />
+                      <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                        <val.icon className="w-6 h-6 text-primary" />
                       </div>
                     </div>
                     <div>
-                      <h4 className="text-xl font-bold mb-2">{val.title}</h4>
-                      <p className="text-gray-400 leading-relaxed">{val.desc}</p>
+                      <h4 className="text-xl font-bold mb-2 text-primary">{val.title}</h4>
+                      <p className="text-gray-600 font-medium leading-relaxed">{val.desc}</p>
                     </div>
                   </div>
                 ))}
@@ -200,7 +200,7 @@ export default async function About() {
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <Link 
                 href="/services" 
-                className="inline-flex items-center justify-center px-8 py-4 bg-accent text-white font-bold rounded-2xl hover:bg-[#d4483a] transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-1 duration-300 text-lg"
+                className="inline-flex items-center justify-center px-8 py-4 bg-white text-primary font-bold rounded-2xl hover:bg-gray-50 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-1 duration-300 text-lg"
               >
                 Explore Our Solutions
               </Link>

@@ -8,6 +8,7 @@ interface HeroProps {
     titleLine1: string;
     titleLine2: string;
     description: string;
+    backgroundImage?: string;
     stats: { end: number; suffix: string; label: string }[];
   }
 }
@@ -25,12 +26,16 @@ const Hero = ({ content }: HeroProps) => {
   const titleLine1 = content?.titleLine1 || "Solar Energy &";
   const titleLine2 = content?.titleLine2 || "Smart Automation";
   const description = content?.description || "Empowering your future with sustainable energy solutions, advanced agro-technology, and intelligent industrial automation.";
+  const backgroundImage = content?.backgroundImage || "/images/hero-bg.jpg";
 
   return (
     <section className="relative pt-32 pb-20 lg:pt-40 lg:pb-32 overflow-hidden">
       {/* Background Image & Overlays */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute inset-0 bg-[url('/hero-bg-2.jpg')] bg-cover bg-center" />
+        <div 
+          className="absolute inset-0 bg-cover bg-center" 
+          style={{ backgroundImage: `url('${backgroundImage}')` }}
+        />
         <div className="absolute inset-0 bg-slate-900/40" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-white" />
         <div className="absolute -top-[20%] -right-[10%] w-[50%] h-[50%] rounded-full bg-accent/10 blur-[120px]" />
@@ -39,17 +44,11 @@ const Hero = ({ content }: HeroProps) => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center max-w-4xl mx-auto">
-          {/* Stylish MAXIT Branding */}
-          <div className="mb-8">
-            <h2 className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-gray-400 tracking-[0.2em] uppercase drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)]">
-              {brandingText}
-            </h2>
-            <div className="w-24 h-1.5 bg-accent mx-auto mt-4 rounded-full shadow-lg shadow-accent/50" />
-          </div>
+
 
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-8 leading-tight font-heading tracking-tight drop-shadow-xl">
             {titleLine1} <br className="hidden md:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-red-400 drop-shadow-md">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-300 drop-shadow-md">
               {titleLine2}
             </span>
           </h1>
@@ -61,7 +60,7 @@ const Hero = ({ content }: HeroProps) => {
           <div className="flex flex-col sm:flex-row gap-5 justify-center mb-16 px-4">
             <Link
               href="/services"
-              className="group inline-flex items-center justify-center px-8 py-4 bg-accent text-white font-semibold rounded-2xl hover:bg-accent/90 shadow-lg shadow-accent/30 hover:shadow-xl hover:shadow-accent/40 transition-all duration-300 transform hover:-translate-y-1"
+              className="group inline-flex items-center justify-center px-8 py-4 bg-primary text-white font-semibold rounded-2xl hover:bg-primary/90 shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 transition-all duration-300 transform hover:-translate-y-1"
             >
               Explore Services
               <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />

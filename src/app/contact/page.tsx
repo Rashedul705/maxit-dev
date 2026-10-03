@@ -51,7 +51,7 @@ export default async function Contact() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
             <h1 className="text-5xl md:text-6xl font-bold font-heading text-primary mb-6 tracking-tight">
               {headerTitle.split(' ').map((word: string, i: number, arr: string[]) => 
-                i === arr.length - 1 ? <span key={i} className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-red-400">{word}</span> : <span key={i}>{word} </span>
+                i === arr.length - 1 ? <span key={i} className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">{word}</span> : <span key={i}>{word} </span>
               )}
             </h1>
             <p className="text-xl text-gray-700 font-medium leading-relaxed max-w-2xl mx-auto">
@@ -69,7 +69,7 @@ export default async function Contact() {
                 <h2 className="text-3xl font-bold font-heading text-primary mb-8">Contact Information</h2>
                 <div className="space-y-8">
                   <div className="flex items-start">
-                    <div className="flex-shrink-0 w-12 h-12 bg-accent/10 text-accent rounded-2xl flex items-center justify-center mr-6">
+                    <div className="flex-shrink-0 w-12 h-12 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mr-6">
                       <MapPin className="w-6 h-6" />
                     </div>
                     <div>
@@ -79,7 +79,7 @@ export default async function Contact() {
                   </div>
                   
                   <div className="flex items-start">
-                    <div className="flex-shrink-0 w-12 h-12 bg-accent/10 text-accent rounded-2xl flex items-center justify-center mr-6">
+                    <div className="flex-shrink-0 w-12 h-12 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mr-6">
                       <Phone className="w-6 h-6" />
                     </div>
                     <div>
@@ -89,7 +89,7 @@ export default async function Contact() {
                   </div>
 
                   <div className="flex items-start">
-                    <div className="flex-shrink-0 w-12 h-12 bg-accent/10 text-accent rounded-2xl flex items-center justify-center mr-6">
+                    <div className="flex-shrink-0 w-12 h-12 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mr-6">
                       <Mail className="w-6 h-6" />
                     </div>
                     <div>

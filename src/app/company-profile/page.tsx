@@ -165,7 +165,7 @@ export default async function CompanyProfile() {
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-10">
           <div className="max-w-3xl">
             <h1 className="text-5xl md:text-7xl font-bold font-heading text-white mb-6 leading-tight">
-              Technology & Engineering Solutions Built for a <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-orange-400">Smarter Future</span>
+              Technology & Engineering Solutions Built for a <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Smarter Future</span>
             </h1>
             <p className="text-xl text-gray-300 mb-10 font-medium leading-relaxed max-w-2xl">
               MaxIT provides integrated technology and engineering solutions across renewable energy, smart agriculture, automation, security, networking, water treatment, communication infrastructure and building electrical systems.
@@ -515,8 +515,8 @@ export default async function CompanyProfile() {
       </section>
 
       {/* 9 & 10. Partners & Certifications */}
-      <section className="py-24 bg-[#0B1120] text-white overflow-hidden relative">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[100px] pointer-events-none -translate-y-1/2 translate-x-1/2"></div>
+      <section className="py-24 bg-primary text-white overflow-hidden relative">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white/5 rounded-full blur-[100px] pointer-events-none -translate-y-1/2 translate-x-1/2"></div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid md:grid-cols-2 gap-16">
@@ -572,7 +572,7 @@ export default async function CompanyProfile() {
                 {/* CEO Image */}
                 <div className="flex-shrink-0 w-56 md:w-64 relative mt-4">
                   {/* Glow Effect */}
-                  <div className="absolute inset-0 bg-[#E74C3C]/20 rounded-[4rem] blur-2xl transform scale-110"></div>
+                  <div className="absolute inset-0 bg-accent/20 rounded-[4rem] blur-2xl transform scale-110"></div>
                   {/* Image Container */}
                   <div className="relative z-10 w-full aspect-[3/4] rounded-[4rem] border-4 border-white shadow-lg overflow-hidden bg-gray-50 flex items-center justify-center">
                     {ceo.photoUrl || ceo.image ? (
@@ -600,7 +600,7 @@ export default async function CompanyProfile() {
                       const [main, rest] = ceo.name.split('(');
                       return (
                         <h2 className="text-3xl md:text-4xl font-bold font-heading text-primary mb-6">
-                          {main.trim()} <span className="text-[#E74C3C]">({rest}</span>
+                          {main.trim()} <span className="text-accent">({rest}</span>
                         </h2>
                       );
                     }
@@ -612,7 +612,7 @@ export default async function CompanyProfile() {
                   })()}
                   
                   <div className="relative">
-                    <span className="text-[#E74C3C] text-5xl font-serif absolute -top-2 -left-6 leading-none">"</span>
+                    <span className="text-accent text-5xl font-serif absolute -top-2 -left-6 leading-none">"</span>
                     <div className="text-gray-500 space-y-4 text-base md:text-[15px] leading-relaxed relative z-10 pl-2">
                       {ceo.message ? (
                         <div className="whitespace-pre-wrap">{ceo.message}</div>
@@ -629,7 +629,7 @@ export default async function CompanyProfile() {
                   <div className="mt-8 flex justify-end w-full">
                     <div className="text-right inline-block">
                       <div 
-                        className="text-2xl text-gray-600 pb-1 px-2 border-b-2 border-[#E74C3C]/60 italic" 
+                        className="text-2xl text-gray-600 pb-1 px-2 border-b-2 border-accent/60 italic" 
                         style={{ fontFamily: "'Dancing Script', 'Caveat', 'Segoe Script', cursive" }}
                       >
                         {ceo.name?.split('(')[0].replace('Engr.', '').trim() || 'Zahangir Alam'}
@@ -771,14 +771,14 @@ export default async function CompanyProfile() {
       <Partners isGrid={true} />
 
       {/* 13. CTA Section */}
-      <section className="relative py-32 flex items-center justify-center bg-[#0B1120]">
+      <section className="relative py-32 flex items-center justify-center bg-primary">
         <div className="absolute inset-0">
           <img 
             src="/images/slides/agro_solar_slide_1789677870674.jpg" 
             alt="Engineering Project" 
-            className="w-full h-full object-cover opacity-50"
+            className="w-full h-full object-cover opacity-30"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0B1120] via-[#0B1120]/80 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/80 to-transparent" />
         </div>
         
         <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
