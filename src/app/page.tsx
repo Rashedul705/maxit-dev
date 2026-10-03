@@ -155,26 +155,38 @@ const Index = async () => {
     <div className="min-h-screen flex flex-col overflow-x-hidden w-full max-w-[100vw]"><main className="flex-1 animate-slide-up overflow-hidden w-full">
       <Hero content={heroContent} />
 
-      {/* How We Power Your Journey (Services Preview) */}
-      <section className="py-20 bg-gray-50 border-b border-gray-100">
+      {/* How We Power Your Solar Journey */}
+      <section className="py-20 bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold font-heading text-primary mb-12">How We Power Your Journey</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {services.slice(0, 4).map((service: any, index: number) => {
-              const iconMap: Record<string, React.ReactNode> = {
-                Sun: <Sun className="w-10 h-10" />,
-                Sprout: <Sprout className="w-10 h-10" />,
-                Cpu: <Cpu className="w-10 h-10" />,
-                Wifi: <Wifi className="w-10 h-10" />
-              };
-              return (
-              <div key={index} className="flex flex-col items-center group cursor-pointer">
-                <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300 mb-6 shadow-sm">
-                  {iconMap[service.iconCategory] || <Sun className="w-10 h-10" />}
+          <h2 className="text-3xl md:text-4xl font-normal text-gray-900 mb-4">
+            How We Power Your <span className="font-bold text-primary">Solar Journey</span>
+          </h2>
+          <p className="text-gray-500 max-w-3xl mx-auto mb-16 leading-relaxed">
+            From planning to performance, our services ensure your solar investment delivers maximum efficiency, reliability, and long-term value.
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 border border-gray-200 rounded-2xl overflow-hidden bg-white">
+            {[
+              { title: "Solar Energy", description: "Expert installation ensuring optimal performance, safety, and long-term reliability across residential, commercial, and industrial solar projects.", icon: <Sun className="w-8 h-8 text-primary" /> },
+              { title: "Irrigation & Water", description: "Advanced solar-powered pumping systems integrated with smart technology for highly efficient agricultural water management.", icon: <Droplets className="w-8 h-8 text-primary" /> },
+              { title: "IT & Networking", description: "Robust network infrastructure design and reliable high-speed connectivity solutions for businesses and organizations.", icon: <Wifi className="w-8 h-8 text-primary" /> },
+              { title: "Automation & Civil Works", description: "Intelligent control systems and structural civil engineering services to modernize your operational infrastructure.", icon: <Settings className="w-8 h-8 text-primary" /> },
+              { title: "Power & Electrical", description: "Comprehensive electrical planning, wiring, and safe power distribution services for diverse project scales.", icon: <Zap className="w-8 h-8 text-primary" /> },
+              { title: "CCTV Surveillance", description: "Professional IP camera systems and advanced surveillance solutions providing reliable 24/7 security monitoring.", icon: <Cctv className="w-8 h-8 text-primary" /> },
+            ].map((service, index) => (
+              <div 
+                key={index} 
+                className={`flex flex-col items-center p-10 group transition-colors hover:bg-gray-50/50 ${
+                  index % 3 !== 2 ? 'md:border-r border-gray-200' : ''
+                } ${index < 3 ? 'border-b border-gray-200' : ''} ${index >= 3 && index < 5 ? 'border-b md:border-b-0 border-gray-200' : ''}`}
+              >
+                <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center border-2 border-primary/20 group-hover:border-primary/50 transition-colors mb-6 shadow-sm">
+                  {service.icon}
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 group-hover:text-primary transition-colors">{service.title}</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-3">{service.title}</h3>
+                <p className="text-sm text-gray-500 leading-relaxed max-w-xs">{service.description}</p>
               </div>
-            )})}
+            ))}
           </div>
         </div>
       </section>

@@ -37,7 +37,7 @@ const Hero = ({ content }: HeroProps) => {
           style={{ backgroundImage: `url('${backgroundImage}')` }}
         />
         <div className="absolute inset-0 bg-slate-900/40" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-white" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-transparent" />
         <div className="absolute -top-[20%] -right-[10%] w-[50%] h-[50%] rounded-full bg-accent/10 blur-[120px]" />
         <div className="absolute top-[20%] -left-[10%] w-[40%] h-[40%] rounded-full bg-primary/10 blur-[120px]" />
       </div>
