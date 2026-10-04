@@ -440,7 +440,9 @@ export default async function CompanyProfile() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {projectsList.slice(0, 4).map((project: any) => (
+            {projectsList.slice(0, 4).map((project: any) => {
+              const slugify = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+              return (
               <div key={project._id} className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col sm:flex-row group">
                 <div className="w-full sm:w-2/5 h-64 sm:h-auto overflow-hidden relative">
                   <img src={project.imageUrl} alt={project.title} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" />
@@ -454,12 +456,13 @@ export default async function CompanyProfile() {
                     <MapPin className="w-4 h-4 mr-1 text-accent" /> Location Verified
                   </div>
                   <p className="text-gray-600 mb-6 line-clamp-2">{project.shortDescription}</p>
-                  <Link href={`/projects/${project._id}`} className="inline-flex items-center text-accent font-bold mt-auto group-hover:translate-x-2 transition-transform w-fit">
+                  <Link href={`/project/${slugify(project.title)}`} className="inline-flex items-center text-accent font-bold mt-auto group-hover:translate-x-2 transition-transform w-fit">
                     View Project <ArrowRight className="ml-2 w-4 h-4" />
                   </Link>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>

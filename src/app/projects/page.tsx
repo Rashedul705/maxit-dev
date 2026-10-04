@@ -58,8 +58,10 @@ export default async function ProjectsPage() {
       {/* Projects Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project: any) => (
-            <Link href={`/projects/${project._id}`} key={project._id} className="group h-full">
+          {projects.map((project: any) => {
+            const slugify = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+            return (
+            <Link href={`/project/${slugify(project.title)}`} key={project._id} className="group h-full">
               <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 h-full flex flex-col border border-gray-100 transform hover:-translate-y-1">
                 {/* Image Container */}
                 <div className="relative h-64 overflow-hidden">
@@ -91,7 +93,8 @@ export default async function ProjectsPage() {
                 </div>
               </div>
             </Link>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>

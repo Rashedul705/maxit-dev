@@ -26,6 +26,17 @@ const ProjectSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
+    clientType: { type: String },
+    location: { type: String },
+    challenge: { type: String },
+    solution: { type: String },
+    scopeOfWork: { type: [String], default: [] },
+    gallery: { type: [String], default: [] },
+    stats: {
+      capacityInstalled: { type: String },
+      energySaved: { type: String },
+      projectDuration: { type: String }
+    },
     imageUrl: {
       type: String,
       required: true,
