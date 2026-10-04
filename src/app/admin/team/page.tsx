@@ -50,6 +50,8 @@ export default function TeamManagement() {
   const [sections, setSections] = useState<TeamSection[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+  const [deleteSectionConfirmId, setDeleteSectionConfirmId] = useState<string | null>(null);
   const [editId, setEditId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -186,19 +188,23 @@ export default function TeamManagement() {
     setIsModalOpen(true);
   };
 
-  const handleDelete = async (id: string) => {
-    if (confirm("Are you sure you want to delete this team member?")) {
-      try {
-        const res = await fetch(`/api/admin/team/${id}`, { method: 'DELETE' });
-        if (res.ok) {
-          setMembers(members.filter(m => m._id !== id));
-        } else {
-          alert("Failed to delete member");
-        }
-      } catch (err) {
-        console.error(err);
+  const confirmDeleteMember = async (id: string) => {
+    try {
+      const res = await fetch(`/api/admin/team/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        setMembers(members.filter(m => m._id !== id));
+      } else {
+        alert("Failed to delete member");
       }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setDeleteConfirmId(null);
     }
+  };
+
+  const handleDelete = (id: string) => {
+    setDeleteConfirmId(id);
   };
 
   const handleMemberSubmit = async (e: React.FormEvent) => {
@@ -288,17 +294,21 @@ export default function TeamManagement() {
     }
   };
 
-  const handleDeleteSection = async (id: string) => {
-    if (confirm("Are you sure you want to delete this section?")) {
-      try {
-        const res = await fetch(`/api/admin/team-sections/${id}`, { method: 'DELETE' });
-        if (res.ok) {
-          setSections(sections.filter(s => s._id !== id));
-        }
-      } catch (err) {
-        console.error(err);
+  const confirmDeleteSection = async (id: string) => {
+    try {
+      const res = await fetch(`/api/admin/team-sections/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        setSections(sections.filter(s => s._id !== id));
       }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setDeleteSectionConfirmId(null);
     }
+  };
+
+  const handleDeleteSection = (id: string) => {
+    setDeleteSectionConfirmId(id);
   };
 
   return (
@@ -772,6 +782,55 @@ export default function TeamManagement() {
                   </button>
                 )}
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Delete Confirmation Modal for Member */}
+      {deleteConfirmId && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setDeleteConfirmId(null)} />
+          <div className="relative bg-white rounded-xl shadow-xl w-full max-w-sm p-6 m-4 animate-in fade-in zoom-in-95 duration-200">
+            <h3 className="text-lg font-bold text-gray-900 mb-2">Delete Team Member</h3>
+            <p className="text-gray-600 mb-6">Are you sure you want to delete this team member? This action cannot be undone.</p>
+            <div className="flex justify-end space-x-3">
+              <button 
+                onClick={() => setDeleteConfirmId(null)}
+                className="px-4 py-2 text-gray-600 font-medium hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={() => confirmDeleteMember(deleteConfirmId)}
+                className="px-4 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal for Section */}
+      {deleteSectionConfirmId && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setDeleteSectionConfirmId(null)} />
+          <div className="relative bg-white rounded-xl shadow-xl w-full max-w-sm p-6 m-4 animate-in fade-in zoom-in-95 duration-200">
+            <h3 className="text-lg font-bold text-gray-900 mb-2">Delete Section</h3>
+            <p className="text-gray-600 mb-6">Are you sure you want to delete this section? This action cannot be undone.</p>
+            <div className="flex justify-end space-x-3">
+              <button 
+                onClick={() => setDeleteSectionConfirmId(null)}
+                className="px-4 py-2 text-gray-600 font-medium hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={() => confirmDeleteSection(deleteSectionConfirmId)}
+                className="px-4 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors"
+              >
+                Delete
+              </button>
             </div>
           </div>
         </div>
