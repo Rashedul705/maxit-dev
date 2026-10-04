@@ -159,10 +159,10 @@ const Index = async () => {
       <section className="py-20 bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-normal text-gray-900 mb-4">
-            How We Power Your <span className="font-bold text-primary">Solar Journey</span>
+            Everything You Need, Under <span className="font-bold text-primary">One Roof</span>
           </h2>
           <p className="text-gray-500 max-w-3xl mx-auto mb-16 leading-relaxed">
-            From planning to performance, our services ensure your solar investment delivers maximum efficiency, reliability, and long-term value.
+            From solar and irrigation to networking, automation, electrical work, and CCTV, we handle the full job so you deal with one reliable team.
           </p>
           
           <div className="grid grid-cols-1 md:grid-cols-3 border border-gray-200 rounded-2xl overflow-hidden bg-white">
@@ -198,8 +198,8 @@ const Index = async () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat: any, index: number) => (
               <div key={index} className="flex flex-col items-center">
-                <div className="text-5xl font-bold text-accent mb-4 font-heading">{stat.value}</div>
-                <div className="text-white/80 font-medium uppercase tracking-wider text-sm">{stat.label}</div>
+                <div className="text-5xl font-bold text-white mb-4 font-heading drop-shadow-md">{stat.value}</div>
+                <div className="text-white/90 font-semibold uppercase tracking-wider text-sm">{stat.label}</div>
               </div>
             ))}
           </div>
