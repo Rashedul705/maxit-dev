@@ -348,40 +348,46 @@ const Index = async () => {
         <section className="py-24 bg-[#141F4E] relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold font-heading text-white mb-6">
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
                 MaxIT Management
               </h2>
-              <p className="text-xl text-gray-300 max-w-3xl mx-auto font-medium leading-relaxed">
-                Meet the visionary leaders driving our technology and engineering solutions forward.
+              <p className="text-lg text-gray-300/80 max-w-2xl mx-auto font-medium">
+                Meet the leaders driving our technology and engineering solutions forward.
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-4 sm:px-10">
-              {teamMembers.map((member: any) => (
-                <div key={member._id} className="bg-white rounded-[2rem] p-8 border border-gray-200 shadow-sm hover:shadow-xl transition-shadow duration-300 flex flex-col items-center text-center">
-                  <div className="w-48 h-48 sm:w-56 sm:h-56 mb-8 rounded-full border-[8px] border-gray-50 overflow-hidden shadow-sm">
-                    <img 
-                      src={member.photoUrl || member.image || "/images/placeholder.jpg"} 
-                      alt={member.name}
-                      className="w-full h-full object-cover"
-                    />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-4 sm:px-8">
+              {teamMembers.map((member: any) => {
+                return (
+                  <div key={member._id} className="bg-[#17223b] rounded-2xl p-10 border border-[#263456] flex flex-col items-center text-center shadow-lg transition-transform hover:-translate-y-1 duration-300">
+                    <div className="w-32 h-32 mb-6 rounded-full border-4 border-blue-500/80 bg-[#0d162a] overflow-hidden shadow-inner">
+                      <img 
+                        src={member.photoUrl || member.image || "/images/placeholder.jpg"} 
+                        alt={member.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    
+                    <h3 className="text-xl font-bold text-white mb-6">
+                      {member.name.replace('Engr. Md Zahangir Alam', 'Engr. Zahangir Alam (Sobuj)')}
+                    </h3>
+                    
+                    <div className="mt-auto">
+                      <span className="inline-block px-5 py-2 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-300 text-sm font-semibold tracking-wide">
+                        {member.officialTitle || member.functionalDesignation}
+                      </span>
+                    </div>
                   </div>
-                  <h3 className="text-2xl font-bold text-primary mb-2">{member.name}</h3>
-                  <p className="text-base font-semibold text-[#0f52ba] mb-1">{member.officialTitle}</p>
-                  {member.functionalDesignation?.trim() && (
-                    <p className="text-sm text-gray-500">{member.functionalDesignation}</p>
-                  )}
-                </div>
-              ))}
+                );
+              })}
             </div>
 
-            <div className="text-center mt-12">
+            <div className="text-center mt-14">
               <Link
                 href="/team"
-                className="inline-flex items-center px-8 py-4 border-2 border-primary text-primary font-semibold rounded-xl hover:bg-primary hover:text-white transition-all duration-300 shadow-sm group"
+                className="inline-flex items-center px-8 py-3 bg-blue-500 text-white font-medium rounded-xl hover:bg-blue-600 transition-colors shadow-lg shadow-blue-500/25"
               >
-                View Full Team
-                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                View full team
               </Link>
             </div>
           </div>
