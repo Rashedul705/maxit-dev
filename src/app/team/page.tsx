@@ -1,6 +1,7 @@
 import { Mail, Linkedin, MessageCircle } from 'lucide-react';
 import dbConnect from '@/lib/mongodb';
 import TeamMember from '@/models/TeamMember';
+import TeamSection from '@/models/TeamSection';
 
 export const dynamic = 'force-dynamic';
 
@@ -9,6 +10,7 @@ async function getTeamData() {
     await dbConnect();
     let ceoDoc = await (TeamMember.findOne as any)({ isCeo: true } as any).lean();
     let membersDocs = await (TeamMember.find as any)({ isCeo: false }).sort({ order: 1 }).lean();
+    let sectionsDocs = await (TeamSection.find as any)({}).sort({ order: 1 }).lean();
     
     // Fallback: extract CEO from membersDocs if not found by isCeo flag
     if (!ceoDoc) {
@@ -25,38 +27,31 @@ async function getTeamData() {
     // Parse to stringify ObjectIds for Next.js
     const ceo = JSON.parse(JSON.stringify(ceoDoc || {}));
     const members = JSON.parse(JSON.stringify(membersDocs));
+    const sections = JSON.parse(JSON.stringify(sectionsDocs || []));
     
-    return { ceo, members };
+    return { ceo, members, sections };
   } catch (error) {
     console.error('Error fetching team data:', error);
-    return { ceo: {}, members: [] };
+    return { ceo: {}, members: [], sections: [] };
   }
 }
 
 export default async function Team() {
   const teamData = await getTeamData();
-  const { ceo, members = [] } = teamData;
+  const { ceo, members = [], sections = [] } = teamData;
   
   // Sort members by order
   members.sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
 
-  const sectionsOrder = [
-    "Board of Directors",
-    "Advisory Council",
-    "Core Engineering & R&D Wing",
-    "Technical Field Staff",
-    "Global Supply Chain & Procurement Division",
-    "Corporate, Finance, HR & Tender Wing",
-    "Facilities & Logistics Support"
-  ];
+  const sectionsOrder = sections.map((s: any) => s.name);
 
   // Group members by section based on the strict order
-  const groupedMembers = sectionsOrder.map(sectionName => {
+  const groupedMembers = sectionsOrder.map((sectionName: string) => {
     return {
       section: sectionName,
       members: members.filter((m: any) => m.section === sectionName)
     };
-  }).filter(g => g.members.length > 0);
+  }).filter((g: any) => g.members.length > 0);
 
   return (
     <div className="min-h-screen flex flex-col overflow-x-hidden w-full max-w-[100vw]">

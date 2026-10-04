@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Edit2, Trash2, X, Search, Image as ImageIcon, Check } from "lucide-react";
+import { Plus, Edit2, Trash2, X, Search, Image as ImageIcon, Check, Settings } from "lucide-react";
 
 type SocialLinks = {
   linkedin?: string;
@@ -24,11 +24,16 @@ type TeamMember = {
   name: string;
   officialTitle: string;
   functionalDesignation: string;
-  department: string;
   section: string;
   bio: string;
   photoUrl: string;
   socialLinks: SocialLinks;
+  order: number;
+};
+
+type TeamSection = {
+  _id: string;
+  name: string;
   order: number;
 };
 
@@ -42,18 +47,23 @@ export default function TeamManagement() {
 
   // Members State
   const [members, setMembers] = useState<TeamMember[]>([]);
+  const [sections, setSections] = useState<TeamSection[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   
+  // Section Management State
+  const [isSectionModalOpen, setIsSectionModalOpen] = useState(false);
+  const [newSectionName, setNewSectionName] = useState("");
+  const [editingSectionId, setEditingSectionId] = useState<string | null>(null);
+
   const [memberForm, setMemberForm] = useState({
     name: "",
     officialTitle: "",
     functionalDesignation: "",
-    department: "",
-    section: "Board of Directors",
+    section: "",
     bio: "",
     photoUrl: "",
     socialLinks: { linkedin: "", email: "", whatsapp: "" }
@@ -66,16 +76,20 @@ export default function TeamManagement() {
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      const [ceoRes, membersRes] = await Promise.all([
+      const [ceoRes, membersRes, sectionsRes] = await Promise.all([
         fetch('/api/admin/ceo'),
-        fetch('/api/admin/team')
+        fetch('/api/admin/team'),
+        fetch('/api/admin/team-sections')
       ]);
       
-      if (ceoRes.ok) {
-        setCeoData(await ceoRes.json());
-      }
-      if (membersRes.ok) {
-        setMembers(await membersRes.json());
+      if (ceoRes.ok) setCeoData(await ceoRes.json());
+      if (membersRes.ok) setMembers(await membersRes.json());
+      if (sectionsRes.ok) {
+        const data = await sectionsRes.json();
+        setSections(data);
+        if (data.length > 0 && !memberForm.section) {
+          setMemberForm(prev => ({ ...prev, section: data[0].name }));
+        }
       }
     } catch (err) {
       console.error("Failed to fetch data", err);
@@ -144,8 +158,7 @@ export default function TeamManagement() {
       name: "",
       officialTitle: "",
       functionalDesignation: "",
-      department: "",
-      section: "Board of Directors",
+      section: sections.length > 0 ? sections[0].name : "Board of Directors",
       bio: "",
       photoUrl: "",
       socialLinks: { linkedin: "", email: "", whatsapp: "" }
@@ -160,8 +173,7 @@ export default function TeamManagement() {
       name: member.name,
       officialTitle: member.officialTitle,
       functionalDesignation: member.functionalDesignation || "",
-      department: member.department || "",
-      section: member.section || "Board of Directors",
+      section: member.section || (sections.length > 0 ? sections[0].name : "Board of Directors"),
       bio: member.bio || "",
       photoUrl: member.photoUrl || "",
       socialLinks: {
@@ -239,8 +251,58 @@ export default function TeamManagement() {
     }
   };
 
+  // Section Management Functions
+  const handleSaveSection = async () => {
+    if (!newSectionName.trim()) return;
+    try {
+      if (editingSectionId) {
+        const res = await fetch(`/api/admin/team-sections/${editingSectionId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: newSectionName })
+        });
+        if (res.ok) {
+          const updated = await res.json();
+          const oldSection = sections.find(s => s._id === editingSectionId);
+          setSections(sections.map(s => s._id === editingSectionId ? updated : s));
+          if (oldSection && oldSection.name !== newSectionName) {
+            setMembers(members.map(m => m.section === oldSection.name ? { ...m, section: newSectionName } : m));
+          }
+          setEditingSectionId(null);
+          setNewSectionName("");
+        }
+      } else {
+        const res = await fetch('/api/admin/team-sections', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: newSectionName, order: sections.length })
+        });
+        if (res.ok) {
+          const newSection = await res.json();
+          setSections([...sections, newSection]);
+          setNewSectionName("");
+        }
+      }
+    } catch (err) {
+      console.error("Failed to save section", err);
+    }
+  };
+
+  const handleDeleteSection = async (id: string) => {
+    if (confirm("Are you sure you want to delete this section?")) {
+      try {
+        const res = await fetch(`/api/admin/team-sections/${id}`, { method: 'DELETE' });
+        if (res.ok) {
+          setSections(sections.filter(s => s._id !== id));
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  };
+
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-7xl mx-auto">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
           <h1 className="text-3xl font-bold font-heading text-primary mb-2">Team Management</h1>
@@ -410,72 +472,63 @@ export default function TeamManagement() {
           </div>
         )}
 
-        {/* Team Members Tab Content */}
+        {/* Team Members Tab Content (Card System) */}
         {activeTab === "members" && (
-          <div>
-            <div className="overflow-x-auto min-h-[300px]">
-              {isLoading ? (
-                <div className="flex items-center justify-center h-64 text-gray-400">Loading members...</div>
-              ) : members.length === 0 ? (
-                <div className="flex items-center justify-center h-64 text-gray-400">No team members found.</div>
-              ) : (
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="bg-gray-50 text-gray-500 text-sm border-b border-gray-100">
-                      <th className="px-6 py-4 font-medium">Profile</th>
-                      <th className="px-6 py-4 font-medium">Name</th>
-                      <th className="px-6 py-4 font-medium">Section</th>
-                      <th className="px-6 py-4 font-medium">Official Title</th>
-                      <th className="px-6 py-4 font-medium">Functional Designation</th>
-                      <th className="px-6 py-4 font-medium text-right">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100">
-                    {members.map((member) => (
-                      <tr key={member._id} className="hover:bg-gray-50/50 transition-colors">
-                        <td className="px-6 py-4">
-                          <div className="w-10 h-10 rounded-full bg-gray-100 overflow-hidden border border-gray-200 flex items-center justify-center">
-                            {member.photoUrl ? (
-                              <img src={member.photoUrl} alt={member.name} className="w-full h-full object-cover" />
-                            ) : (
-                              <ImageIcon className="w-5 h-5 text-gray-400" />
-                            )}
+          <div className="p-8 bg-gray-50/50">
+            {isLoading ? (
+              <div className="flex items-center justify-center h-64 text-gray-400">Loading members...</div>
+            ) : members.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-64 text-gray-400">
+                <ImageIcon className="w-12 h-12 mb-4 text-gray-300" />
+                <p>No team members found.</p>
+                <button onClick={openAddModal} className="mt-4 text-primary font-medium hover:underline">Add one now</button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {members.map((member) => (
+                  <div key={member._id} className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all overflow-hidden flex flex-col group">
+                    <div className="p-6 flex flex-col items-center text-center flex-1">
+                      <div className="w-24 h-24 rounded-full bg-gray-100 overflow-hidden border-2 border-gray-50 mb-4 group-hover:border-primary/20 transition-colors">
+                        {member.photoUrl ? (
+                          <img src={member.photoUrl} alt={member.name} className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-gray-400">
+                            <ImageIcon className="w-8 h-8" />
                           </div>
-                        </td>
-                        <td className="px-6 py-4 font-medium text-gray-900">{member.name}</td>
-                        <td className="px-6 py-4 text-gray-600 text-sm">
+                        )}
+                      </div>
+                      <h3 className="text-lg font-bold text-gray-900 mb-1">{member.name}</h3>
+                      <p className="text-sm font-medium text-primary mb-2">{member.officialTitle}</p>
+                      
+                      {member.functionalDesignation && (
+                        <p className="text-xs text-gray-500 mb-3">{member.functionalDesignation}</p>
+                      )}
+                      
+                      <div className="mt-auto pt-4">
+                        <span className="inline-block px-3 py-1 bg-gray-100 text-gray-600 text-xs rounded-full font-medium">
                           {member.section}
-                        </td>
-                        <td className="px-6 py-4 text-gray-600">
-                          <span className="px-3 py-1 bg-primary/10 text-primary text-xs rounded-full font-medium">
-                            {member.officialTitle}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 text-gray-600 text-sm">
-                          {member.functionalDesignation || '-'}
-                        </td>
-                        <td className="px-6 py-4 text-right">
-                          <div className="flex items-center justify-end space-x-2">
-                            <button 
-                              onClick={() => openEditModal(member)}
-                              className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                            >
-                              <Edit2 className="w-4 h-4" />
-                            </button>
-                            <button 
-                              onClick={() => handleDelete(member._id)}
-                              className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-            </div>
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <div className="flex border-t border-gray-100 divide-x divide-gray-100 bg-gray-50/50">
+                      <button 
+                        onClick={() => openEditModal(member)}
+                        className="flex-1 py-3 text-sm font-medium text-blue-600 hover:bg-blue-50 transition-colors flex items-center justify-center"
+                      >
+                        <Edit2 className="w-4 h-4 mr-2" /> Edit
+                      </button>
+                      <button 
+                        onClick={() => handleDelete(member._id)}
+                        className="flex-1 py-3 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors flex items-center justify-center"
+                      >
+                        <Trash2 className="w-4 h-4 mr-2" /> Delete
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -557,33 +610,31 @@ export default function TeamManagement() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Section (Grouping) *</label>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center">
+                  Section (Grouping) *
+                  <button
+                    type="button"
+                    onClick={() => setIsSectionModalOpen(true)}
+                    className="ml-2 text-primary hover:text-primary/80 transition-colors"
+                    title="Manage Sections"
+                  >
+                    <Settings className="w-4 h-4" />
+                  </button>
+                </label>
+                <div className="flex items-center gap-2">
                   <select
                     required
                     value={memberForm.section}
                     onChange={(e) => setMemberForm({ ...memberForm, section: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
+                    className="flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
                   >
-                    <option value="Board of Directors">Board of Directors</option>
-                    <option value="Advisory Council">Advisory Council</option>
-                    <option value="Core Engineering & R&D Wing">Core Engineering & R&D Wing</option>
-                    <option value="Technical Field Staff">Technical Field Staff</option>
-                    <option value="Global Supply Chain & Procurement Division">Global Supply Chain & Procurement Division</option>
-                    <option value="Corporate, Finance, HR & Tender Wing">Corporate, Finance, HR & Tender Wing</option>
-                    <option value="Facilities & Logistics Support">Facilities & Logistics Support</option>
+                    {sections.length === 0 ? (
+                      <option value="Board of Directors">Board of Directors</option>
+                    ) : (
+                      sections.map(s => <option key={s._id} value={s.name}>{s.name}</option>)
+                    )}
                   </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Department Text</label>
-                  <input
-                    type="text"
-                    value={memberForm.department}
-                    onChange={(e) => setMemberForm({ ...memberForm, department: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
-                    placeholder="e.g. Research, Development & Product Architecture"
-                  />
                 </div>
               </div>
 
@@ -654,6 +705,74 @@ export default function TeamManagement() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Sections Management Modal */}
+      {isSectionModalOpen && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsSectionModalOpen(false)} />
+          <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-md p-6 m-4 animate-in fade-in zoom-in-95 duration-200">
+            <div className="flex items-center justify-between mb-6 border-b border-gray-100 pb-2">
+              <h2 className="text-xl font-bold text-gray-900">Manage Sections</h2>
+              <button onClick={() => setIsSectionModalOpen(false)} className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-4 mb-6 max-h-64 overflow-y-auto pr-2">
+              {sections.map(section => (
+                <div key={section._id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-100">
+                  <span className="font-medium text-gray-800">{section.name}</span>
+                  <div className="flex items-center space-x-2">
+                    <button 
+                      onClick={() => { setEditingSectionId(section._id); setNewSectionName(section.name); }}
+                      className="text-blue-600 hover:bg-blue-50 p-1.5 rounded"
+                    >
+                      <Edit2 className="w-4 h-4" />
+                    </button>
+                    <button 
+                      onClick={() => handleDeleteSection(section._id)}
+                      className="text-red-600 hover:bg-red-50 p-1.5 rounded"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+              {sections.length === 0 && <p className="text-sm text-gray-500 text-center py-4">No sections available.</p>}
+            </div>
+
+            <div className="pt-4 border-t border-gray-100">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                {editingSectionId ? 'Edit Section Name' : 'Add New Section'}
+              </label>
+              <div className="flex space-x-2">
+                <input
+                  type="text"
+                  value={newSectionName}
+                  onChange={(e) => setNewSectionName(e.target.value)}
+                  placeholder="e.g. Advisory Council"
+                  className="flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
+                />
+                <button
+                  onClick={handleSaveSection}
+                  disabled={!newSectionName.trim()}
+                  className="px-4 py-2 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50"
+                >
+                  {editingSectionId ? 'Update' : 'Add'}
+                </button>
+                {editingSectionId && (
+                  <button
+                    onClick={() => { setEditingSectionId(null); setNewSectionName(""); }}
+                    className="px-3 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200"
+                  >
+                    Cancel
+                  </button>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       )}

@@ -15,6 +15,7 @@ import Project from '@/models/Project';
 import GlobalContact from '@/models/GlobalContact';
 import CompanyProfileData from '@/models/CompanyProfileData';
 import SiteSettings from '@/models/SiteSettings';
+import TeamSection from '@/models/TeamSection';
 
 export const dynamic = 'force-dynamic';
 
@@ -23,6 +24,7 @@ async function getTeamData() {
     await dbConnect();
     let ceoDoc = await (TeamMember.findOne as any)({ isCeo: true }).lean();
     let membersDocs = await (TeamMember.find as any)({ isCeo: false }).sort({ order: 1 }).lean();
+    let sectionsDocs = await (TeamSection.find as any)({}).sort({ order: 1 }).lean();
     
     // Fallback: extract CEO from membersDocs if not found by isCeo flag
     if (!ceoDoc) {
@@ -39,11 +41,12 @@ async function getTeamData() {
     // Parse to stringify ObjectIds for Next.js
     const ceo = JSON.parse(JSON.stringify(ceoDoc || {}));
     const members = JSON.parse(JSON.stringify(membersDocs));
+    const sections = JSON.parse(JSON.stringify(sectionsDocs || []));
     
-    return { ceo, members };
+    return { ceo, members, sections };
   } catch (error) {
     console.error('Error fetching team data:', error);
-    return { ceo: {}, members: [] };
+    return { ceo: {}, members: [], sections: [] };
   }
 }
 
@@ -106,7 +109,7 @@ async function getSiteSettings() {
 
 export default async function CompanyProfile() {
   const [teamData, services, projectsList, contact, profileData, settings] = await Promise.all([getTeamData(), getServicesData(), getProjectsData(), getContactInfo(), getCompanyProfileData(), getSiteSettings()]);
-  const { ceo, members = [] } = teamData;
+  const { ceo, members = [], sections = [] } = teamData;
   const { stats, howWeWork, industries, capabilities, whyChooseUs } = profileData;
   
   const featuredTitle = settings?.featuredServiceTitle || "Comprehensive Solar Solutions";
@@ -130,23 +133,15 @@ export default async function CompanyProfile() {
   const linkedin = contact?.linkedinUrl || "#";
   members.sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
 
-  const sectionsOrder = [
-    "Board of Directors",
-    "Advisory Council",
-    "Core Engineering & R&D Wing",
-    "Technical Field Staff",
-    "Global Supply Chain & Procurement Division",
-    "Corporate, Finance, HR & Tender Wing",
-    "Facilities & Logistics Support"
-  ];
+  const sectionsOrder = sections.map((s: any) => s.name);
 
   // Group members by section based on the strict order
-  const groupedMembers = sectionsOrder.map(sectionName => {
+  const groupedMembers = sectionsOrder.map((sectionName: string) => {
     return {
       section: sectionName,
       members: members.filter((m: any) => m.section === sectionName)
     };
-  }).filter(g => g.members.length > 0);
+  }).filter((g: any) => g.members.length > 0);
 
   return (
     <div className="min-h-screen bg-white">

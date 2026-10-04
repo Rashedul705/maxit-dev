@@ -14,6 +14,9 @@ export const metadata: Metadata = {
   title: "MaxIT Solution - Solar Energy, Agro Tech & Automation",
   description: "Leading provider of solar home systems, smart irrigation, agricultural technology, and industrial automation solutions in Bangladesh.",
   keywords: "Solar Energy, Solar Home Systems, Rooftop Solar, Energy Efficiency, Green Power, Smart Irrigation, Agro Tech, Solar Pumps, Water Management, Electric Automation, Industrial Automation, Smart Home Control, Electric Systems, IoT Solutions",
+  icons: {
+    icon: "/logo.png",
+  },
   openGraph: {
     title: "MaxIT Solution - Solar Energy, Agro Tech & Automation",
     description: "Leading provider of solar home systems, smart irrigation, agricultural technology, and industrial automation solutions in Bangladesh.",
