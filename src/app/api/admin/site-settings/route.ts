@@ -43,15 +43,7 @@ export async function POST(request: Request) {
     
     let settings = await (SiteSettings.findOne as any)();
     if (settings) {
-      settings.servicesHeaderTitle = body.servicesHeaderTitle;
-      settings.servicesHeaderSubtitle = body.servicesHeaderSubtitle;
-      settings.projectsHeaderTitle = body.projectsHeaderTitle;
-      settings.projectsHeaderSubtitle = body.projectsHeaderSubtitle;
-      settings.contactHeaderTitle = body.contactHeaderTitle;
-      settings.contactHeaderSubtitle = body.contactHeaderSubtitle;
-      settings.featuredServiceTitle = body.featuredServiceTitle;
-      settings.featuredServiceDescription = body.featuredServiceDescription;
-      settings.featuredServicePoints = body.featuredServicePoints;
+      Object.assign(settings, body);
       await settings.save();
     } else {
       settings = await SiteSettings.create(body);

@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import dbConnect from "@/lib/mongodb";
 import GlobalContact from "@/models/GlobalContact";
+import SiteSettings from "@/models/SiteSettings";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
@@ -38,11 +39,14 @@ export default async function RootLayout({
   await dbConnect();
   const contactDoc = await (GlobalContact.findOne as any)().lean();
   const contactInfo = contactDoc ? JSON.parse(JSON.stringify(contactDoc)) : null;
+  const settingsDoc = await (SiteSettings.findOne as any)().lean();
+  const siteSettings = settingsDoc ? JSON.parse(JSON.stringify(settingsDoc)) : null;
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${outfit.variable} font-sans antialiased`} suppressHydrationWarning>
         <Providers>
-          <Header />
+          <Header navbarContactButtonLink={siteSettings?.navbarContactButtonLink || "/contact"} />
             {children}
           <Footer contactInfo={contactInfo} />
         </Providers>

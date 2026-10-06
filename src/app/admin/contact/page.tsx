@@ -20,8 +20,14 @@ export default function ContactManagement() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
 
+  // Settings state
+  const [settings, setSettings] = useState({ contactHeaderTitle: "", contactHeaderSubtitle: "" });
+  const [isSavingSettings, setIsSavingSettings] = useState(false);
+  const [settingsMessage, setSettingsMessage] = useState({ type: "", text: "" });
+
   useEffect(() => {
     fetchContent();
+    fetchSettings();
   }, []);
 
   const fetchContent = async () => {
@@ -35,6 +41,47 @@ export default function ContactManagement() {
       console.error("Failed to fetch contact content", err);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const fetchSettings = async () => {
+    try {
+      const res = await fetch('/api/admin/site-settings');
+      if (res.ok) {
+        const fetched = await res.json();
+        setSettings({
+          contactHeaderTitle: fetched.contactHeaderTitle || "Get in Touch",
+          contactHeaderSubtitle: fetched.contactHeaderSubtitle || "Ready to start your next project or need technical assistance? Our team of experts is here to help."
+        });
+      }
+    } catch (err) {
+      console.error("Failed to fetch settings", err);
+    }
+  };
+
+  const handleSaveSettings = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSavingSettings(true);
+    setSettingsMessage({ type: "", text: "" });
+    try {
+      const currentRes = await fetch('/api/admin/site-settings');
+      const currentSettings = currentRes.ok ? await currentRes.json() : {};
+      
+      const res = await fetch('/api/admin/site-settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...currentSettings, ...settings })
+      });
+      if (res.ok) {
+        setSettingsMessage({ type: "success", text: "Page header updated!" });
+        setTimeout(() => setSettingsMessage({ type: "", text: "" }), 3000);
+      } else {
+        setSettingsMessage({ type: "error", text: "Failed to update header" });
+      }
+    } catch (err) {
+      setSettingsMessage({ type: "error", text: "An error occurred" });
+    } finally {
+      setIsSavingSettings(false);
     }
   };
 
@@ -74,7 +121,46 @@ export default function ContactManagement() {
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
         <h1 className="text-3xl font-bold font-heading text-primary mb-2">Global Contact Info</h1>
-        <p className="text-gray-500">Manage the address, phone, email, and social links used across the site.</p>
+        <p className="text-gray-500">Manage the Contact page header and the contact details used across the site.</p>
+      </div>
+
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden p-6 mb-8">
+        <h2 className="text-xl font-bold text-gray-900 mb-4 border-b border-gray-100 pb-2">Contact Page Header</h2>
+        <form onSubmit={handleSaveSettings} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+              <input
+                type="text" required value={settings.contactHeaderTitle}
+                onChange={(e) => setSettings({ ...settings, contactHeaderTitle: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Subtitle</label>
+              <textarea
+                required value={settings.contactHeaderSubtitle}
+                onChange={(e) => setSettings({ ...settings, contactHeaderSubtitle: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 h-20 resize-none"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end items-center mt-4">
+            {settingsMessage.text && (
+              <span className={`text-sm font-medium mr-4 ${settingsMessage.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>
+                {settingsMessage.text}
+              </span>
+            )}
+            <button
+              type="submit"
+              disabled={isSavingSettings}
+              className="flex items-center px-6 py-2 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50"
+            >
+              <Save className="w-4 h-4 mr-2" />
+              {isSavingSettings ? "Saving..." : "Save Header"}
+            </button>
+          </div>
+        </form>
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">

@@ -13,6 +13,11 @@ type SiteSettings = {
   contactHeaderTitle: string;
   contactHeaderSubtitle: string;
   
+  heroPrimaryButtonLink: string;
+  heroSecondaryButtonLink: string;
+  navbarContactButtonLink: string;
+  footerContactButtonLink: string;
+
   featuredServiceTitle: string;
   featuredServiceDescription: string;
   featuredServicePoints: FeaturedPoint[];
@@ -82,75 +87,52 @@ export default function SiteSettingsManagement() {
     <div className="max-w-5xl mx-auto">
       <div className="mb-8">
         <h1 className="text-3xl font-bold font-heading text-primary mb-2">Site Settings & Shared Sections</h1>
-        <p className="text-gray-500">Manage page headers and the featured solar service block.</p>
+        <p className="text-gray-500">Manage global button links and the featured solar service block.</p>
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         <form onSubmit={handleSubmit} className="p-8 space-y-12">
           
-          {/* PAGE HEADERS */}
+          {/* BUTTON LINKS */}
           <div className="space-y-6">
-            <h3 className="text-xl font-bold text-gray-900 border-b border-gray-100 pb-4">Page Headers</h3>
+            <h3 className="text-xl font-bold text-gray-900 border-b border-gray-100 pb-4">Button Links</h3>
             
-            {/* Services Header */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-6 rounded-xl">
-              <h4 className="col-span-full font-bold text-primary">Services Page</h4>
+              <h4 className="col-span-full font-bold text-primary">Homepage Hero Buttons</h4>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Explore Services Link</label>
                 <input
-                  type="text" required value={data.servicesHeaderTitle}
-                  onChange={(e) => setData({ ...data, servicesHeaderTitle: e.target.value })}
+                  type="text" required value={data.heroPrimaryButtonLink || ""}
+                  onChange={(e) => setData({ ...data, heroPrimaryButtonLink: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Subtitle</label>
-                <textarea
-                  required value={data.servicesHeaderSubtitle}
-                  onChange={(e) => setData({ ...data, servicesHeaderSubtitle: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 h-20 resize-none"
+                <label className="block text-sm font-medium text-gray-700 mb-1">Contact Us Link</label>
+                <input
+                  type="text" required value={data.heroSecondaryButtonLink || ""}
+                  onChange={(e) => setData({ ...data, heroSecondaryButtonLink: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20"
                 />
               </div>
             </div>
 
-            {/* Projects Header */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-6 rounded-xl">
-              <h4 className="col-span-full font-bold text-primary">Projects Page</h4>
+              <h4 className="col-span-full font-bold text-primary">Global Contact Buttons</h4>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Navbar Contact Link</label>
                 <input
-                  type="text" required value={data.projectsHeaderTitle}
-                  onChange={(e) => setData({ ...data, projectsHeaderTitle: e.target.value })}
+                  type="text" required value={data.navbarContactButtonLink || ""}
+                  onChange={(e) => setData({ ...data, navbarContactButtonLink: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Subtitle</label>
-                <textarea
-                  required value={data.projectsHeaderSubtitle}
-                  onChange={(e) => setData({ ...data, projectsHeaderSubtitle: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 h-20 resize-none"
-                />
-              </div>
-            </div>
-
-            {/* Contact Header */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-6 rounded-xl">
-              <h4 className="col-span-full font-bold text-primary">Contact Page</h4>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Footer Contact Link</label>
                 <input
-                  type="text" required value={data.contactHeaderTitle}
-                  onChange={(e) => setData({ ...data, contactHeaderTitle: e.target.value })}
+                  type="text" required value={data.footerContactButtonLink || ""}
+                  onChange={(e) => setData({ ...data, footerContactButtonLink: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Subtitle</label>
-                <textarea
-                  required value={data.contactHeaderSubtitle}
-                  onChange={(e) => setData({ ...data, contactHeaderSubtitle: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 h-20 resize-none"
                 />
               </div>
             </div>

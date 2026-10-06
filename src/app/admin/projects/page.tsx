@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Edit2, Trash2, X, Image as ImageIcon, Loader2 } from "lucide-react";
+import { Plus, Edit2, Trash2, X, Image as ImageIcon, Loader2, Save } from "lucide-react";
 
 type Project = {
   _id: string;
@@ -57,6 +57,11 @@ export default function ProjectManagement() {
   const [isUploading, setIsUploading] = useState(false);
   const [isUploadingGallery, setIsUploadingGallery] = useState(false);
 
+  // Settings state
+  const [settings, setSettings] = useState({ projectsHeaderTitle: "", projectsHeaderSubtitle: "" });
+  const [isSavingSettings, setIsSavingSettings] = useState(false);
+  const [settingsMessage, setSettingsMessage] = useState({ type: "", text: "" });
+
   const defaultProjectForm = {
     title: "",
     description: "",
@@ -92,16 +97,50 @@ export default function ProjectManagement() {
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      const [projRes, catRes] = await Promise.all([
+      const [projRes, catRes, setRes] = await Promise.all([
         fetch('/api/admin/projects'),
-        fetch('/api/admin/project-categories')
+        fetch('/api/admin/project-categories'),
+        fetch('/api/admin/site-settings')
       ]);
       if (projRes.ok) setProjects(await projRes.json());
       if (catRes.ok) setCategories(await catRes.json());
+      if (setRes.ok) {
+        const fetched = await setRes.json();
+        setSettings({
+          projectsHeaderTitle: fetched.projectsHeaderTitle || "Our Recent Projects",
+          projectsHeaderSubtitle: fetched.projectsHeaderSubtitle || "Explore our portfolio of successful implementations across solar energy, smart home automation, and agro tech."
+        });
+      }
     } catch (err) {
       console.error("Failed to fetch data", err);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleSaveSettings = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSavingSettings(true);
+    setSettingsMessage({ type: "", text: "" });
+    try {
+      const currentRes = await fetch('/api/admin/site-settings');
+      const currentSettings = currentRes.ok ? await currentRes.json() : {};
+      
+      const res = await fetch('/api/admin/site-settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...currentSettings, ...settings })
+      });
+      if (res.ok) {
+        setSettingsMessage({ type: "success", text: "Page header updated!" });
+        setTimeout(() => setSettingsMessage({ type: "", text: "" }), 3000);
+      } else {
+        setSettingsMessage({ type: "error", text: "Failed to update header" });
+      }
+    } catch (err) {
+      setSettingsMessage({ type: "error", text: "An error occurred" });
+    } finally {
+      setIsSavingSettings(false);
     }
   };
 
@@ -320,7 +359,7 @@ export default function ProjectManagement() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         <div>
           <h1 className="text-3xl font-bold font-heading text-primary mb-2">Projects & Categories</h1>
-          <p className="text-gray-500">Manage your projects portfolio and categories.</p>
+          <p className="text-gray-500">Manage your projects portfolio, categories and the Projects page header.</p>
         </div>
         <div className="flex space-x-2">
           <button 
@@ -336,6 +375,45 @@ export default function ProjectManagement() {
             Categories
           </button>
         </div>
+      </div>
+
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden p-6 mb-8">
+        <h2 className="text-xl font-bold text-gray-900 mb-4 border-b border-gray-100 pb-2">Page Header</h2>
+        <form onSubmit={handleSaveSettings} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+              <input
+                type="text" required value={settings.projectsHeaderTitle}
+                onChange={(e) => setSettings({ ...settings, projectsHeaderTitle: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Subtitle</label>
+              <textarea
+                required value={settings.projectsHeaderSubtitle}
+                onChange={(e) => setSettings({ ...settings, projectsHeaderSubtitle: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 h-20 resize-none"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end items-center mt-4">
+            {settingsMessage.text && (
+              <span className={`text-sm font-medium mr-4 ${settingsMessage.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>
+                {settingsMessage.text}
+              </span>
+            )}
+            <button
+              type="submit"
+              disabled={isSavingSettings}
+              className="flex items-center px-6 py-2 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50"
+            >
+              <Save className="w-4 h-4 mr-2" />
+              {isSavingSettings ? "Saving..." : "Save Header"}
+            </button>
+          </div>
+        </form>
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">

@@ -13,6 +13,7 @@ import AboutContent from '@/models/AboutContent';
 import CompanyProfileData from '@/models/CompanyProfileData';
 import Service from '@/models/Service';
 import TeamMember from '@/models/TeamMember';
+import SiteSettings from '@/models/SiteSettings';
 
 export const dynamic = 'force-dynamic';
 
@@ -80,6 +81,16 @@ async function getServicesData() {
   }
 }
 
+async function getSiteSettings() {
+  try {
+    await dbConnect();
+    const doc = await (SiteSettings.findOne as any)().lean();
+    return doc ? JSON.parse(JSON.stringify(doc)) : null;
+  } catch (error) {
+    return null;
+  }
+}
+
 async function getTeamData() {
   try {
     await dbConnect();
@@ -134,6 +145,7 @@ const Index = async () => {
   const aboutData = await getAboutData();
   const profileData = await getCompanyProfileData();
   const teamMembers = await getTeamData();
+  const siteSettings = await getSiteSettings();
   let services = await getServicesData();
   if (services.length === 0) {
     services = [
@@ -153,7 +165,7 @@ const Index = async () => {
 
   return (
     <div className="min-h-screen flex flex-col overflow-x-hidden w-full max-w-[100vw]"><main className="flex-1 animate-slide-up overflow-hidden w-full">
-      <Hero content={heroContent} />
+      <Hero content={heroContent} siteSettings={siteSettings} />
 
       {/* How We Power Your Solar Journey */}
       <section className="py-20 bg-white border-b border-gray-100">
@@ -435,7 +447,7 @@ const Index = async () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Link
-                href="/contact"
+                href={siteSettings?.footerContactButtonLink || "/contact"}
                 className="group relative inline-flex items-center justify-center px-8 py-4 bg-white text-primary hover:bg-gray-50 font-bold rounded-xl transition-all duration-300 shadow-lg transform hover:-translate-y-1 w-full sm:w-auto"
               >
                 <span className="relative z-10 text-lg">Get Started Today</span>

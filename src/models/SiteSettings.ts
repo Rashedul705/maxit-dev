@@ -10,6 +10,12 @@ const SiteSettingsSchema = new mongoose.Schema(
     contactHeaderTitle: { type: String, default: "Get in Touch" },
     contactHeaderSubtitle: { type: String, default: "Ready to start your next project or need technical assistance? Our team of experts is here to help." },
 
+    // Button Links
+    heroPrimaryButtonLink: { type: String, default: "/services" },
+    heroSecondaryButtonLink: { type: String, default: "/contact" },
+    navbarContactButtonLink: { type: String, default: "/contact" },
+    footerContactButtonLink: { type: String, default: "/contact" },
+
     // Featured Solar Block (Shared)
     featuredServiceTitle: { type: String, default: "Solar & Renewable Energy" },
     featuredServiceDescription: { type: String, default: "Leading the transition to sustainable energy with end-to-end solar engineering, ensuring maximum efficiency and reliability for industrial, commercial, and residential sectors." },

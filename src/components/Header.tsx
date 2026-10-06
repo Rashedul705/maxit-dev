@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from 'lucide-react';
 
-const Header = () => {
+const Header = ({ navbarContactButtonLink = "/contact" }: { navbarContactButtonLink?: string }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
@@ -70,7 +70,7 @@ const Header = () => {
           {/* Desktop CTA */}
           <div className="hidden md:flex">
             <Link 
-              href="/contact" 
+              href={navbarContactButtonLink} 
               className="px-6 py-2.5 text-sm font-medium text-white bg-primary hover:bg-primary/90 shadow-sm rounded-md transition-all duration-300"
             >
               Get Started
@@ -109,7 +109,7 @@ const Header = () => {
             ))}
             <div className="pt-4 mt-2 border-t">
               <Link 
-                href="/contact" 
+                href={navbarContactButtonLink} 
                 className="flex justify-center w-full px-6 py-3 text-sm font-medium text-white bg-primary hover:bg-primary/90 rounded-md transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
