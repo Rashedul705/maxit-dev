@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { 
-  ArrowRight, ShieldCheck, Zap, Award, Target, Eye, 
-  Settings, Users, Leaf, ThumbsUp, Wrench, CheckCircle2 
-} from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
+import { ArrowRight, Target, Eye } from 'lucide-react';
 
 import dbConnect from '@/lib/mongodb';
 import AboutContent from '@/models/AboutContent';
+import AboutHeroSlider from '@/components/AboutHeroSlider';
+import HoneycombGallery from '@/components/HoneycombGallery';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,7 +20,7 @@ async function getAboutData() {
         vision: "To be the region's most trusted engineering and technology partner, driving the transition towards smart automation, renewable energy, and intelligent infrastructure on a global scale.",
       };
     }
-    return about;
+    return JSON.parse(JSON.stringify(about));
   } catch (error) {
     console.error('Error fetching about data:', error);
     return {
@@ -33,19 +33,17 @@ async function getAboutData() {
 
 export default async function About() {
   const aboutData = await getAboutData();
+  
   return (
     <div className="min-h-screen flex flex-col overflow-x-hidden w-full max-w-[100vw]">
       <main className="flex-1 animate-slide-up overflow-hidden w-full">
         
         {/* 1. Hero & Brand Story / Our Journey */}
-        <section className="relative py-24 bg-white overflow-hidden">
+        <section className="relative pt-32 pb-24 bg-white overflow-hidden">
           <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] pointer-events-none -translate-y-1/2 translate-x-1/3"></div>
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="text-center mb-16">
-              <div className="inline-block px-4 py-2 bg-primary/5 rounded-full mb-6 border border-primary/10">
-                <span className="text-primary font-semibold text-sm tracking-wider uppercase">Our Journey</span>
-              </div>
               <h1 className="text-4xl md:text-6xl font-bold font-heading text-primary mb-6 tracking-tight">
                 {aboutData.aboutHeaderTitle?.split('Max iT').length > 1 ? (
                   <>
@@ -57,19 +55,17 @@ export default async function About() {
                   aboutData.aboutHeaderTitle || "The Story Behind Max iT"
                 )}
               </h1>
+              {aboutData.aboutHeaderSubtitle && (
+                <p className="text-2xl text-primary/80 font-medium mb-6">
+                  {aboutData.aboutHeaderSubtitle}
+                </p>
+              )}
               <p className="text-xl text-gray-700 max-w-3xl mx-auto font-medium leading-relaxed">
                 {aboutData.journey}
               </p>
             </div>
             
-            <div className="rounded-3xl overflow-hidden shadow-2xl relative h-[400px] md:h-[500px]">
-              <img src="/images/slides/commercial_rooftop_slide_1789677880098.jpg" alt="Max iT Journey" className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0B1120]/80 via-transparent to-transparent"></div>
-              <div className="absolute bottom-8 left-8 text-white">
-                <p className="text-3xl font-bold font-heading mb-2">Innovating Since 2014</p>
-                <p className="text-lg opacity-90">Building the infrastructure of tomorrow.</p>
-              </div>
-            </div>
+            <AboutHeroSlider slides={aboutData.heroSlides || []} />
           </div>
         </section>
 
@@ -82,7 +78,7 @@ export default async function About() {
                 <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-8">
                   <Target className="w-8 h-8 text-primary" />
                 </div>
-                <h3 className="text-3xl font-bold font-heading text-primary mb-4">Our Mission</h3>
+                <h3 className="text-3xl font-bold font-heading text-primary mb-4">{aboutData.missionTitle || "Our Mission"}</h3>
                 <p className="text-gray-700 text-lg leading-relaxed font-medium">
                   {aboutData.mission}
                 </p>
@@ -93,7 +89,7 @@ export default async function About() {
                 <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mb-8">
                   <Eye className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-3xl font-bold font-heading mb-4">Our Vision</h3>
+                <h3 className="text-3xl font-bold font-heading mb-4">{aboutData.visionTitle || "Our Vision"}</h3>
                 <p className="text-white/90 text-lg leading-relaxed font-medium">
                   {aboutData.vision}
                 </p>
@@ -114,12 +110,12 @@ export default async function About() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {(aboutData.features && aboutData.features.length > 0 ? aboutData.features : [
-                { icon: ShieldCheck, title: "Premium Equipment", desc: "We source and deploy only industry-leading, rigorously tested materials." },
-                { icon: Users, title: "Expert Engineers", desc: "Our team consists of certified professionals with years of hands-on experience." },
-                { icon: Zap, title: "End-to-End Solutions", desc: "From conceptual design to final commissioning and maintenance." },
-                { icon: Wrench, title: "24/7 Support", desc: "Dedicated after-sales support ensuring maximum uptime and reliability." }
+                { icon: "ShieldCheck", title: "Premium Equipment", desc: "We source and deploy only industry-leading, rigorously tested materials." },
+                { icon: "Users", title: "Expert Engineers", desc: "Our team consists of certified professionals with years of hands-on experience." },
+                { icon: "Zap", title: "End-to-End Solutions", desc: "From conceptual design to final commissioning and maintenance." },
+                { icon: "Wrench", title: "24/7 Support", desc: "Dedicated after-sales support ensuring maximum uptime and reliability." }
               ]).map((feature: any, idx: number) => {
-                const Icon = feature.icon || [ShieldCheck, Users, Zap, Wrench][idx % 4];
+                const Icon = (LucideIcons as any)[feature.icon] || LucideIcons.CheckCircle2;
                 return (
                 <div key={idx} className="bg-gray-50 rounded-3xl p-8 hover:bg-white hover:shadow-xl transition-all duration-300 border border-transparent hover:border-gray-200">
                   <Icon className="w-12 h-12 text-accent mb-6" />
@@ -145,12 +141,12 @@ export default async function About() {
               
               <div className="md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-8">
                 {(aboutData.coreValues && aboutData.coreValues.length > 0 ? aboutData.coreValues : [
-                  { icon: Award, title: "Quality Assurance", desc: "Never compromising on standards. Excellence is our baseline." },
-                  { icon: CheckCircle2, title: "Integrity & Transparency", desc: "Honest communication and ethical business practices in every deal." },
-                  { icon: ThumbsUp, title: "Customer Success", desc: "Your success is our success. We build long-term partnerships." },
-                  { icon: Leaf, title: "Sustainable Innovation", desc: "Prioritizing eco-friendly solutions that protect our future." }
+                  { icon: "Award", title: "Quality Assurance", desc: "Never compromising on standards. Excellence is our baseline." },
+                  { icon: "CheckCircle2", title: "Integrity & Transparency", desc: "Honest communication and ethical business practices in every deal." },
+                  { icon: "ThumbsUp", title: "Customer Success", desc: "Your success is our success. We build long-term partnerships." },
+                  { icon: "Leaf", title: "Sustainable Innovation", desc: "Prioritizing eco-friendly solutions that protect our future." }
                 ]).map((val: any, idx: number) => {
-                  const Icon = val.icon || [Award, CheckCircle2, ThumbsUp, Leaf][idx % 4];
+                  const Icon = (LucideIcons as any)[val.icon] || LucideIcons.CheckCircle2;
                   return (
                   <div key={idx} className="flex gap-4">
                     <div className="flex-shrink-0 mt-1">
@@ -169,30 +165,17 @@ export default async function About() {
           </div>
         </section>
 
-        {/* 5. Visuals & Behind-the-Scenes */}
-        <section className="py-24 bg-gray-50 overflow-hidden">
+        {/* 5. Project Gallery */}
+        <section className="py-24 bg-white overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold font-heading text-primary mb-6">{aboutData.behindTheScenesTitle || "Behind The Scenes"}</h2>
+              <h2 className="text-4xl md:text-5xl font-bold font-heading text-primary mb-6">{aboutData.projectGalleryTitle || "Our Projects"}</h2>
               <p className="text-xl text-gray-700 max-w-2xl mx-auto font-medium">
-                {aboutData.behindTheScenesSubtitle || "A glimpse into our operational excellence and the technology that drives us."}
+                {aboutData.projectGallerySubtitle || "A glimpse into our operational excellence and the technology that drives us."}
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="col-span-1 md:col-span-2 row-span-2 relative rounded-3xl overflow-hidden group h-[400px] md:h-auto">
-                <img src="/images/slides/agro_solar_slide_1789677870674.jpg" alt="Agro Solar Project" className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
-                <div className="absolute inset-0 bg-primary/20 group-hover:bg-transparent transition-colors duration-500"></div>
-              </div>
-              <div className="relative rounded-3xl overflow-hidden group h-[250px]">
-                <img src="/images/slides/iot_smart_home_slide_1789677856585.jpg" alt="Smart Home Tech" className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
-                <div className="absolute inset-0 bg-primary/20 group-hover:bg-transparent transition-colors duration-500"></div>
-              </div>
-              <div className="relative rounded-3xl overflow-hidden group h-[250px]">
-                <img src="/images/slides/networking_service_1789678979212.jpg" alt="Networking Infrastructure" className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
-                <div className="absolute inset-0 bg-primary/20 group-hover:bg-transparent transition-colors duration-500"></div>
-              </div>
-            </div>
+            <HoneycombGallery projects={(aboutData.galleryProjects || []).map((p: any, i: number) => ({ ...p, imageUrl: p.image, _id: p._id || i }))} />
           </div>
         </section>
 
@@ -231,5 +214,3 @@ export default async function About() {
     </div>
   );
 };
-
-
