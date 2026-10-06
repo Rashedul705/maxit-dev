@@ -28,12 +28,11 @@ export async function POST(request: Request) {
   try {
     await dbConnect();
     const body = await request.json();
-    const { journey, mission, vision } = body;
 
     // Find the first document and update it, or create a new one if none exists
     const updatedAbout = await (AboutContent.findOneAndUpdate as any)(
       {} as any,
-      { $set: { journey, mission, vision } },
+      { $set: body },
       { new: true, upsert: true, runValidators: true }
     );
 

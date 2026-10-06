@@ -47,7 +47,15 @@ export default async function About() {
                 <span className="text-primary font-semibold text-sm tracking-wider uppercase">Our Journey</span>
               </div>
               <h1 className="text-4xl md:text-6xl font-bold font-heading text-primary mb-6 tracking-tight">
-                The Story Behind <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Max iT</span>
+                {aboutData.aboutHeaderTitle?.split('Max iT').length > 1 ? (
+                  <>
+                    {aboutData.aboutHeaderTitle.split('Max iT')[0]}
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Max iT</span>
+                    {aboutData.aboutHeaderTitle.split('Max iT')[1]}
+                  </>
+                ) : (
+                  aboutData.aboutHeaderTitle || "The Story Behind Max iT"
+                )}
               </h1>
               <p className="text-xl text-gray-700 max-w-3xl mx-auto font-medium leading-relaxed">
                 {aboutData.journey}
@@ -98,25 +106,27 @@ export default async function About() {
         <section className="py-24 bg-white relative">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold font-heading text-primary mb-6">What Sets Us Apart</h2>
+              <h2 className="text-4xl md:text-5xl font-bold font-heading text-primary mb-6">{aboutData.whatSetsUsApartTitle || "What Sets Us Apart"}</h2>
               <p className="text-xl text-gray-700 max-w-2xl mx-auto font-medium">
-                Why forward-thinking companies choose Max iT as their trusted technology partner.
+                {aboutData.whatSetsUsApartSubtitle || "Why forward-thinking companies choose Max iT as their trusted technology partner."}
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {[
+              {(aboutData.features && aboutData.features.length > 0 ? aboutData.features : [
                 { icon: ShieldCheck, title: "Premium Equipment", desc: "We source and deploy only industry-leading, rigorously tested materials." },
                 { icon: Users, title: "Expert Engineers", desc: "Our team consists of certified professionals with years of hands-on experience." },
                 { icon: Zap, title: "End-to-End Solutions", desc: "From conceptual design to final commissioning and maintenance." },
                 { icon: Wrench, title: "24/7 Support", desc: "Dedicated after-sales support ensuring maximum uptime and reliability." }
-              ].map((feature, idx) => (
+              ]).map((feature: any, idx: number) => {
+                const Icon = feature.icon || [ShieldCheck, Users, Zap, Wrench][idx % 4];
+                return (
                 <div key={idx} className="bg-gray-50 rounded-3xl p-8 hover:bg-white hover:shadow-xl transition-all duration-300 border border-transparent hover:border-gray-200">
-                  <feature.icon className="w-12 h-12 text-accent mb-6" />
+                  <Icon className="w-12 h-12 text-accent mb-6" />
                   <h4 className="text-xl font-bold text-primary mb-3">{feature.title}</h4>
                   <p className="text-gray-600 font-medium leading-relaxed">{feature.desc}</p>
                 </div>
-              ))}
+              )})}
             </div>
           </div>
         </section>
@@ -126,24 +136,26 @@ export default async function About() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col md:flex-row gap-16">
               <div className="md:w-1/3">
-                <h2 className="text-4xl font-bold font-heading mb-6 text-primary">Our Core Values</h2>
+                <h2 className="text-4xl font-bold font-heading mb-6 text-primary">{aboutData.coreValuesTitle || "Our Core Values"}</h2>
                 <p className="text-gray-600 text-lg leading-relaxed mb-8 font-medium">
-                  These guiding principles shape our culture, drive our decisions, and define how we interact with our clients and the world.
+                  {aboutData.coreValuesSubtitle || "These guiding principles shape our culture, drive our decisions, and define how we interact with our clients and the world."}
                 </p>
                 <div className="w-20 h-1 bg-primary rounded-full"></div>
               </div>
               
               <div className="md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-8">
-                {[
+                {(aboutData.coreValues && aboutData.coreValues.length > 0 ? aboutData.coreValues : [
                   { icon: Award, title: "Quality Assurance", desc: "Never compromising on standards. Excellence is our baseline." },
                   { icon: CheckCircle2, title: "Integrity & Transparency", desc: "Honest communication and ethical business practices in every deal." },
                   { icon: ThumbsUp, title: "Customer Success", desc: "Your success is our success. We build long-term partnerships." },
                   { icon: Leaf, title: "Sustainable Innovation", desc: "Prioritizing eco-friendly solutions that protect our future." }
-                ].map((val, idx) => (
+                ]).map((val: any, idx: number) => {
+                  const Icon = val.icon || [Award, CheckCircle2, ThumbsUp, Leaf][idx % 4];
+                  return (
                   <div key={idx} className="flex gap-4">
                     <div className="flex-shrink-0 mt-1">
                       <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                        <val.icon className="w-6 h-6 text-primary" />
+                        <Icon className="w-6 h-6 text-primary" />
                       </div>
                     </div>
                     <div>
@@ -151,7 +163,7 @@ export default async function About() {
                       <p className="text-gray-600 font-medium leading-relaxed">{val.desc}</p>
                     </div>
                   </div>
-                ))}
+                )})}
               </div>
             </div>
           </div>
@@ -161,9 +173,9 @@ export default async function About() {
         <section className="py-24 bg-gray-50 overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold font-heading text-primary mb-6">Behind The Scenes</h2>
+              <h2 className="text-4xl md:text-5xl font-bold font-heading text-primary mb-6">{aboutData.behindTheScenesTitle || "Behind The Scenes"}</h2>
               <p className="text-xl text-gray-700 max-w-2xl mx-auto font-medium">
-                A glimpse into our operational excellence and the technology that drives us.
+                {aboutData.behindTheScenesSubtitle || "A glimpse into our operational excellence and the technology that drives us."}
               </p>
             </div>
 
@@ -192,9 +204,9 @@ export default async function About() {
           </div>
           
           <div className="max-w-4xl mx-auto px-4 relative z-10">
-            <h2 className="text-4xl md:text-6xl font-bold font-heading mb-6 tracking-tight">Ready to Transform Your Future?</h2>
+            <h2 className="text-4xl md:text-6xl font-bold font-heading mb-6 tracking-tight">{aboutData.ctaTitle || "Ready to Transform Your Future?"}</h2>
             <p className="text-xl text-white/80 font-medium mb-12 max-w-2xl mx-auto">
-              Whether you need scalable solar energy, industrial automation, or enterprise networking, our team is ready to build your solution.
+              {aboutData.ctaSubtitle || "Whether you need scalable solar energy, industrial automation, or enterprise networking, our team is ready to build your solution."}
             </p>
             
             <div className="flex flex-col sm:flex-row gap-6 justify-center">

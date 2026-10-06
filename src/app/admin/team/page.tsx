@@ -485,6 +485,64 @@ export default function TeamManagement() {
         {/* Team Members Tab Content (Card System) */}
         {activeTab === "members" && (
           <div className="p-8 bg-gray-50/50">
+            {/* Team Page Header Settings */}
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden p-6 mb-8">
+              <h2 className="text-xl font-bold text-gray-900 mb-4 border-b border-gray-100 pb-2">Team Page Header</h2>
+              <form onSubmit={async (e) => {
+                e.preventDefault();
+                setIsSavingCeo(true); // Reusing state for button loading
+                try {
+                  const currentRes = await fetch('/api/admin/site-settings');
+                  const currentSettings = currentRes.ok ? await currentRes.json() : {};
+                  const formData = new FormData(e.currentTarget);
+                  
+                  const res = await fetch('/api/admin/site-settings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      ...currentSettings,
+                      teamHeaderTitle: formData.get('teamHeaderTitle'),
+                      teamHeaderSubtitle: formData.get('teamHeaderSubtitle'),
+                    })
+                  });
+                  if (res.ok) {
+                    setCeoSaveSuccess(true);
+                    setTimeout(() => setCeoSaveSuccess(false), 3000);
+                  }
+                } catch (err) {
+                  console.error(err);
+                } finally {
+                  setIsSavingCeo(false);
+                }
+              }} className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                    <input
+                      name="teamHeaderTitle"
+                      type="text" required
+                      defaultValue="Complete Corporate Governance and Web Team Directory"
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Subtitle</label>
+                    <textarea
+                      name="teamHeaderSubtitle"
+                      required
+                      defaultValue="Corporate Organogram and Profile Layout with Global Supply Chain Network."
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 h-20 resize-none"
+                    />
+                  </div>
+                </div>
+                <div className="flex justify-end mt-2">
+                  <button type="submit" disabled={isSavingCeo} className="flex items-center px-6 py-2 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50">
+                    {ceoSaveSuccess ? <><Check className="w-5 h-5 mr-2" /> Saved!</> : isSavingCeo ? "Saving..." : "Save Header"}
+                  </button>
+                </div>
+              </form>
+            </div>
+
             {isLoading ? (
               <div className="flex items-center justify-center h-64 text-gray-400">Loading members...</div>
             ) : members.length === 0 ? (

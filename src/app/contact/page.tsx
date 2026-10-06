@@ -33,6 +33,7 @@ export default async function Contact() {
   
   const headerTitle = settings?.contactHeaderTitle || "Get in Touch";
   const headerSubtitle = settings?.contactHeaderSubtitle || "Ready to start your next project or need technical assistance? Our team of experts is here to help.";
+  const infoTitle = settings?.contactInfoSectionTitle || "Contact Information";
   
   const addressLine1 = contact?.addressLine1 || "2nd Floor, Afroza Tower,";
   const addressLine2 = contact?.addressLine2 || "Uposhohor Newmarket,";
@@ -66,7 +67,7 @@ export default async function Contact() {
               
               {/* Contact Information */}
               <div>
-                <h2 className="text-3xl font-bold font-heading text-primary mb-8">Contact Information</h2>
+                <h2 className="text-3xl font-bold font-heading text-primary mb-8">{infoTitle}</h2>
                 <div className="space-y-8">
                   <div className="flex items-start">
                     <div className="flex-shrink-0 w-12 h-12 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mr-6">

@@ -11,6 +11,27 @@ export default function AboutManagement() {
     journey: "",
     mission: "",
     vision: "",
+    aboutHeaderTitle: "The Story Behind Max iT",
+    whatSetsUsApartTitle: "What Sets Us Apart",
+    whatSetsUsApartSubtitle: "Why forward-thinking companies choose Max iT as their trusted technology partner.",
+    coreValuesTitle: "Our Core Values",
+    coreValuesSubtitle: "These guiding principles shape our culture, drive our decisions, and define how we interact with our clients and the world.",
+    behindTheScenesTitle: "Behind The Scenes",
+    behindTheScenesSubtitle: "A glimpse into our operational excellence and the technology that drives us.",
+    ctaTitle: "Ready to Transform Your Future?",
+    ctaSubtitle: "Whether you need scalable solar energy, industrial automation, or enterprise networking, our team is ready to build your solution.",
+    features: [
+      { title: "Premium Equipment", desc: "We source and deploy only industry-leading, rigorously tested materials." },
+      { title: "Expert Engineers", desc: "Our team consists of certified professionals with years of hands-on experience." },
+      { title: "End-to-End Solutions", desc: "From conceptual design to final commissioning and maintenance." },
+      { title: "24/7 Support", desc: "Dedicated after-sales support ensuring maximum uptime and reliability." }
+    ],
+    coreValues: [
+      { title: "Quality Assurance", desc: "Never compromising on standards. Excellence is our baseline." },
+      { title: "Integrity & Transparency", desc: "Honest communication and ethical business practices in every deal." },
+      { title: "Customer Success", desc: "Your success is our success. We build long-term partnerships." },
+      { title: "Sustainable Innovation", desc: "Prioritizing eco-friendly solutions that protect our future." }
+    ]
   });
   const [isLoading, setIsLoading] = useState(true);
 
@@ -23,7 +44,28 @@ export default function AboutManagement() {
           setFormData({
             journey: data.journey || "",
             mission: data.mission || "",
-            vision: data.vision || ""
+            vision: data.vision || "",
+            aboutHeaderTitle: data.aboutHeaderTitle || "The Story Behind Max iT",
+            whatSetsUsApartTitle: data.whatSetsUsApartTitle || "What Sets Us Apart",
+            whatSetsUsApartSubtitle: data.whatSetsUsApartSubtitle || "Why forward-thinking companies choose Max iT as their trusted technology partner.",
+            coreValuesTitle: data.coreValuesTitle || "Our Core Values",
+            coreValuesSubtitle: data.coreValuesSubtitle || "These guiding principles shape our culture, drive our decisions, and define how we interact with our clients and the world.",
+            behindTheScenesTitle: data.behindTheScenesTitle || "Behind The Scenes",
+            behindTheScenesSubtitle: data.behindTheScenesSubtitle || "A glimpse into our operational excellence and the technology that drives us.",
+            ctaTitle: data.ctaTitle || "Ready to Transform Your Future?",
+            ctaSubtitle: data.ctaSubtitle || "Whether you need scalable solar energy, industrial automation, or enterprise networking, our team is ready to build your solution.",
+            features: data.features?.length > 0 ? data.features : [
+              { title: "Premium Equipment", desc: "We source and deploy only industry-leading, rigorously tested materials." },
+              { title: "Expert Engineers", desc: "Our team consists of certified professionals with years of hands-on experience." },
+              { title: "End-to-End Solutions", desc: "From conceptual design to final commissioning and maintenance." },
+              { title: "24/7 Support", desc: "Dedicated after-sales support ensuring maximum uptime and reliability." }
+            ],
+            coreValues: data.coreValues?.length > 0 ? data.coreValues : [
+              { title: "Quality Assurance", desc: "Never compromising on standards. Excellence is our baseline." },
+              { title: "Integrity & Transparency", desc: "Honest communication and ethical business practices in every deal." },
+              { title: "Customer Success", desc: "Your success is our success. We build long-term partnerships." },
+              { title: "Sustainable Innovation", desc: "Prioritizing eco-friendly solutions that protect our future." }
+            ]
           });
         }
       } catch (err) {
@@ -104,19 +146,111 @@ export default function AboutManagement() {
 
           <hr className="border-gray-100" />
 
-          {/* Vision */}
-          <div>
-            <label className="block text-lg font-bold text-gray-900 mb-2">Vision Statement</label>
-            <p className="text-sm text-gray-500 mb-4">Where do you aim to take the brand in the future?</p>
-            <textarea 
-              rows={3}
-              required
-              value={formData.vision}
-              onChange={(e) => setFormData({...formData, vision: e.target.value})}
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 resize-y"
-            />
-          </div>
+          {/* Section Titles */}
+          <div className="space-y-6">
+            <h3 className="text-xl font-bold text-gray-900 border-b border-gray-100 pb-2">Section Titles & Subtitles</h3>
+            
+            <div className="grid grid-cols-1 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">About Header Title</label>
+                <input type="text" value={formData.aboutHeaderTitle} onChange={(e) => setFormData({...formData, aboutHeaderTitle: e.target.value})} className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20" />
+              </div>
+            </div>
 
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">What Sets Us Apart Title</label>
+                <input type="text" value={formData.whatSetsUsApartTitle} onChange={(e) => setFormData({...formData, whatSetsUsApartTitle: e.target.value})} className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">What Sets Us Apart Subtitle</label>
+                <input type="text" value={formData.whatSetsUsApartSubtitle} onChange={(e) => setFormData({...formData, whatSetsUsApartSubtitle: e.target.value})} className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20" />
+              </div>
+            </div>
+            
+            {/* Features Array Edit */}
+            <div className="bg-gray-50 p-4 rounded-lg border border-gray-100 space-y-3">
+              <h4 className="font-semibold text-gray-800 mb-2">What Sets Us Apart - Features (4 Items)</h4>
+              {formData.features.map((feature, idx) => (
+                <div key={`feature-${idx}`} className="grid grid-cols-1 md:grid-cols-3 gap-2 items-start border-b border-gray-200 pb-3 mb-3">
+                  <div className="col-span-1">
+                    <label className="block text-xs font-medium text-gray-500 mb-1">Title {idx + 1}</label>
+                    <input type="text" value={feature.title} onChange={(e) => {
+                      const newFeatures = [...formData.features];
+                      newFeatures[idx].title = e.target.value;
+                      setFormData({...formData, features: newFeatures});
+                    }} className="w-full px-3 py-1 text-sm border border-gray-200 rounded focus:ring-1 focus:ring-primary/20" />
+                  </div>
+                  <div className="col-span-2">
+                    <label className="block text-xs font-medium text-gray-500 mb-1">Description {idx + 1}</label>
+                    <textarea rows={2} value={feature.desc} onChange={(e) => {
+                      const newFeatures = [...formData.features];
+                      newFeatures[idx].desc = e.target.value;
+                      setFormData({...formData, features: newFeatures});
+                    }} className="w-full px-3 py-1 text-sm border border-gray-200 rounded focus:ring-1 focus:ring-primary/20 resize-y" />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Core Values Title</label>
+                <input type="text" value={formData.coreValuesTitle} onChange={(e) => setFormData({...formData, coreValuesTitle: e.target.value})} className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Core Values Subtitle</label>
+                <input type="text" value={formData.coreValuesSubtitle} onChange={(e) => setFormData({...formData, coreValuesSubtitle: e.target.value})} className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20" />
+              </div>
+            </div>
+
+            {/* Core Values Array Edit */}
+            <div className="bg-gray-50 p-4 rounded-lg border border-gray-100 space-y-3">
+              <h4 className="font-semibold text-gray-800 mb-2">Our Core Values (4 Items)</h4>
+              {formData.coreValues.map((val, idx) => (
+                <div key={`val-${idx}`} className="grid grid-cols-1 md:grid-cols-3 gap-2 items-start border-b border-gray-200 pb-3 mb-3">
+                  <div className="col-span-1">
+                    <label className="block text-xs font-medium text-gray-500 mb-1">Title {idx + 1}</label>
+                    <input type="text" value={val.title} onChange={(e) => {
+                      const newVals = [...formData.coreValues];
+                      newVals[idx].title = e.target.value;
+                      setFormData({...formData, coreValues: newVals});
+                    }} className="w-full px-3 py-1 text-sm border border-gray-200 rounded focus:ring-1 focus:ring-primary/20" />
+                  </div>
+                  <div className="col-span-2">
+                    <label className="block text-xs font-medium text-gray-500 mb-1">Description {idx + 1}</label>
+                    <textarea rows={2} value={val.desc} onChange={(e) => {
+                      const newVals = [...formData.coreValues];
+                      newVals[idx].desc = e.target.value;
+                      setFormData({...formData, coreValues: newVals});
+                    }} className="w-full px-3 py-1 text-sm border border-gray-200 rounded focus:ring-1 focus:ring-primary/20 resize-y" />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Behind The Scenes Title</label>
+                <input type="text" value={formData.behindTheScenesTitle} onChange={(e) => setFormData({...formData, behindTheScenesTitle: e.target.value})} className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Behind The Scenes Subtitle</label>
+                <input type="text" value={formData.behindTheScenesSubtitle} onChange={(e) => setFormData({...formData, behindTheScenesSubtitle: e.target.value})} className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">CTA Title</label>
+                <input type="text" value={formData.ctaTitle} onChange={(e) => setFormData({...formData, ctaTitle: e.target.value})} className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">CTA Subtitle</label>
+                <input type="text" value={formData.ctaSubtitle} onChange={(e) => setFormData({...formData, ctaSubtitle: e.target.value})} className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20" />
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="p-6 border-t border-gray-100 bg-gray-50 flex justify-end">

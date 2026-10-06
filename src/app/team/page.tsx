@@ -2,6 +2,7 @@ import { Mail, Linkedin, MessageCircle } from 'lucide-react';
 import dbConnect from '@/lib/mongodb';
 import TeamMember from '@/models/TeamMember';
 import TeamSection from '@/models/TeamSection';
+import SiteSettings from '@/models/SiteSettings';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,16 +30,22 @@ async function getTeamData() {
     const members = JSON.parse(JSON.stringify(membersDocs));
     const sections = JSON.parse(JSON.stringify(sectionsDocs || []));
     
-    return { ceo, members, sections };
+    const settingsDoc = await (SiteSettings.findOne as any)().lean();
+    const settings = settingsDoc ? JSON.parse(JSON.stringify(settingsDoc)) : null;
+
+    return { ceo, members, sections, settings };
   } catch (error) {
     console.error('Error fetching team data:', error);
-    return { ceo: {}, members: [], sections: [] };
+    return { ceo: {}, members: [], sections: [], settings: null };
   }
 }
 
 export default async function Team() {
   const teamData = await getTeamData();
-  const { ceo, members = [], sections = [] } = teamData;
+  const { ceo, members = [], sections = [], settings } = teamData;
+  
+  const headerTitle = settings?.teamHeaderTitle || "Complete Corporate Governance and Web Team Directory";
+  const headerSubtitle = settings?.teamHeaderSubtitle || "Corporate Organogram and Profile Layout with Global Supply Chain Network.";
   
   // Sort members by order
   members.sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
@@ -71,13 +78,21 @@ export default async function Team() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="text-center max-w-4xl mx-auto mb-0">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-primary mb-6 tracking-tight leading-tight">
-                Complete Corporate Governance and <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Web Team Directory</span>
+                {headerTitle.split('Web Team Directory').length > 1 ? (
+                  <>
+                    {headerTitle.split('Web Team Directory')[0]}
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Web Team Directory</span>
+                    {headerTitle.split('Web Team Directory')[1]}
+                  </>
+                ) : (
+                  headerTitle
+                )}
               </h1>
               <p className="text-2xl text-gray-800 font-bold mb-4">
                 Max iT Solution Ltd.
               </p>
               <p className="text-xl text-gray-700 font-medium leading-relaxed">
-                Corporate Organogram and Profile Layout with Global Supply Chain Network.
+                {headerSubtitle}
               </p>
             </div>
           </div>

@@ -9,6 +9,9 @@ const SiteSettingsSchema = new mongoose.Schema(
     projectsHeaderSubtitle: { type: String, default: "Explore our portfolio of successful implementations across solar energy, smart home automation, and agro tech." },
     contactHeaderTitle: { type: String, default: "Get in Touch" },
     contactHeaderSubtitle: { type: String, default: "Ready to start your next project or need technical assistance? Our team of experts is here to help." },
+    contactInfoSectionTitle: { type: String, default: "Contact Information" },
+    teamHeaderTitle: { type: String, default: "Complete Corporate Governance and Web Team Directory" },
+    teamHeaderSubtitle: { type: String, default: "Corporate Organogram and Profile Layout with Global Supply Chain Network." },
 
     // Button Links
     heroPrimaryButtonLink: { type: String, default: "/services" },
