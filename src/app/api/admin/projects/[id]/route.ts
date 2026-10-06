@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import Project from '@/models/Project';
@@ -11,15 +12,22 @@ export async function PUT(
     await dbConnect();
     const body = await request.json();
 
-    const updatedProject = await (Project.findByIdAndUpdate as any)(
-      id,
-      { $set: body },
-      { new: true, runValidators: true } as any
-    );
-
-    if (!updatedProject) {
+    const existingProject = await (Project.findById as any)(id);
+    if (!existingProject) {
       return NextResponse.json({ error: 'Project not found' }, { status: 404 });
     }
+
+    const slugify = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+    const updateData = { ...body };
+    if (!existingProject.slug) {
+      updateData.slug = slugify(existingProject.title);
+    }
+
+    const updatedProject = await (Project.findByIdAndUpdate as any)(
+      id,
+      { $set: updateData },
+      { new: true, runValidators: true } as any
+    );
 
     return NextResponse.json(updatedProject);
   } catch (error) {

@@ -19,7 +19,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
     const allProjects = await Project.find({}).sort({ order: 1, _id: 1 }).lean();
     
     const found = allProjects.find((p: any) => 
-      slugify(p.title) === decodedName || p.title === decodedName
+      (p.slug && p.slug === decodedName) || slugify(p.title) === decodedName || p.title === decodedName
     );
 
     if (found) {
@@ -111,6 +111,11 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
               
               {/* Project Overview */}
               <div>
+                {project.shortDescription && (
+                  <p className="text-xl text-gray-600 mb-8 font-medium leading-relaxed font-sans whitespace-pre-line">
+                    {project.shortDescription}
+                  </p>
+                )}
                 <h2 className="text-3xl font-bold text-gray-900 mb-6 font-heading">Project Overview</h2>
                 <p className="text-lg text-gray-700 leading-relaxed font-sans whitespace-pre-line">
                   {project.description}
@@ -243,33 +248,24 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
       {project.gallery && project.gallery.length > 0 && (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
           <h2 className="text-3xl font-bold text-gray-900 mb-10 font-heading text-center">Project Gallery</h2>
-          {project.gallery.length >= 5 ? (
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:h-[600px]">
-              <div className="md:col-span-2 md:row-span-2 h-full">
-                <img src={project.gallery[0]} alt="Gallery 1" className="w-full h-full object-cover rounded-xl shadow-md min-h-[300px]" />
-              </div>
-              <div className="md:col-span-1 md:row-span-1 h-full">
-                <img src={project.gallery[1]} alt="Gallery 2" className="w-full h-full object-cover rounded-xl shadow-md min-h-[200px]" />
-              </div>
-              <div className="md:col-span-1 md:row-span-1 h-full">
-                <img src={project.gallery[2]} alt="Gallery 3" className="w-full h-full object-cover rounded-xl shadow-md min-h-[200px]" />
-              </div>
-              <div className="md:col-span-1 md:row-span-1 h-full">
-                <img src={project.gallery[3]} alt="Gallery 4" className="w-full h-full object-cover rounded-xl shadow-md min-h-[200px]" />
-              </div>
-              <div className="md:col-span-1 md:row-span-1 h-full">
-                <img src={project.gallery[4]} alt="Gallery 5" className="w-full h-full object-cover rounded-xl shadow-md min-h-[200px]" />
-              </div>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {project.gallery.map((img: string, idx: number) => (
-                <div key={idx} className={`${idx === 0 ? 'md:col-span-2 md:row-span-2' : ''} h-full`}>
-                  <img src={img} alt={`Gallery ${idx + 1}`} className="w-full h-full object-cover rounded-xl shadow-md min-h-[250px]" />
+          <div className={`grid grid-cols-1 gap-4 ${project.gallery.length >= 5 ? 'md:grid-cols-4 md:auto-rows-[280px]' : 'md:grid-cols-2 lg:grid-cols-3 md:auto-rows-[300px]'}`}>
+            {project.gallery.map((img: string, idx: number) => {
+              const isLarge = project.gallery.length >= 5 && idx === 0;
+              return (
+                <div 
+                  key={idx} 
+                  className={`${isLarge ? 'md:col-span-2 md:row-span-2' : ''} relative h-64 md:h-auto rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group`}
+                >
+                  <img 
+                    src={img} 
+                    alt={`${project.title} Gallery Image ${idx + 1}`} 
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
                 </div>
-              ))}
-            </div>
-          )}
+              );
+            })}
+          </div>
         </div>
       )}
 
@@ -299,7 +295,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
             <div className="mt-20 pt-12 border-t border-gray-800">
               <p className="text-gray-400 mb-4 uppercase tracking-widest text-sm font-semibold">Up Next</p>
               <Link 
-                href={`/project/${slugify(nextProject.title)}`}
+                href={`/project/${nextProject.slug || slugify(nextProject.title)}`}
                 className="group inline-flex items-center text-3xl font-bold text-white hover:text-accent transition-colors"
               >
                 {nextProject.title}

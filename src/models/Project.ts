@@ -41,6 +41,9 @@ const ProjectSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    slug: {
+      type: String,
+    },
     order: {
       type: Number,
       default: 0,

@@ -61,7 +61,7 @@ export default async function ProjectsPage() {
           {projects.map((project: any) => {
             const slugify = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
             return (
-            <Link href={`/project/${slugify(project.title)}`} key={project._id} className="group h-full">
+            <Link href={`/project/${project.slug || slugify(project.title)}`} key={project._id} className="group h-full">
               <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 h-full flex flex-col border border-gray-100 transform hover:-translate-y-1">
                 {/* Image Container */}
                 <div className="relative h-64 overflow-hidden">
