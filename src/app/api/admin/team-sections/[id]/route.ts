@@ -9,7 +9,7 @@ export async function PUT(req: Request, context: { params: Promise<{ id: string 
     const { id } = await context.params;
     const body = await req.json();
 
-    const existingSection = await TeamSection.findById(id);
+    const existingSection = await (TeamSection as any).findById(id);
     if (!existingSection) {
       return NextResponse.json({ error: 'Section not found' }, { status: 404 });
     }
@@ -17,7 +17,7 @@ export async function PUT(req: Request, context: { params: Promise<{ id: string 
     const oldName = existingSection.name;
     const newName = body.name;
 
-    const section = await TeamSection.findByIdAndUpdate(id, body, { new: true });
+    const section = await (TeamSection as any).findByIdAndUpdate(id, body, { new: true });
     
     // Update all team members associated with this section if the name changed
     if (newName && oldName !== newName) {
@@ -34,7 +34,7 @@ export async function DELETE(req: Request, context: { params: Promise<{ id: stri
   try {
     await dbConnect();
     const { id } = await context.params;
-    const section = await TeamSection.findByIdAndDelete(id);
+    const section = await (TeamSection as any).findByIdAndDelete(id);
     if (!section) {
       return NextResponse.json({ error: 'Section not found' }, { status: 404 });
     }

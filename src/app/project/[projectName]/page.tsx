@@ -16,7 +16,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
   let project = null;
   let nextProject = null;
   try {
-    const allProjects = await Project.find({}).sort({ order: 1, _id: 1 }).lean();
+    const allProjects = await (Project as any).find({}).sort({ order: 1, _id: 1 }).lean();
     
     const found = allProjects.find((p: any) => 
       (p.slug && p.slug === decodedName) || slugify(p.title) === decodedName || p.title === decodedName
