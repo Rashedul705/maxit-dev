@@ -166,27 +166,46 @@ const Index = async () => {
           </p>
           
           <div className="grid grid-cols-1 md:grid-cols-3 border border-gray-200 rounded-2xl overflow-hidden bg-white">
-            {[
-              { title: "Solar Energy", description: "Expert installation ensuring optimal performance, safety, and long-term reliability across residential, commercial, and industrial solar projects.", icon: <Sun className="w-8 h-8 text-primary" /> },
-              { title: "Irrigation & Water", description: "Advanced solar-powered pumping systems integrated with smart technology for highly efficient agricultural water management.", icon: <Droplets className="w-8 h-8 text-primary" /> },
-              { title: "IT & Networking", description: "Robust network infrastructure design and reliable high-speed connectivity solutions for businesses and organizations.", icon: <Wifi className="w-8 h-8 text-primary" /> },
-              { title: "Automation & Civil Works", description: "Intelligent control systems and structural civil engineering services to modernize your operational infrastructure.", icon: <Settings className="w-8 h-8 text-primary" /> },
-              { title: "Power & Electrical", description: "Comprehensive electrical planning, wiring, and safe power distribution services for diverse project scales.", icon: <Zap className="w-8 h-8 text-primary" /> },
-              { title: "CCTV Surveillance", description: "Professional IP camera systems and advanced surveillance solutions providing reliable 24/7 security monitoring.", icon: <Cctv className="w-8 h-8 text-primary" /> },
-            ].map((service, index) => (
+            {services.slice(0, 6).map((service: any, index: number) => {
+              const iconMap: Record<string, React.ReactNode> = {
+                Cpu: <Cpu className="w-8 h-8 text-primary" />,
+                Activity: <Activity className="w-8 h-8 text-primary" />,
+                Settings: <Settings className="w-8 h-8 text-primary" />,
+                Cctv: <Cctv className="w-8 h-8 text-primary" />,
+                Target: <Target className="w-8 h-8 text-primary" />,
+                Home: <Home className="w-8 h-8 text-primary" />,
+                Sprout: <Sprout className="w-8 h-8 text-primary" />,
+                Building2: <Building2 className="w-8 h-8 text-primary" />,
+                Factory: <Factory className="w-8 h-8 text-primary" />,
+                GraduationCap: <GraduationCap className="w-8 h-8 text-primary" />,
+                Landmark: <Landmark className="w-8 h-8 text-primary" />,
+                Sun: <Sun className="w-8 h-8 text-primary" />,
+                Wifi: <Wifi className="w-8 h-8 text-primary" />,
+                Droplets: <Droplets className="w-8 h-8 text-primary" />,
+                Zap: <Zap className="w-8 h-8 text-primary" />,
+              };
+              return (
               <div 
                 key={index} 
                 className={`flex flex-col items-center p-10 group transition-colors hover:bg-gray-50/50 ${
                   index % 3 !== 2 ? 'md:border-r border-gray-200' : ''
                 } ${index < 3 ? 'border-b border-gray-200' : ''} ${index >= 3 && index < 5 ? 'border-b md:border-b-0 border-gray-200' : ''}`}
               >
-                <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center border-2 border-primary/20 group-hover:border-primary/50 transition-colors mb-6 shadow-sm">
-                  {service.icon}
+                <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center border-2 border-primary/20 group-hover:border-primary/50 transition-colors mb-6 shadow-sm overflow-hidden">
+                  {service.iconUrl ? (
+                    <img src={service.iconUrl} alt={service.title} className="w-10 h-10 object-contain" />
+                  ) : (
+                    service.iconCategory && iconMap[service.iconCategory] ? iconMap[service.iconCategory] : <Settings className="w-8 h-8 text-primary" />
+                  )}
                 </div>
                 <h3 className="text-lg font-bold text-gray-900 mb-3">{service.title}</h3>
-                <p className="text-sm text-gray-500 leading-relaxed max-w-xs">{service.description}</p>
+                {service.subServices && service.subServices.length > 0 && (
+                  <p className="text-sm text-gray-500 leading-relaxed text-center max-w-sm">
+                    {service.subServices.join(" • ")}
+                  </p>
+                )}
               </div>
-            ))}
+            )})}
           </div>
         </div>
       </section>

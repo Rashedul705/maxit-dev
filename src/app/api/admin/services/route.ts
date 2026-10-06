@@ -17,17 +17,17 @@ export async function POST(request: Request) {
   try {
     await dbConnect();
     const body = await request.json();
-    const { title, description, iconCategory, imageUrl, order } = body;
+    const { title, iconUrl, imageUrl, subServices, order } = body;
 
-    if (!title || !description) {
-      return NextResponse.json({ error: 'Title and description are required' }, { status: 400 });
+    if (!title) {
+      return NextResponse.json({ error: 'Title is required' }, { status: 400 });
     }
 
     const newService = await Service.create({
       title,
-      description,
-      iconCategory: iconCategory || 'Settings',
+      iconUrl: iconUrl || '',
       imageUrl: imageUrl || '',
+      subServices: subServices || [],
       order: order || 0
     });
 

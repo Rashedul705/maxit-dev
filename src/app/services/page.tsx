@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { 
-  Sun, ArrowRight, Cpu, Activity, Settings, Cctv, Target, Droplets, Sprout, Leaf, Wifi, RadioTower, Lightbulb, Home, Building2, Factory, GraduationCap, Landmark 
+  Sun, ArrowRight, Cpu, Activity, Settings, Cctv, Target, Droplets, Sprout, Leaf, Wifi, RadioTower, Lightbulb, Home, Building2, Factory, GraduationCap, Landmark, Zap, CheckCircle2, Image as ImageIcon 
 } from 'lucide-react';
-
 import dbConnect from '@/lib/mongodb';
 import Service from '@/models/Service';
 import SiteSettings from '@/models/SiteSettings';
@@ -34,29 +33,32 @@ async function getSiteSettings() {
 export default async function Services() {
   const [services, settings] = await Promise.all([getServicesData(), getSiteSettings()]);
   
+  const iconMap: Record<string, React.ReactNode> = {
+    Cpu: <Cpu className="w-10 h-10" />,
+    Activity: <Activity className="w-10 h-10" />,
+    Settings: <Settings className="w-10 h-10" />,
+    Cctv: <Cctv className="w-10 h-10" />,
+    Target: <Target className="w-10 h-10" />,
+    Home: <Home className="w-10 h-10" />,
+    Sprout: <Sprout className="w-10 h-10" />,
+    Building2: <Building2 className="w-10 h-10" />,
+    Factory: <Factory className="w-10 h-10" />,
+    GraduationCap: <GraduationCap className="w-10 h-10" />,
+    Landmark: <Landmark className="w-10 h-10" />,
+    Sun: <Sun className="w-10 h-10" />,
+    Wifi: <Wifi className="w-10 h-10" />,
+    Droplets: <Droplets className="w-10 h-10" />,
+    Zap: <Zap className="w-10 h-10" />,
+  };
+
   const headerTitle = settings?.servicesHeaderTitle || "Our Services";
   const headerSubtitle = settings?.servicesHeaderSubtitle || "Comprehensive technology and engineering solutions designed for efficiency, sustainability, and growth.";
-  
-  const featuredTitle = settings?.featuredServiceTitle || "Solar & Renewable Energy";
-  const featuredDescription = settings?.featuredServiceDescription || "Leading the transition to sustainable energy with end-to-end solar engineering, ensuring maximum efficiency and reliability for industrial, commercial, and residential sectors.";
-  const featuredPoints = settings?.featuredServicePoints && settings.featuredServicePoints.length > 0 
-    ? settings.featuredServicePoints 
-    : [
-        { name: "Solar Installation", desc: "End-to-end design and setup." },
-        { name: "Roof Top Solar", desc: "Optimizing commercial rooftops." },
-        { name: "Complete Solar Setup", desc: "Turnkey off-grid & on-grid." },
-        { name: "Net Metering", desc: "Grid synchronization & setup." },
-        { name: "Solar Lift Integration", desc: "Powering heavy industrial lifts." },
-        { name: "Maintenance & Support", desc: "24/7 technical assistance." }
-      ];
+
   return (
     <div className="min-h-screen flex flex-col overflow-x-hidden w-full max-w-[100vw]">
       <main className="flex-1 animate-slide-up overflow-hidden w-full">
-        {/* Hero Section of Services Page */}
+        {/* Hero Section */}
         <section className="relative pt-32 pb-20 bg-gradient-to-b from-primary/5 to-white overflow-hidden">
-          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-accent/5 rounded-full blur-[120px] pointer-events-none transform translate-x-1/3 -translate-y-1/3" />
-          <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] pointer-events-none transform -translate-x-1/3 translate-y-1/3" />
-          
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
             <h1 className="text-4xl md:text-6xl font-bold font-heading text-primary mb-6 tracking-tight">
               {headerTitle.split(' ').map((word: string, i: number, arr: string[]) => 
@@ -69,121 +71,88 @@ export default async function Services() {
           </div>
         </section>
 
-        {/* Services Content Area */}
+        {/* Services Content Area - Grid Layout */}
         <section className="pb-24 bg-white relative z-10">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10">
-            
-            {/* Core Service - Featured Block */}
-            <div className="mb-16">
-              <div className="bg-primary rounded-3xl overflow-hidden shadow-2xl flex flex-col lg:flex-row relative border border-primary/20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {services.map((service: any) => {
+                const slugify = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
                 
-                {/* Image Half */}
-                <div className="lg:w-5/12 relative min-h-[300px] lg:min-h-full">
-                  <img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?w=1200&q=80" alt="Solar Installation" className="absolute inset-0 w-full h-full object-cover" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-primary to-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-primary" />
-                  <div className="absolute top-6 left-6 z-10 lg:hidden">
-                    <div className="inline-block px-4 py-1.5 bg-white text-primary font-bold text-xs uppercase tracking-widest rounded-full shadow-lg">
-                      Core Service
-                    </div>
-                  </div>
-                </div>
-
-                {/* Content Half */}
-                <div className="lg:w-7/12 p-8 md:p-14 relative z-10 flex flex-col justify-center bg-primary">
-                  <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-[80px] pointer-events-none -translate-y-1/2 translate-x-1/4"></div>
-                  
-                  <div className="hidden lg:inline-block px-4 py-1.5 bg-white text-primary font-bold text-xs uppercase tracking-widest rounded-full mb-8 w-fit shadow-lg">
-                    Core Service
-                  </div>
-
-                  <div className="flex items-center space-x-4 mb-6">
-                    <div className="w-16 h-16 md:w-20 md:h-20 bg-white/10 rounded-2xl flex items-center justify-center text-white shadow-inner shrink-0">
-                      <Sun className="w-8 h-8 md:w-10 md:h-10" />
-                    </div>
-                    <h3 className="text-3xl md:text-5xl font-bold font-heading text-white leading-tight">{featuredTitle}</h3>
-                  </div>
-                  
-                  <p className="text-white/80 font-medium leading-relaxed text-lg mb-10">
-                    {featuredDescription}
-                  </p>
-                  
-                  <div className="bg-black/10 rounded-3xl p-8 md:p-10 border border-white/5">
-                    <h4 className="text-2xl font-bold text-white mb-8">Comprehensive Solar Capabilities:</h4>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-8 gap-x-8">
-                      {featuredPoints.map((item: any, idx: number) => (
-                        <div key={idx} className="flex items-start space-x-4 group">
-                          <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white group-hover:bg-white group-hover:text-primary transition-colors shrink-0 mt-1">
-                            <ArrowRight className="w-5 h-5" />
-                          </div>
-                          <div>
-                            <h5 className="text-white font-bold text-lg mb-1 group-hover:text-gray-200 transition-colors">{item.name}</h5>
-                            <p className="text-white/70 text-sm font-medium">{item.desc}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  <div className="mt-10 flex flex-wrap gap-4">
-                    <Link href="/contact" className="inline-flex items-center px-8 py-4 bg-white text-primary font-bold rounded-xl hover:bg-gray-100 transition-all shadow-lg hover:shadow-white/20">
-                      Request Solar Quote
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Other Services Section */}
-            <div className="pt-8">
-              <div className="text-center mb-12">
-                <span className="text-primary font-bold uppercase tracking-wider text-sm">Other Services</span>
-                <h2 className="text-4xl font-bold font-heading text-gray-900 mt-2">Technology & Infrastructure</h2>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {services.map((service: any, idx: number) => {
-                const iconMap: Record<string, React.ReactNode> = {
-                  Cpu: <Cpu className="w-8 h-8" />,
-                  Activity: <Activity className="w-8 h-8" />,
-                  Settings: <Settings className="w-8 h-8" />,
-                  Cctv: <Cctv className="w-8 h-8" />,
-                  Target: <Target className="w-8 h-8" />,
-                  Home: <Home className="w-8 h-8" />,
-                  Sprout: <Sprout className="w-8 h-8" />,
-                  Building2: <Building2 className="w-8 h-8" />,
-                  Factory: <Factory className="w-8 h-8" />,
-                  GraduationCap: <GraduationCap className="w-8 h-8" />,
-                  Landmark: <Landmark className="w-8 h-8" />,
-                  Sun: <Sun className="w-8 h-8" />
-                };
                 return (
-                  <div key={service._id} className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-100 flex flex-col group">
-                    <div className="h-48 overflow-hidden relative">
-                      <div className="absolute inset-0 bg-primary/20 mix-blend-multiply z-10 group-hover:bg-transparent transition-colors duration-500"></div>
-                      {service.imageUrl && (
-                        <img src={service.imageUrl} alt={service.title} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
-                      )}
-                      <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-gray-900/80 to-transparent z-10"></div>
-                      <div className="absolute bottom-4 left-4 z-20 w-12 h-12 bg-white rounded-xl flex items-center justify-center text-primary shadow-lg group-hover:bg-primary group-hover:text-white transition-colors duration-300">
-                        {iconMap[service.iconCategory] || <Settings className="w-8 h-8" />}
+                  <div 
+                    key={service._id} 
+                    className={`flex flex-col bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group relative ${
+                      service.title.toLowerCase().includes('solar') ? 'ring-2 ring-primary border-transparent' : ''
+                    }`}
+                  >
+                    {service.title.toLowerCase().includes('solar') && (
+                      <div className="absolute top-0 right-0 bg-primary text-white text-xs font-bold px-3 py-1 rounded-bl-lg z-20">
+                        CORE SERVICE
                       </div>
+                    )}
+                    
+                    {/* Cover Image Header */}
+                    <div className="h-48 overflow-hidden relative border-b border-gray-100 rounded-t-2xl">
+                      <div className="absolute inset-0 bg-primary/20 mix-blend-multiply z-10 group-hover:bg-transparent transition-colors duration-500"></div>
+                      {service.imageUrl ? (
+                        <img src={service.imageUrl} alt={service.title} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
+                      ) : (
+                        <div className="w-full h-full bg-gray-100 flex flex-col items-center justify-center text-gray-300">
+                          <ImageIcon className="w-12 h-12 opacity-50 mb-2" />
+                          <span className="text-sm font-medium">No Image</span>
+                        </div>
+                      )}
                     </div>
-                    <div className="p-8 flex flex-col flex-grow">
-                      <h4 className="text-2xl font-bold font-heading text-gray-900 mb-4 group-hover:text-primary transition-colors">{service.title}</h4>
-                      <p className="text-gray-600 font-medium leading-relaxed mb-8 flex-grow">{service.description}</p>
-                      <Link href="/contact" className="inline-flex items-center text-primary font-bold hover:text-accent transition-colors mt-auto">
-                        Consult with us <ArrowRight className="ml-2 w-5 h-5" />
+                    
+                    {/* Icon overlay on the edge of the image */}
+                    <div className="absolute top-40 left-8 z-20 w-16 h-16 bg-white rounded-xl flex items-center justify-center text-primary shadow-lg group-hover:bg-primary group-hover:text-white transition-colors duration-300 overflow-hidden border border-gray-100">
+                      {service.iconUrl ? (
+                        <img src={service.iconUrl} alt="Icon" className="w-10 h-10 object-contain" />
+                      ) : (
+                        service.iconCategory && iconMap[service.iconCategory] ? iconMap[service.iconCategory] : <ImageIcon className="w-8 h-8 opacity-50" />
+                      )}
+                    </div>
+                    
+                    <div className="p-8 pt-12 flex flex-col flex-grow">
+                      <h3 className="text-2xl font-bold text-gray-900 mb-6 font-heading">{service.title}</h3>
+                    
+                    {/* Sub Services */}
+                    {service.subServices && service.subServices.length > 0 && (
+                      <div className="mb-8 flex-grow">
+                        <ul className="space-y-3">
+                          {service.subServices.map((sub: string, subIdx: number) => (
+                            <li key={subIdx} className="flex items-start">
+                              <CheckCircle2 className="w-5 h-5 text-accent mr-3 flex-shrink-0 mt-0.5" />
+                              <span className="text-gray-700 text-sm font-medium">{sub}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    
+                    {/* Action Buttons */}
+                    <div className="mt-auto flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-100">
+                      <Link 
+                        href={`/projects?category=${slugify(service.title)}`} 
+                        className="flex-1 text-center py-2.5 px-4 bg-gray-50 hover:bg-gray-100 text-gray-900 text-sm font-bold rounded-xl transition-colors border border-gray-200"
+                      >
+                        View Projects
+                      </Link>
+                      <Link 
+                        href="/contact" 
+                        className="flex-1 text-center py-2.5 px-4 bg-primary hover:bg-primary/90 text-white text-sm font-bold rounded-xl transition-colors"
+                      >
+                        Consult Us
                       </Link>
                     </div>
+                    </div>
                   </div>
-                )})}
-              </div>
+                );
+              })}
             </div>
           </div>
         </section>
       </main>
     </div>
   );
-};
-
-
+}

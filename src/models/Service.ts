@@ -6,17 +6,19 @@ const ServiceSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    description: {
-      type: String,
-      required: true,
-    },
     iconCategory: {
       type: String,
-      required: true,
       default: 'Settings',
+    },
+    iconUrl: {
+      type: String,
     },
     imageUrl: {
       type: String,
+    },
+    subServices: {
+      type: [String],
+      default: [],
     },
     order: {
       type: Number,
