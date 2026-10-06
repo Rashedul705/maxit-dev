@@ -1,4 +1,4 @@
-import dbConnect from './src/lib/mongodb.ts';
+import dbConnect from './src/lib/mongodb';
 import mongoose from 'mongoose';
 
 const checkDatabase = async () => {
