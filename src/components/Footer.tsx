@@ -20,7 +20,7 @@ const Footer = ({ contactInfo }: { contactInfo?: any }) => {
   if (pathname.startsWith('/admin')) return null;
 
   return (
-    <footer className="bg-primary text-white relative overflow-hidden">
+    <footer className="bg-slate-900 text-white relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-[100px] pointer-events-none transform translate-x-1/2 -translate-y-1/2"></div>
       

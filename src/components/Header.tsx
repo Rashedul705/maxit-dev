@@ -22,13 +22,11 @@ const Header = ({ navbarContactButtonLink = "/contact" }: { navbarContactButtonL
 
   const navItems = [
     { name: 'Home', path: '/' },
-    { name: 'About', path: '/about' },
-    { name: 'Company Profile', path: '/company-profile' },
     { name: 'Services', path: '/services' },
     { name: 'Projects', path: '/projects' },
     { name: 'Team', path: '/team' },
+    { name: 'About', path: '/about' },
     { name: 'Contact', path: '/contact' },
-    { name: 'Admin Login', path: '/admin/login' },
   ];
 
   if (pathname.startsWith('/admin')) return null;
