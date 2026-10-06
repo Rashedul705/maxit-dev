@@ -10,7 +10,7 @@ const HeroContentSchema = new mongoose.Schema(
   {
     brandingText: {
       type: String,
-      default: 'MAXIT',
+      default: 'Max iT',
     },
     titleLine1: {
       type: String,

@@ -15,7 +15,7 @@ async function getAboutData() {
     let about = await (AboutContent.findOne as any)().lean();
     if (!about) {
       about = {
-        journey: "Founded with a passion for innovation, MaxIT Solution began with a simple goal: to make industrial-grade engineering and sustainable energy accessible. Over the years, we have grown from a small technical startup into a trusted regional leader, driven by a commitment to reliability and engineering excellence.",
+        journey: "Founded with a passion for innovation, Max iT Solution began with a simple goal: to make industrial-grade engineering and sustainable energy accessible. Over the years, we have grown from a small technical startup into a trusted regional leader, driven by a commitment to reliability and engineering excellence.",
         mission: "To empower businesses, industries, and communities by delivering robust, scalable, and sustainable technology solutions. We strive to solve complex engineering challenges with innovation, ensuring efficiency and long-term value for every client we serve.",
         vision: "To be the region's most trusted engineering and technology partner, driving the transition towards smart automation, renewable energy, and intelligent infrastructure on a global scale.",
       };
@@ -24,7 +24,7 @@ async function getAboutData() {
   } catch (error) {
     console.error('Error fetching about data:', error);
     return {
-      journey: "Founded with a passion for innovation, MaxIT Solution began with a simple goal: to make industrial-grade engineering and sustainable energy accessible.",
+      journey: "Founded with a passion for innovation, Max iT Solution began with a simple goal: to make industrial-grade engineering and sustainable energy accessible.",
       mission: "To empower businesses, industries, and communities by delivering robust, scalable, and sustainable technology solutions.",
       vision: "To be the region's most trusted engineering and technology partner, driving the transition towards smart automation.",
     };
@@ -47,7 +47,7 @@ export default async function About() {
                 <span className="text-primary font-semibold text-sm tracking-wider uppercase">Our Journey</span>
               </div>
               <h1 className="text-4xl md:text-6xl font-bold font-heading text-primary mb-6 tracking-tight">
-                The Story Behind <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">MaxIT</span>
+                The Story Behind <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Max iT</span>
               </h1>
               <p className="text-xl text-gray-700 max-w-3xl mx-auto font-medium leading-relaxed">
                 {aboutData.journey}
@@ -55,7 +55,7 @@ export default async function About() {
             </div>
             
             <div className="rounded-3xl overflow-hidden shadow-2xl relative h-[400px] md:h-[500px]">
-              <img src="/images/slides/commercial_rooftop_slide_1789677880098.jpg" alt="MaxIT Journey" className="w-full h-full object-cover" />
+              <img src="/images/slides/commercial_rooftop_slide_1789677880098.jpg" alt="Max iT Journey" className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0B1120]/80 via-transparent to-transparent"></div>
               <div className="absolute bottom-8 left-8 text-white">
                 <p className="text-3xl font-bold font-heading mb-2">Innovating Since 2014</p>
@@ -100,7 +100,7 @@ export default async function About() {
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold font-heading text-primary mb-6">What Sets Us Apart</h2>
               <p className="text-xl text-gray-700 max-w-2xl mx-auto font-medium">
-                Why forward-thinking companies choose MaxIT as their trusted technology partner.
+                Why forward-thinking companies choose Max iT as their trusted technology partner.
               </p>
             </div>
 

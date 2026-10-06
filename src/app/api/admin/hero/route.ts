@@ -9,7 +9,7 @@ export async function GET() {
     if (!content) {
       // Return default values if nothing in DB yet
       content = {
-        brandingText: 'MAXIT',
+        brandingText: 'Max iT',
         titleLine1: 'Solar Energy &',
         titleLine2: 'Smart Automation',
         description: 'Empowering your future with sustainable energy solutions, advanced agro-technology, and intelligent industrial automation.',

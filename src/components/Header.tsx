@@ -44,7 +44,7 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center bg-white rounded-2xl px-6 py-3 transition-all duration-300">
           <Link href="/" className="flex items-center group relative">
-            <img src="/logo.png" alt="MaxIT Solution Logo" className="h-10 w-auto relative z-10 transition-transform duration-300 group-hover:scale-105" />
+            <img src="/logo.png" alt="Max iT Solution Logo" className="h-10 w-auto relative z-10 transition-transform duration-300 group-hover:scale-105" />
           </Link>
 
           {/* Desktop Navigation */}

@@ -11,7 +11,7 @@ export async function GET() {
     // If it doesn't exist, return a default template
     if (!about) {
       about = {
-        journey: "Founded with a passion for innovation, MaxIT Solution began with a simple goal: to make industrial-grade engineering and sustainable energy accessible.",
+        journey: "Founded with a passion for innovation, Max iT Solution began with a simple goal: to make industrial-grade engineering and sustainable energy accessible.",
         mission: "To empower businesses, industries, and communities by delivering robust, scalable, and sustainable technology solutions.",
         vision: "To be the region's most trusted engineering and technology partner, driving the transition towards smart automation.",
       };

@@ -74,7 +74,7 @@ export default async function Team() {
                 Complete Corporate Governance and <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Web Team Directory</span>
               </h1>
               <p className="text-2xl text-gray-800 font-bold mb-4">
-                Max IT Solution Ltd.
+                Max iT Solution Ltd.
               </p>
               <p className="text-xl text-gray-700 font-medium leading-relaxed">
                 Corporate Organogram and Profile Layout with Global Supply Chain Network.
@@ -140,7 +140,7 @@ export default async function Team() {
                         <div className="whitespace-pre-wrap">{ceo.message}</div>
                       ) : (
                         <>
-                          <p>At Max IT Solution LTD., we believe that technology should serve people, empower communities, and create lasting impact. Since the beginning of our journey, we have been driven by a simple yet powerful mission: to provide reliable, innovative, and sustainable solutions that address real-world challenges faced by businesses and communities alike.</p>
+                          <p>At Max iT Solution LTD., we believe that technology should serve people, empower communities, and create lasting impact. Since the beginning of our journey, we have been driven by a simple yet powerful mission: to provide reliable, innovative, and sustainable solutions that address real-world challenges faced by businesses and communities alike.</p>
                           <p>Whether it is supporting business operations through our IT services or contributing to rural development through renewable energy and agro-based technologies, we remain committed to delivering excellence in everything we do.</p>
                           <p>As we continue to grow, we stay grounded in our core values of professionalism, integrity, and service. I am proud of the work we have accomplished so far, and I am even more excited about the future we are building together.</p>
                         </>

@@ -30,7 +30,7 @@ const Footer = ({ contactInfo }: { contactInfo?: any }) => {
           <div className="col-span-1 lg:col-span-2 flex flex-col items-center md:items-start">
             <Link href="/" className="inline-block group mb-6">
               <div className="bg-white p-3 rounded-xl shadow-lg group-hover:scale-105 transition-transform inline-flex">
-                <img src="/logo.png" alt="MaxIT Solution Logo" className="h-10 w-auto" />
+                <img src="/logo.png" alt="Max iT Solution Logo" className="h-10 w-auto" />
               </div>
             </Link>
             <p className="text-white/80 mb-8 max-w-md leading-relaxed mx-auto md:mx-0">
@@ -104,7 +104,7 @@ const Footer = ({ contactInfo }: { contactInfo?: any }) => {
         </div>
 
         <div className="border-t border-white/10 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-white/60">
-          <p>© {currentYear} MaxIT Solution. All rights reserved.</p>
+          <p>© {currentYear} Max iT Solution. All rights reserved.</p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
             <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>

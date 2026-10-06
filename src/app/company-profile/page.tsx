@@ -163,7 +163,7 @@ export default async function CompanyProfile() {
               Technology & Engineering Solutions Built for a <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Smarter Future</span>
             </h1>
             <p className="text-xl text-gray-300 mb-10 font-medium leading-relaxed max-w-2xl">
-              MaxIT provides integrated technology and engineering solutions across renewable energy, smart agriculture, automation, security, networking, water treatment, communication infrastructure and building electrical systems.
+              Max iT provides integrated technology and engineering solutions across renewable energy, smart agriculture, automation, security, networking, water treatment, communication infrastructure and building electrical systems.
             </p>
             <div className="flex flex-wrap gap-4 mt-8">
               <Link href="#solutions" className="px-8 py-4 bg-primary text-white font-bold rounded-xl hover:bg-primary/90 transition-all shadow-lg hover:shadow-primary/30 flex items-center">
@@ -186,14 +186,14 @@ export default async function CompanyProfile() {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-12">
-            <span className="text-accent font-bold uppercase tracking-wider text-sm">About MaxIT</span>
+            <span className="text-accent font-bold tracking-wider text-sm">About Max iT</span>
             <h2 className="text-3xl font-bold font-heading text-primary mt-2">Engineering the Future of Infrastructure</h2>
           </div>
           
           <div className="flex flex-col lg:flex-row gap-16 items-center">
             <div className="w-full lg:w-1/2">
               <p className="text-lg text-gray-700 leading-relaxed font-medium mb-6">
-                MaxIT is a technology and engineering solutions company focused on delivering reliable, efficient and sustainable solutions for homes, businesses, industries and institutions. 
+                Max iT is a technology and engineering solutions company focused on delivering reliable, efficient and sustainable solutions for homes, businesses, industries and institutions. 
               </p>
               <p className="text-lg text-gray-700 leading-relaxed font-medium">
                 We bridge the gap between complex technological capabilities and practical implementation. From solar grid installations to fully automated smart environments, our multi-disciplinary approach ensures every project is executed to the highest engineering standards.
@@ -345,16 +345,16 @@ export default async function CompanyProfile() {
           </div>
 
           <p className="text-xl text-gray-700 max-w-4xl mx-auto font-medium leading-relaxed">
-            From initial consultation and system design to installation, commissioning and after-sales support, MaxIT provides end-to-end technology and engineering solutions tailored to each project.
+            From initial consultation and system design to installation, commissioning and after-sales support, Max iT provides end-to-end technology and engineering solutions tailored to each project.
           </p>
         </div>
       </section>
 
-      {/* 5. Why MaxIT */}
+      {/* 5. Why Max iT */}
       <section className="py-24 bg-primary text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold font-heading mb-4">Why Choose MaxIT?</h2>
+            <h2 className="text-4xl font-bold font-heading mb-4">Why Choose Max iT?</h2>
             <p className="text-white/80 font-medium max-w-2xl mx-auto text-lg">Delivering proven value through technical excellence and integrated approaches.</p>
           </div>
 
@@ -559,7 +559,7 @@ export default async function CompanyProfile() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold font-heading text-primary mb-6">Complete Corporate Governance and Web Team Directory</h2>
-            <p className="text-gray-800 text-xl font-bold mb-3">Max IT Solution Ltd.</p>
+            <p className="text-gray-800 text-xl font-bold mb-3">Max iT Solution Ltd.</p>
             <p className="text-gray-600 text-lg max-w-3xl mx-auto font-medium">Corporate Organogram and Profile Layout with Global Supply Chain Network.</p>
           </div>
 
@@ -616,7 +616,7 @@ export default async function CompanyProfile() {
                         <div className="whitespace-pre-wrap">{ceo.message}</div>
                       ) : (
                         <>
-                          <p>At Max IT Solution LTD., we believe that technology should serve people, empower communities, and create lasting impact. Since the beginning of our journey, we have been driven by a simple yet powerful mission: to provide reliable, innovative, and sustainable solutions that address real-world challenges faced by businesses and communities alike.</p>
+                          <p>At Max iT Solution LTD., we believe that technology should serve people, empower communities, and create lasting impact. Since the beginning of our journey, we have been driven by a simple yet powerful mission: to provide reliable, innovative, and sustainable solutions that address real-world challenges faced by businesses and communities alike.</p>
                           <p>Whether it is supporting business operations through our IT services or contributing to rural development through renewable energy and agro-based technologies, we remain committed to delivering excellence in everything we do.</p>
                           <p>As we continue to grow, we stay grounded in our core values of professionalism, integrity, and service. I am proud of the work we have accomplished so far, and I am even more excited about the future we are building together.</p>
                         </>
@@ -744,7 +744,7 @@ export default async function CompanyProfile() {
       <section className="py-20 bg-primary text-white border-b border-primary/90">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold font-heading">MaxIT at a Glance</h2>
+            <h2 className="text-3xl font-bold font-heading">Max iT at a Glance</h2>
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 text-center">

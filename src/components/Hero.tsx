@@ -22,7 +22,7 @@ const Hero = ({ content }: HeroProps) => {
   ];
 
   const stats = content?.stats || defaultStats;
-  const brandingText = content?.brandingText || "MAXIT";
+  const brandingText = content?.brandingText || "Max iT";
   const titleLine1 = content?.titleLine1 || "Solar Energy &";
   const titleLine2 = content?.titleLine2 || "Smart Automation";
   const description = content?.description || "Empowering your future with sustainable energy solutions, advanced agro-technology, and intelligent industrial automation.";

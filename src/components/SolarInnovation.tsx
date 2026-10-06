@@ -85,7 +85,7 @@ const SolarInnovation = () => {
               </span>
             </h2>
             <p className="text-xl text-gray-600 font-medium leading-relaxed">
-              Explore our state-of-the-art videography and see how MaxIT Solution is reshaping the energy landscape with break-through technologies.
+              Explore our state-of-the-art videography and see how Max iT Solution is reshaping the energy landscape with break-through technologies.
             </p>
           </div>
           

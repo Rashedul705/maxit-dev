@@ -301,7 +301,7 @@ export default function CompanyProfileDataManagement() {
           {/* WHY CHOOSE US SECTION */}
           <div className="space-y-4 pt-4 border-t border-gray-100">
             <div className="flex items-center justify-between border-b border-gray-100 pb-4">
-              <h3 className="text-xl font-bold text-gray-900">Why Choose MaxIT (Company Profile)</h3>
+              <h3 className="text-xl font-bold text-gray-900">Why Choose Max iT (Company Profile)</h3>
               <button 
                 type="button" 
                 onClick={() => setData({ ...data, whyChooseUs: [...data.whyChooseUs, { title: "", description: "", icon: "Target" }] })}

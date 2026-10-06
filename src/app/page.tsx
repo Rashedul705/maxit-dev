@@ -236,7 +236,7 @@ const Index = async () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-20">
             <h2 className="text-4xl md:text-5xl font-bold font-heading text-primary mb-6">
-              Why Choose MaxIT Solution?
+              Why Choose Max iT Solution?
             </h2>
             <p className="text-xl text-gray-700 max-w-3xl mx-auto font-medium leading-relaxed">
               We are dedicated to empowering businesses and homes with sustainable energy, advanced agricultural technology, and smart automation solutions.
@@ -297,13 +297,13 @@ const Index = async () => {
           <div className="flex flex-col lg:flex-row gap-16 items-center">
             <div className="w-full lg:w-1/2 relative">
               <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl">
-                <img src="/images/slides/agro_solar_slide_1789677870674.jpg" alt="About MaxIT" className="w-full h-full object-cover" />
+                <img src="/images/slides/agro_solar_slide_1789677870674.jpg" alt="About Max iT" className="w-full h-full object-cover" />
               </div>
               <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-accent/10 rounded-full blur-[40px] -z-10"></div>
             </div>
             
             <div className="w-full lg:w-1/2">
-              <h2 className="text-4xl md:text-5xl font-bold font-heading text-primary mb-6">About MaxIT Solution</h2>
+              <h2 className="text-4xl md:text-5xl font-bold font-heading text-primary mb-6">About Max iT Solution</h2>
               <p className="text-xl text-gray-700 font-medium leading-relaxed mb-10">
                 {aboutData.journey || "We are dedicated to empowering businesses and homes with sustainable energy, advanced agricultural technology, and smart automation solutions."}
               </p>
@@ -340,7 +340,7 @@ const Index = async () => {
               Client Success Stories
             </h2>
             <p className="text-xl text-gray-600 font-medium max-w-2xl mx-auto">
-              Don't just take our word for it — hear from the visionaries who have experienced the MaxIT difference firsthand.
+              Don't just take our word for it — hear from the visionaries who have experienced the Max iT difference firsthand.
             </p>
           </div>
 
@@ -368,7 +368,7 @@ const Index = async () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-                MaxIT Management
+                Max iT Management
               </h2>
               <p className="text-lg text-gray-300/80 max-w-2xl mx-auto font-medium">
                 Meet the leaders driving our technology and engineering solutions forward.

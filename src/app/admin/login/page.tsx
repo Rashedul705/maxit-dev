@@ -49,7 +49,7 @@ export default function AdminLogin() {
           Admin Login
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
-          Sign in to access the MaxIT management dashboard
+          Sign in to access the Max iT management dashboard
         </p>
       </div>
 
