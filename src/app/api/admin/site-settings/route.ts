@@ -76,13 +76,7 @@ export async function POST(request: Request) {
     await dbConnect();
     const body = await request.json();
     
-    let settings = await (SiteSettings.findOne as any)();
-    if (settings) {
-      Object.assign(settings, body);
-      await settings.save();
-    } else {
-      settings = await SiteSettings.create(body);
-    }
+    const settings = await SiteSettings.findOneAndUpdate({}, body, { new: true, upsert: true });
 
     revalidatePath('/', 'layout');
     

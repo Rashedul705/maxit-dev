@@ -170,20 +170,20 @@ export default function HomeAdmin() {
               {/* Nav Items Array */}
               <div className="space-y-2">
                 <label className="block text-sm font-medium">Navigation Menu Items</label>
-                {siteSettings.navItems?.sort((a:any,b:any)=>a.order-b.order).map((item: any, idx: number) => (
+                {siteSettings?.navItems?.map((item: any, idx: number) => (
                   <div key={idx} className="flex gap-2 items-center">
                     <input type="text" value={item.label} onChange={(e) => {
-                      const newArr = [...siteSettings.navItems];
+                      const newArr = [...(siteSettings?.navItems || [])];
                       newArr[idx].label = e.target.value;
                       updateSetting('navItems', newArr);
                     }} className="flex-1 border p-2 rounded" placeholder="Label" />
                     <input type="text" value={item.link} onChange={(e) => {
-                      const newArr = [...siteSettings.navItems];
+                      const newArr = [...(siteSettings?.navItems || [])];
                       newArr[idx].link = e.target.value;
                       updateSetting('navItems', newArr);
                     }} className="flex-1 border p-2 rounded" placeholder="Link" />
                     <button onClick={() => {
-                      const newArr = siteSettings.navItems.filter((_:any, i:number) => i !== idx);
+                      const newArr = siteSettings?.navItems?.filter((_:any, i:number) => i !== idx);
                       updateSetting('navItems', newArr);
                     }} className="p-2 text-red-500"><Trash2 size={16} /></button>
                   </div>
@@ -230,20 +230,20 @@ export default function HomeAdmin() {
 
               <div className="space-y-2">
                 <label className="block text-sm font-medium">Stats (Max 4 recommended)</label>
-                {homeData.hero?.stats?.sort((a:any,b:any)=>a.order-b.order).map((stat: any, idx: number) => (
+                {homeData.hero?.stats.map((stat: any, idx: number) => (
                   <div key={idx} className="flex gap-2 items-center bg-gray-50 p-2 rounded border">
                     <input type="text" value={stat.number} onChange={(e) => {
-                      const newArr = [...homeData.hero.stats];
+                      const newArr = [...(homeData.hero?.stats || [])];
                       newArr[idx].number = e.target.value;
                       updateHome('hero', 'stats', newArr);
                     }} className="w-24 border p-2 rounded" placeholder="e.g. 50+" />
                     <input type="text" value={stat.label} onChange={(e) => {
-                      const newArr = [...homeData.hero.stats];
+                      const newArr = [...(homeData.hero?.stats || [])];
                       newArr[idx].label = e.target.value;
                       updateHome('hero', 'stats', newArr);
                     }} className="flex-1 border p-2 rounded" placeholder="Label (e.g. Projects)" />
                     <button onClick={() => {
-                      const newArr = homeData.hero.stats.filter((_:any, i:number) => i !== idx);
+                      const newArr = homeData.hero?.stats?.filter((_:any, i:number) => i !== idx);
                       updateHome('hero', 'stats', newArr);
                     }} className="p-2 text-red-500"><Trash2 size={16} /></button>
                   </div>
@@ -271,17 +271,17 @@ export default function HomeAdmin() {
               
               <div className="space-y-2">
                 <label className="block text-sm font-medium">Service Cards</label>
-                {homeData.servicesSection?.services?.sort((a:any,b:any)=>a.order-b.order).map((srv: any, idx: number) => (
+                {homeData.servicesSection?.services.map((srv: any, idx: number) => (
                   <div key={idx} className="bg-gray-50 p-4 rounded border space-y-3">
                     <div className="flex justify-between">
                       <h4 className="font-semibold text-sm">Card {idx + 1}</h4>
-                      <button onClick={() => { const newArr = homeData.servicesSection.services.filter((_:any, i:number) => i !== idx); updateHome('servicesSection', 'services', newArr); }} className="text-red-500"><Trash2 size={16} /></button>
+                      <button onClick={() => { const newArr = homeData.servicesSection?.services?.filter((_:any, i:number) => i !== idx); updateHome('servicesSection', 'services', newArr); }} className="text-red-500"><Trash2 size={16} /></button>
                     </div>
                     <div className="flex gap-2 items-center">
-                      <input type="text" value={srv.icon} onChange={(e) => { const newArr = [...homeData.servicesSection.services]; newArr[idx].icon = e.target.value; updateHome('servicesSection', 'services', newArr); }} className="w-32 border p-2 rounded text-sm" placeholder="Lucide Icon (e.g. Sun)" />
-                      <input type="text" value={srv.title} onChange={(e) => { const newArr = [...homeData.servicesSection.services]; newArr[idx].title = e.target.value; updateHome('servicesSection', 'services', newArr); }} className="flex-1 border p-2 rounded text-sm" placeholder="Title" />
+                      <input type="text" value={srv.icon} onChange={(e) => { const newArr = [...(homeData.servicesSection?.services || [])]; newArr[idx].icon = e.target.value; updateHome('servicesSection', 'services', newArr); }} className="w-32 border p-2 rounded text-sm" placeholder="Lucide Icon (e.g. Sun)" />
+                      <input type="text" value={srv.title} onChange={(e) => { const newArr = [...(homeData.servicesSection?.services || [])]; newArr[idx].title = e.target.value; updateHome('servicesSection', 'services', newArr); }} className="flex-1 border p-2 rounded text-sm" placeholder="Title" />
                     </div>
-                    <textarea value={srv.description} onChange={(e) => { const newArr = [...homeData.servicesSection.services]; newArr[idx].description = e.target.value; updateHome('servicesSection', 'services', newArr); }} className="w-full border p-2 rounded text-sm" placeholder="Description" rows={2} />
+                    <textarea value={srv.description} onChange={(e) => { const newArr = [...(homeData.servicesSection?.services || [])]; newArr[idx].description = e.target.value; updateHome('servicesSection', 'services', newArr); }} className="w-full border p-2 rounded text-sm" placeholder="Description" rows={2} />
                   </div>
                 ))}
                 <button onClick={() => updateHome('servicesSection', 'services', [...(homeData.servicesSection?.services||[]), { icon: 'Settings', title: 'New Service', description: '', order: homeData.servicesSection?.services?.length||0 }])} className="text-sm text-primary flex items-center mt-2"><Plus size={16} /> Add Service Card</button>
@@ -302,11 +302,11 @@ export default function HomeAdmin() {
               <div><label className="block text-sm font-medium mb-1">Section Title</label><input type="text" value={homeData.milestones?.title || ''} onChange={(e) => updateHome('milestones', 'title', e.target.value)} className="w-full border p-2 rounded" /></div>
               <div className="space-y-2">
                 <label className="block text-sm font-medium">Stats</label>
-                {homeData.milestones?.stats?.sort((a:any,b:any)=>a.order-b.order).map((stat: any, idx: number) => (
+                {homeData.milestones?.stats.map((stat: any, idx: number) => (
                   <div key={idx} className="flex gap-2 items-center bg-gray-50 p-2 rounded border">
-                    <input type="text" value={stat.number} onChange={(e) => { const newArr = [...homeData.milestones.stats]; newArr[idx].number = e.target.value; updateHome('milestones', 'stats', newArr); }} className="w-24 border p-2 rounded" placeholder="e.g. 50+" />
-                    <input type="text" value={stat.label} onChange={(e) => { const newArr = [...homeData.milestones.stats]; newArr[idx].label = e.target.value; updateHome('milestones', 'stats', newArr); }} className="flex-1 border p-2 rounded" placeholder="Label" />
-                    <button onClick={() => { const newArr = homeData.milestones.stats.filter((_:any, i:number) => i !== idx); updateHome('milestones', 'stats', newArr); }} className="p-2 text-red-500"><Trash2 size={16} /></button>
+                    <input type="text" value={stat.number} onChange={(e) => { const newArr = [...(homeData.milestones?.stats || [])]; newArr[idx].number = e.target.value; updateHome('milestones', 'stats', newArr); }} className="w-24 border p-2 rounded" placeholder="e.g. 50+" />
+                    <input type="text" value={stat.label} onChange={(e) => { const newArr = [...(homeData.milestones?.stats || [])]; newArr[idx].label = e.target.value; updateHome('milestones', 'stats', newArr); }} className="flex-1 border p-2 rounded" placeholder="Label" />
+                    <button onClick={() => { const newArr = homeData.milestones?.stats?.filter((_:any, i:number) => i !== idx); updateHome('milestones', 'stats', newArr); }} className="p-2 text-red-500"><Trash2 size={16} /></button>
                   </div>
                 ))}
                 <button onClick={() => updateHome('milestones', 'stats', [...(homeData.milestones?.stats||[]), { number: '10+', label: 'New Stat', order: homeData.milestones?.stats?.length||0 }])} className="text-sm text-primary flex items-center mt-2"><Plus size={16} /> Add Stat</button>
@@ -332,14 +332,14 @@ export default function HomeAdmin() {
               
               <div className="space-y-2">
                 <label className="block text-sm font-medium">Videos</label>
-                {homeData.videosSection?.videos?.sort((a:any,b:any)=>a.order-b.order).map((vid: any, idx: number) => (
+                {homeData.videosSection?.videos.map((vid: any, idx: number) => (
                   <div key={idx} className="bg-gray-50 p-4 rounded border space-y-3">
                     <div className="flex justify-between items-center">
-                      <label className="flex items-center gap-2"><input type="checkbox" checked={vid.active ?? true} onChange={(e) => { const newArr = [...homeData.videosSection.videos]; newArr[idx].active = e.target.checked; updateHome('videosSection', 'videos', newArr); }} /> Active</label>
-                      <button onClick={() => { const newArr = homeData.videosSection.videos.filter((_:any, i:number) => i !== idx); updateHome('videosSection', 'videos', newArr); }} className="text-red-500"><Trash2 size={16} /></button>
+                      <label className="flex items-center gap-2"><input type="checkbox" checked={vid.active ?? true} onChange={(e) => { const newArr = [...(homeData.videosSection?.videos || [])]; newArr[idx].active = e.target.checked; updateHome('videosSection', 'videos', newArr); }} /> Active</label>
+                      <button onClick={() => { const newArr = homeData.videosSection?.videos?.filter((_:any, i:number) => i !== idx); updateHome('videosSection', 'videos', newArr); }} className="text-red-500"><Trash2 size={16} /></button>
                     </div>
                     <input type="text" value={vid.youtubeLink || ''} onChange={(e) => { 
-                      const newArr = [...homeData.videosSection.videos]; 
+                      const newArr = [...(homeData.videosSection?.videos || [])]; 
                       newArr[idx].youtubeLink = e.target.value; 
                       newArr[idx].videoId = extractYoutubeId(e.target.value) || '';
                       updateHome('videosSection', 'videos', newArr); 
@@ -350,8 +350,8 @@ export default function HomeAdmin() {
                         <span className="text-xs text-green-600 font-medium">Valid YouTube ID: {vid.videoId}</span>
                       </div>
                     )}
-                    <input type="text" value={vid.title || ''} onChange={(e) => { const newArr = [...homeData.videosSection.videos]; newArr[idx].title = e.target.value; updateHome('videosSection', 'videos', newArr); }} className="w-full border p-2 rounded text-sm" placeholder="Title on Image" />
-                    <textarea value={vid.description || ''} onChange={(e) => { const newArr = [...homeData.videosSection.videos]; newArr[idx].description = e.target.value; updateHome('videosSection', 'videos', newArr); }} className="w-full border p-2 rounded text-sm" placeholder="Short description" rows={2} />
+                    <input type="text" value={vid.title || ''} onChange={(e) => { const newArr = [...(homeData.videosSection?.videos || [])]; newArr[idx].title = e.target.value; updateHome('videosSection', 'videos', newArr); }} className="w-full border p-2 rounded text-sm" placeholder="Title on Image" />
+                    <textarea value={vid.description || ''} onChange={(e) => { const newArr = [...(homeData.videosSection?.videos || [])]; newArr[idx].description = e.target.value; updateHome('videosSection', 'videos', newArr); }} className="w-full border p-2 rounded text-sm" placeholder="Short description" rows={2} />
                   </div>
                 ))}
                 <button onClick={() => updateHome('videosSection', 'videos', [...(homeData.videosSection?.videos||[]), { youtubeLink: '', videoId: '', title: 'New Video', description: '', active: true, order: homeData.videosSection?.videos?.length||0 }])} className="text-sm text-primary flex items-center mt-2"><Plus size={16} /> Add Video</button>
@@ -380,14 +380,14 @@ export default function HomeAdmin() {
               </div>
               <div className="space-y-2">
                 <label className="block text-sm font-medium">Cards</label>
-                {homeData.whyChooseUs?.cards?.sort((a:any,b:any)=>a.order-b.order).map((card: any, idx: number) => (
+                {homeData.whyChooseUs?.cards.map((card: any, idx: number) => (
                   <div key={idx} className="bg-gray-50 p-4 rounded border space-y-2">
-                    <div className="flex justify-between"><h4 className="font-semibold text-sm">Card {idx + 1}</h4><button onClick={() => { const newArr = homeData.whyChooseUs.cards.filter((_:any, i:number) => i !== idx); updateHome('whyChooseUs', 'cards', newArr); }} className="text-red-500"><Trash2 size={16} /></button></div>
+                    <div className="flex justify-between"><h4 className="font-semibold text-sm">Card {idx + 1}</h4><button onClick={() => { const newArr = homeData.whyChooseUs?.cards?.filter((_:any, i:number) => i !== idx); updateHome('whyChooseUs', 'cards', newArr); }} className="text-red-500"><Trash2 size={16} /></button></div>
                     <div className="grid grid-cols-3 gap-2">
-                      <input type="text" value={card.icon || ''} onChange={(e) => { const newArr = [...homeData.whyChooseUs.cards]; newArr[idx].icon = e.target.value; updateHome('whyChooseUs', 'cards', newArr); }} className="border p-2 rounded text-sm" placeholder="Icon" />
-                      <input type="text" value={card.title || ''} onChange={(e) => { const newArr = [...homeData.whyChooseUs.cards]; newArr[idx].title = e.target.value; updateHome('whyChooseUs', 'cards', newArr); }} className="col-span-2 border p-2 rounded text-sm" placeholder="Title" />
+                      <input type="text" value={card.icon || ''} onChange={(e) => { const newArr = [...(homeData.whyChooseUs?.cards || [])]; newArr[idx].icon = e.target.value; updateHome('whyChooseUs', 'cards', newArr); }} className="border p-2 rounded text-sm" placeholder="Icon" />
+                      <input type="text" value={card.title || ''} onChange={(e) => { const newArr = [...(homeData.whyChooseUs?.cards || [])]; newArr[idx].title = e.target.value; updateHome('whyChooseUs', 'cards', newArr); }} className="col-span-2 border p-2 rounded text-sm" placeholder="Title" />
                     </div>
-                    <textarea value={card.description || ''} onChange={(e) => { const newArr = [...homeData.whyChooseUs.cards]; newArr[idx].description = e.target.value; updateHome('whyChooseUs', 'cards', newArr); }} className="w-full border p-2 rounded text-sm" placeholder="Description" rows={2} />
+                    <textarea value={card.description || ''} onChange={(e) => { const newArr = [...(homeData.whyChooseUs?.cards || [])]; newArr[idx].description = e.target.value; updateHome('whyChooseUs', 'cards', newArr); }} className="w-full border p-2 rounded text-sm" placeholder="Description" rows={2} />
                   </div>
                 ))}
                 <button onClick={() => updateHome('whyChooseUs', 'cards', [...(homeData.whyChooseUs?.cards||[]), { icon: 'Star', title: 'New Reason', description: '', accentColor: 'from-blue-500 to-cyan-500', order: homeData.whyChooseUs?.cards?.length||0 }])} className="text-sm text-primary flex items-center mt-2"><Plus size={16} /> Add Card</button>
@@ -569,11 +569,11 @@ export default function HomeAdmin() {
                 <div className="space-y-6">
                   <div className="space-y-2">
                     <label className="block text-sm font-medium">Social Links</label>
-                    {siteSettings.socialLinks?.sort((a:any,b:any)=>a.order-b.order).map((soc: any, idx: number) => (
+                    {siteSettings?.socialLinks?.map((soc: any, idx: number) => (
                       <div key={idx} className="flex gap-2 items-center">
-                        <input type="text" value={soc.platform} onChange={(e) => { const newArr = [...siteSettings.socialLinks]; newArr[idx].platform = e.target.value; updateSetting('socialLinks', newArr); }} className="w-24 border p-2 rounded text-sm" placeholder="Platform" />
-                        <input type="text" value={soc.url} onChange={(e) => { const newArr = [...siteSettings.socialLinks]; newArr[idx].url = e.target.value; updateSetting('socialLinks', newArr); }} className="flex-1 border p-2 rounded text-sm" placeholder="URL" />
-                        <button onClick={() => { const newArr = siteSettings.socialLinks.filter((_:any, i:number) => i !== idx); updateSetting('socialLinks', newArr); }} className="p-2 text-red-500"><Trash2 size={16} /></button>
+                        <input type="text" value={soc.platform} onChange={(e) => { const newArr = [...(siteSettings?.socialLinks || [])]; newArr[idx].platform = e.target.value; updateSetting('socialLinks', newArr); }} className="w-24 border p-2 rounded text-sm" placeholder="Platform" />
+                        <input type="text" value={soc.url} onChange={(e) => { const newArr = [...(siteSettings?.socialLinks || [])]; newArr[idx].url = e.target.value; updateSetting('socialLinks', newArr); }} className="flex-1 border p-2 rounded text-sm" placeholder="URL" />
+                        <button onClick={() => { const newArr = siteSettings?.socialLinks?.filter((_:any, i:number) => i !== idx); updateSetting('socialLinks', newArr); }} className="p-2 text-red-500"><Trash2 size={16} /></button>
                       </div>
                     ))}
                     <button onClick={() => updateSetting('socialLinks', [...(siteSettings.socialLinks||[]), { platform: 'New', url: '#', icon: 'Link', order: siteSettings.socialLinks?.length||0 }])} className="text-sm text-primary flex items-center mt-2"><Plus size={16} /> Add Social Link</button>
@@ -581,11 +581,11 @@ export default function HomeAdmin() {
 
                   <div className="space-y-2">
                     <label className="block text-sm font-medium">Quick Links</label>
-                    {siteSettings.quickLinks?.sort((a:any,b:any)=>a.order-b.order).map((ql: any, idx: number) => (
+                    {siteSettings?.quickLinks?.map((ql: any, idx: number) => (
                       <div key={idx} className="flex gap-2 items-center">
-                        <input type="text" value={ql.label} onChange={(e) => { const newArr = [...siteSettings.quickLinks]; newArr[idx].label = e.target.value; updateSetting('quickLinks', newArr); }} className="flex-1 border p-2 rounded text-sm" placeholder="Label" />
-                        <input type="text" value={ql.link} onChange={(e) => { const newArr = [...siteSettings.quickLinks]; newArr[idx].link = e.target.value; updateSetting('quickLinks', newArr); }} className="flex-1 border p-2 rounded text-sm" placeholder="Link" />
-                        <button onClick={() => { const newArr = siteSettings.quickLinks.filter((_:any, i:number) => i !== idx); updateSetting('quickLinks', newArr); }} className="p-2 text-red-500"><Trash2 size={16} /></button>
+                        <input type="text" value={ql.label} onChange={(e) => { const newArr = [...(siteSettings?.quickLinks || [])]; newArr[idx].label = e.target.value; updateSetting('quickLinks', newArr); }} className="flex-1 border p-2 rounded text-sm" placeholder="Label" />
+                        <input type="text" value={ql.link} onChange={(e) => { const newArr = [...(siteSettings?.quickLinks || [])]; newArr[idx].link = e.target.value; updateSetting('quickLinks', newArr); }} className="flex-1 border p-2 rounded text-sm" placeholder="Link" />
+                        <button onClick={() => { const newArr = siteSettings?.quickLinks?.filter((_:any, i:number) => i !== idx); updateSetting('quickLinks', newArr); }} className="p-2 text-red-500"><Trash2 size={16} /></button>
                       </div>
                     ))}
                     <button onClick={() => updateSetting('quickLinks', [...(siteSettings.quickLinks||[]), { label: 'New', link: '#', order: siteSettings.quickLinks?.length||0 }])} className="text-sm text-primary flex items-center mt-2"><Plus size={16} /> Add Quick Link</button>

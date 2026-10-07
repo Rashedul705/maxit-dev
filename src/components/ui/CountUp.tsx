@@ -2,7 +2,8 @@
 
 import { useEffect, useState, useRef } from 'react';
 
-export default function CountUp({ end, duration = 2000 }: { end: number, duration?: number }) {
+export default function CountUp({ end, duration = 2000 }: { end: number | string, duration?: number }) {
+  const numericEnd = Number(end) || 0;
   const [count, setCount] = useState(0);
   const [hasAnimated, setHasAnimated] = useState(false);
   const nodeRef = useRef<HTMLSpanElement>(null);
@@ -18,11 +19,11 @@ export default function CountUp({ end, duration = 2000 }: { end: number, duratio
             const progress = Math.min((timestamp - startTimestamp) / duration, 1);
             // using easeOutQuad for a smoother stop
             const easeOutProgress = progress * (2 - progress);
-            setCount(Math.floor(easeOutProgress * end));
+            setCount(Math.floor(easeOutProgress * numericEnd));
             if (progress < 1) {
               window.requestAnimationFrame(step);
             } else {
-              setCount(end);
+              setCount(numericEnd);
             }
           };
           window.requestAnimationFrame(step);
@@ -41,7 +42,10 @@ export default function CountUp({ end, duration = 2000 }: { end: number, duratio
         observer.unobserve(currentRef);
       }
     };
-  }, [end, duration, hasAnimated]);
+  }, [numericEnd, duration, hasAnimated]);
 
-  return <span ref={nodeRef}>{count}</span>;
+  // Ensure we never return NaN as children
+  const displayCount = isNaN(count) ? 0 : count;
+
+  return <span ref={nodeRef}>{displayCount}</span>;
 }

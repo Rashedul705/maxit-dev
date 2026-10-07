@@ -227,7 +227,7 @@ const Index = async () => {
                   {service.iconUrl ? (
                     <img src={service.iconUrl} alt={service.title} className="w-10 h-10 object-contain" />
                   ) : (
-                    service.iconCategory && iconMap[service.iconCategory] ? iconMap[service.iconCategory] : <Settings className="w-8 h-8 text-primary" />
+                    (service.iconCategory || service.icon) && iconMap[service.iconCategory || service.icon] ? iconMap[service.iconCategory || service.icon] : <Settings className="w-8 h-8 text-primary" />
                   )}
                 </div>
                 <h3 className="text-lg font-bold text-gray-900 mb-3">{service.title}</h3>
