@@ -4,9 +4,10 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { useCallback, useEffect, useState } from 'react';
 import { Play, ChevronLeft, ChevronRight, Zap } from 'lucide-react';
 
-const SolarInnovation = () => {
+const SolarInnovation = ({ content }: { content?: any }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [isPlaying, setIsPlaying] = useState(false);
+  const [selectedVideoUrl, setSelectedVideoUrl] = useState<string | null>(null);
   
   // Custom Autoplay logic
   useEffect(() => {
@@ -25,48 +26,22 @@ const SolarInnovation = () => {
     if (emblaApi) emblaApi.scrollNext();
   }, [emblaApi]);
 
-  const slides = [
+  const defaultSlides = [
     {
       title: "Solar Energy Automation",
       description: "High-tech robotic automation managing large-scale solar farms for maximum efficiency and precision.",
-      image: "/images/slides/solar_automation_slide_1789677805531.jpg"
+      image: "/images/slides/solar_automation_slide_1789677805531.jpg",
+      videoUrl: ""
     },
     {
       title: "Hybrid Inverters",
       description: "State-of-the-art hybrid inverter systems combining grid and battery storage for uninterrupted power.",
-      image: "/images/slides/hybrid_inverter_slide_1789677816112.jpg"
-    },
-    {
-      title: "Central Solar Inverters",
-      description: "Robust central inverters for commercial and industrial plants, engineered for heavy-duty power conversion.",
-      image: "/images/slides/central_inverter_slide_1789677826849.jpg"
-    },
-    {
-      title: "Net Metering Technology",
-      description: "Advanced net metering integration allowing you to seamlessly sell surplus energy back to the national grid.",
-      image: "/images/slides/net_metering_slide_1789677836790.jpg"
-    },
-    {
-      title: "On-Grid Solar Systems",
-      description: "Sleek, high-performance on-grid solar inverters perfectly synced with your local utility grid.",
-      image: "/images/slides/on_grid_inverter_slide_1789677846524.jpg"
-    },
-    {
-      title: "IoT & Smart Homes",
-      description: "Control your entire energy ecosystem from a futuristic dashboard right at your fingertips.",
-      image: "/images/slides/iot_smart_home_slide_1789677856585.jpg"
-    },
-    {
-      title: "Agro-Photovoltaics",
-      description: "Dual-use technology combining precision agriculture and solar energy production on the exact same land.",
-      image: "/images/slides/agro_solar_slide_1789677870674.jpg"
-    },
-    {
-      title: "Commercial Rooftop Solar",
-      description: "Massive commercial rooftop installations powering industrial parks with clean, renewable energy.",
-      image: "/images/slides/commercial_rooftop_slide_1789677880098.jpg"
+      image: "/images/slides/hybrid_inverter_slide_1789677816112.jpg",
+      videoUrl: ""
     }
   ];
+
+  const slides = content?.videos?.length > 0 ? content.videos : defaultSlides;
 
   return (
     <section className="pt-12 pb-24 bg-white relative overflow-hidden">
@@ -79,13 +54,13 @@ const SolarInnovation = () => {
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
           <div className="max-w-2xl">
             <h2 className="text-4xl md:text-6xl font-bold font-heading text-foreground mb-6">
-              Pioneering the <br />
+              {content?.headingNormal || "Pioneering the"} <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
-                Solar Frontier
+                {content?.headingHighlight || "Solar Frontier"}
               </span>
             </h2>
             <p className="text-xl text-gray-600 font-medium leading-relaxed">
-              Explore our state-of-the-art videography and see how Max iT Solution is reshaping the energy landscape with break-through technologies.
+              {content?.subtext || "Explore our state-of-the-art videography and see how Max iT Solution is reshaping the energy landscape with break-through technologies."}
             </p>
           </div>
           
@@ -121,9 +96,24 @@ const SolarInnovation = () => {
                 
                 {/* Videography Play Button */}
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div className="w-24 h-24 rounded-full bg-primary/90 flex items-center justify-center backdrop-blur-md text-white shadow-[0_0_40px_rgba(4,107,210,0.4)] transform group-hover:scale-110 group-hover:bg-primary transition-all duration-500 cursor-pointer pointer-events-auto">
-                    <Play fill="currentColor" className="w-8 h-8 ml-2" />
-                  </div>
+                  {slide.videoUrl && (
+                    <div 
+                      className="w-24 h-24 rounded-full bg-primary/90 flex items-center justify-center backdrop-blur-md text-white shadow-[0_0_40px_rgba(4,107,210,0.4)] transform group-hover:scale-110 group-hover:bg-primary transition-all duration-500 cursor-pointer pointer-events-auto"
+                      onClick={() => {
+                        // Extract video ID safely
+                        let embedUrl = slide.videoUrl;
+                        if (slide.videoUrl.includes('youtube.com/watch') || slide.videoUrl.includes('youtu.be/')) {
+                          const idMatch = slide.videoUrl.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+                          if (idMatch && idMatch[1]) {
+                            embedUrl = `https://www.youtube.com/embed/${idMatch[1]}?autoplay=1`;
+                          }
+                        }
+                        setSelectedVideoUrl(embedUrl);
+                      }}
+                    >
+                      <Play fill="currentColor" className="w-8 h-8 ml-2" />
+                    </div>
+                  )}
                 </div>
 
                 <div className="absolute text-left bottom-0 left-0 right-0 p-8 md:p-16">
@@ -141,6 +131,23 @@ const SolarInnovation = () => {
           </div>
         </div>
       </div>
+      
+      {/* Video Modal overlay */}
+      {selectedVideoUrl && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onClick={() => setSelectedVideoUrl(null)}>
+          <div className="relative w-full max-w-5xl aspect-video rounded-2xl overflow-hidden bg-black shadow-2xl" onClick={e => e.stopPropagation()}>
+            <iframe 
+              src={selectedVideoUrl} 
+              className="w-full h-full"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+              allowFullScreen
+            ></iframe>
+            <button className="absolute top-4 right-4 text-white bg-black/50 p-2 rounded-full hover:bg-black/80" onClick={() => setSelectedVideoUrl(null)}>
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
     </section>
   );
 };

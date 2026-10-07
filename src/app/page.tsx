@@ -8,7 +8,7 @@ import Partners from '../components/Partners';
 import dbConnect from '@/lib/mongodb';
 import Testimonial from '@/models/Testimonial';
 import Reason from '@/models/Reason';
-import HeroContent from '@/models/HeroContent';
+import HomeContent from '@/models/HomeContent';
 import AboutContent from '@/models/AboutContent';
 import CompanyProfileData from '@/models/CompanyProfileData';
 import Service from '@/models/Service';
@@ -39,14 +39,17 @@ async function getReasons() {
   }
 }
 
-async function getHeroContent() {
+async function getHomeData() {
   try {
     await dbConnect();
-    const doc = await (HeroContent.findOne as any)().lean();
-    if (!doc) return null;
+    const doc = await (HomeContent.findOne as any)().lean();
+    if (!doc) {
+      // Return hardcoded default if empty
+      return null;
+    }
     return JSON.parse(JSON.stringify(doc));
   } catch (error) {
-    console.error('Error fetching hero content:', error);
+    console.error('Error fetching home content:', error);
     return null;
   }
 }
@@ -141,12 +144,16 @@ async function getTeamData() {
 const Index = async () => {
   const testimonials = await getTestimonials();
   const reasonsData = await getReasons();
-  const heroContent = await getHeroContent();
+  const homeData = await getHomeData();
   const aboutData = await getAboutData();
   const profileData = await getCompanyProfileData();
   const teamMembers = await getTeamData();
   const siteSettings = await getSiteSettings();
   let services = await getServicesData();
+
+  // The sections will use homeData if present, falling back to old hardcoded stuff if undefined
+  
+  // Services fallback (from db) or old default
   if (services.length === 0) {
     services = [
       { title: "Solar Home Systems", description: "Complete solar energy solutions for residential use.", iconCategory: "Sun" },
@@ -156,29 +163,42 @@ const Index = async () => {
     ];
   }
 
-  const stats = profileData?.stats?.length > 0 ? profileData.stats : [
-    { value: "50+", label: "Total Rooftop Solar Power" },
-    { value: "30+", label: "Solar Irrigation Pumps" },
-    { value: "10+", label: "Off-Grid Solar Systems" },
-    { value: "24/7", label: "Nationwide Support" }
-  ];
+  // Use homeData services if they exist and have items, otherwise fallback to DB services
+  const displayServices = homeData?.servicesSection?.services?.length > 0 
+    ? [...homeData.servicesSection.services].sort((a:any, b:any) => a.order - b.order)
+    : services;
+
+  const displayStats = homeData?.milestones?.stats?.length > 0 
+    ? [...homeData.milestones.stats].sort((a:any, b:any) => a.order - b.order)
+    : (profileData?.stats?.length > 0 ? profileData.stats : [
+        { value: "50+", label: "Total Rooftop Solar Power" },
+        { value: "30+", label: "Solar Irrigation Pumps" },
+        { value: "10+", label: "Off-Grid Solar Systems" },
+        { value: "24/7", label: "Nationwide Support" }
+      ]);
+
+  const displayReasons = homeData?.whyChooseUs?.cards?.length > 0
+    ? [...homeData.whyChooseUs.cards].sort((a:any, b:any) => a.order - b.order)
+    : reasonsData;
 
   return (
     <div className="min-h-screen flex flex-col overflow-x-hidden w-full max-w-[100vw]"><main className="flex-1 animate-slide-up overflow-hidden w-full">
-      <Hero content={heroContent} siteSettings={siteSettings} />
+      {(!homeData || homeData.hero?.visible !== false) && (
+        <Hero content={homeData?.hero} siteSettings={siteSettings} />
+      )}
 
-      {/* How We Power Your Solar Journey */}
+      {(!homeData || homeData.servicesSection?.visible !== false) && (
       <section className="py-20 bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-normal text-gray-900 mb-4">
-            Everything You Need, Under <span className="font-bold text-primary">One Roof</span>
+            {homeData?.servicesSection?.headingNormal || "Everything You Need, Under "}<span className="font-bold text-primary">{homeData?.servicesSection?.headingHighlight || "One Roof"}</span>
           </h2>
           <p className="text-gray-500 max-w-3xl mx-auto mb-16 leading-relaxed">
-            From solar and irrigation to networking, automation, electrical work, and CCTV, we handle the full job so you deal with one reliable team.
+            {homeData?.servicesSection?.subtext || "From solar and irrigation to networking, automation, electrical work, and CCTV, we handle the full job so you deal with one reliable team."}
           </p>
           
           <div className="grid grid-cols-1 md:grid-cols-3 border border-gray-200 rounded-2xl overflow-hidden bg-white">
-            {services.slice(0, 6).map((service: any, index: number) => {
+            {displayServices.slice(0, 6).map((service: any, index: number) => {
               const iconMap: Record<string, React.ReactNode> = {
                 Cpu: <Cpu className="w-8 h-8 text-primary" />,
                 Activity: <Activity className="w-8 h-8 text-primary" />,
@@ -221,26 +241,32 @@ const Index = async () => {
           </div>
         </div>
       </section>
+      )}
 
       {/* Milestones / Stats */}
+      {(!homeData || homeData.milestones?.visible !== false) && (
       <section className="py-20 bg-primary text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold font-heading mb-12">Milestones That Define Our Impact</h2>
+          <h2 className="text-3xl md:text-4xl font-bold font-heading mb-12">{homeData?.milestones?.title || "Milestones That Define Our Impact"}</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat: any, index: number) => (
+            {displayStats.map((stat: any, index: number) => (
               <div key={index} className="flex flex-col items-center">
-                <div className="text-5xl font-bold text-white mb-4 font-heading drop-shadow-md">{stat.value}</div>
+                <div className="text-5xl font-bold text-white mb-4 font-heading drop-shadow-md">{stat.value || stat.number}</div>
                 <div className="text-white/90 font-semibold uppercase tracking-wider text-sm">{stat.label}</div>
               </div>
             ))}
           </div>
         </div>
       </section>
+      )}
 
       {/* Solutions We Deliver */}
-      <SolarInnovation />
+      {(!homeData || homeData.videosSection?.visible !== false) && (
+        <SolarInnovation content={homeData?.videosSection} />
+      )}
 
       {/* About Section */}
+      {(!homeData || homeData.whyChooseUs?.visible !== false) && (
       <section className="py-24 bg-white relative overflow-hidden">
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-accent/5 rounded-full blur-[100px] pointer-events-none" />
@@ -248,15 +274,15 @@ const Index = async () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-20">
             <h2 className="text-4xl md:text-5xl font-bold font-heading text-primary mb-6">
-              Why Choose Max iT Solution?
+              {homeData?.whyChooseUs?.headingNormal || "Why Choose "}<span className="text-primary">{homeData?.whyChooseUs?.headingHighlight || "Max iT Solution?"}</span>
             </h2>
             <p className="text-xl text-gray-700 max-w-3xl mx-auto font-medium leading-relaxed">
-              We are dedicated to empowering businesses and homes with sustainable energy, advanced agricultural technology, and smart automation solutions.
+              {homeData?.whyChooseUs?.subtext || "We are dedicated to empowering businesses and homes with sustainable energy, advanced agricultural technology, and smart automation solutions."}
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 xl:gap-10 mb-16">
-            {reasonsData.map((reason: any, index: number) => {
+            {displayReasons.map((reason: any, index: number) => {
               const iconMap: Record<string, React.ReactNode> = {
                 Sun: <Sun className="w-8 h-8" />,
                 Settings: <Settings className="w-8 h-8" />,
@@ -276,13 +302,13 @@ const Index = async () => {
               };
               return (
               <div 
-                key={reason._id} 
+                key={index} 
                 className="group relative bg-white rounded-3xl p-8 border border-gray-100 shadow-xl shadow-primary/5 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 transform hover:-translate-y-2 overflow-hidden"
               >
-                <div className={`absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br ${reason.gradient} opacity-10 rounded-full group-hover:scale-150 transition-transform duration-700 ease-out`} />
+                <div className={`absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br ${reason.gradient || reason.accentColor || 'from-blue-500 to-cyan-500'} opacity-10 rounded-full group-hover:scale-150 transition-transform duration-700 ease-out`} />
                 
-                <div className={`relative z-10 w-16 h-16 rounded-2xl bg-gradient-to-br ${reason.gradient} flex items-center justify-center text-white mb-6 shadow-md transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
-                  {iconMap[reason.iconCategory] || <Settings className="w-8 h-8" />}
+                <div className={`relative z-10 w-16 h-16 rounded-2xl bg-gradient-to-br ${reason.gradient || reason.accentColor || 'from-blue-500 to-cyan-500'} flex items-center justify-center text-white mb-6 shadow-md transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
+                  {iconMap[reason.iconCategory || reason.icon] || <Settings className="w-8 h-8" />}
                 </div>
                 
                 <h3 className="relative z-10 text-2xl font-bold font-heading text-primary mb-3">{reason.title}</h3>
@@ -293,54 +319,60 @@ const Index = async () => {
 
           <div className="text-center">
             <Link
-              href="/about"
+              href={homeData?.whyChooseUs?.button?.link || "/about"}
               className="inline-flex items-center px-8 py-4 bg-primary text-white font-semibold rounded-2xl hover:bg-primary/90 shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 transform hover:-translate-y-1 group"
             >
-              Learn More About Us
+              {homeData?.whyChooseUs?.button?.label || "Learn More About Us"}
               <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
         </div>
       </section>
+      )}
 
       {/* About Summary Section */}
+      {(!homeData || homeData.aboutPreview?.visible !== false) && (
       <section className="py-24 bg-gray-50 relative overflow-hidden border-t border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-16 items-center">
             <div className="w-full lg:w-1/2 relative">
               <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl">
-                <img src="/images/slides/agro_solar_slide_1789677870674.jpg" alt="About Max iT" className="w-full h-full object-cover" />
+                <img src={homeData?.aboutPreview?.image || "/images/slides/agro_solar_slide_1789677870674.jpg"} alt="About Max iT" className="w-full h-full object-cover" />
               </div>
               <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-accent/10 rounded-full blur-[40px] -z-10"></div>
             </div>
             
             <div className="w-full lg:w-1/2">
-              <h2 className="text-4xl md:text-5xl font-bold font-heading text-primary mb-6">About Max iT Solution</h2>
+              <h2 className="text-4xl md:text-5xl font-bold font-heading text-primary mb-6">
+                {homeData?.aboutPreview?.headingNormal || "About "}<span className="text-primary">{homeData?.aboutPreview?.headingHighlight || "Max iT Solution"}</span>
+              </h2>
               <p className="text-xl text-gray-700 font-medium leading-relaxed mb-10">
-                {aboutData.journey || "We are dedicated to empowering businesses and homes with sustainable energy, advanced agricultural technology, and smart automation solutions."}
+                {homeData?.aboutPreview?.paragraph || aboutData.journey || "We are dedicated to empowering businesses and homes with sustainable energy, advanced agricultural technology, and smart automation solutions."}
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
-                  href="/about"
-                  className="inline-flex items-center px-8 py-4 bg-primary text-white font-semibold rounded-xl hover:bg-primary/90 transition-all duration-300 shadow-lg hover:shadow-primary/30 group transform hover:-translate-y-1"
+                  href={homeData?.aboutPreview?.primaryButton?.link || "/about"}
+                  className="inline-flex items-center justify-center px-8 py-4 bg-primary text-white font-semibold rounded-xl hover:bg-primary/90 transition-all duration-300 shadow-lg hover:shadow-primary/30 group transform hover:-translate-y-1"
                 >
-                  Discover Our Journey
+                  {homeData?.aboutPreview?.primaryButton?.label || "Discover Our Journey"}
                   <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <Link
-                  href="/company-profile"
-                  className="inline-flex items-center px-8 py-4 bg-white border border-gray-200 text-gray-800 font-semibold rounded-xl hover:bg-gray-50 transition-all duration-300 shadow-sm group transform hover:-translate-y-1"
+                  href={homeData?.aboutPreview?.secondaryButton?.link || "/company-profile"}
+                  className="inline-flex items-center justify-center px-8 py-4 bg-white border border-gray-200 text-gray-800 font-semibold rounded-xl hover:bg-gray-50 transition-all duration-300 shadow-sm group transform hover:-translate-y-1"
                 >
-                  Company Profile
+                  {homeData?.aboutPreview?.secondaryButton?.label || "Company Profile"}
                 </Link>
               </div>
             </div>
           </div>
         </div>
       </section>
+      )}
 
       {/* Testimonials Section */}
+      {(!homeData || homeData.testimonialsSection?.visible !== false) && (
       <section className="py-24 bg-white relative overflow-hidden">
         {/* Dynamic Background */}
         <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-secondary/50 rounded-full blur-[150px] pointer-events-none transform translate-x-1/2 -translate-y-1/2" />
@@ -349,10 +381,10 @@ const Index = async () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-20">
             <h2 className="text-4xl md:text-5xl font-bold font-heading text-primary mb-6">
-              Client Success Stories
+              {homeData?.testimonialsSection?.headingNormal || "Client "}<span className="text-primary">{homeData?.testimonialsSection?.headingHighlight || "Success Stories"}</span>
             </h2>
             <p className="text-xl text-gray-600 font-medium max-w-2xl mx-auto">
-              Don't just take our word for it — hear from the visionaries who have experienced the Max iT difference firsthand.
+              {homeData?.testimonialsSection?.subtext || "Don't just take our word for it — hear from the visionaries who have experienced the Max iT difference firsthand."}
             </p>
           </div>
 
@@ -370,20 +402,23 @@ const Index = async () => {
           </div>
         </div>
       </section>
+      )}
 
       {/* Partners Section */}
-      <Partners />
+      {(!homeData || homeData.partnersSection?.visible !== false) && (
+        <Partners />
+      )}
 
       {/* Team Preview Section */}
-      {teamMembers && teamMembers.length > 0 && (
+      {(!homeData || homeData.teamSection?.visible !== false) && teamMembers && teamMembers.length > 0 && (
         <section className="py-24 bg-[#141F4E] relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-                Max iT Management
+                {homeData?.teamSection?.headingNormal || "Max iT "}<span className="text-blue-400">{homeData?.teamSection?.headingHighlight || "Management"}</span>
               </h2>
               <p className="text-lg text-gray-300/80 max-w-2xl mx-auto font-medium">
-                Meet the leaders driving our technology and engineering solutions forward.
+                {homeData?.teamSection?.subtext || "Meet the leaders driving our technology and engineering solutions forward."}
               </p>
             </div>
             
@@ -415,10 +450,10 @@ const Index = async () => {
 
             <div className="text-center mt-14">
               <Link
-                href="/team"
+                href={homeData?.teamSection?.button?.link || "/team"}
                 className="inline-flex items-center px-8 py-3 bg-blue-500 text-white font-medium rounded-xl hover:bg-blue-600 transition-colors shadow-lg shadow-blue-500/25"
               >
-                View full team
+                {homeData?.teamSection?.button?.label || "View full team"}
               </Link>
             </div>
           </div>
@@ -426,10 +461,11 @@ const Index = async () => {
       )}
 
       {/* CTA Section */}
+      {(!homeData || homeData.ctaSection?.visible !== false) && (
       <section className="py-24 relative overflow-hidden flex items-center justify-center min-h-[500px] bg-primary">
         {/* Background Image with Parallax-like effect */}
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-[url('/images/slides/commercial_rooftop_slide_1789677880098.jpg')] bg-cover bg-center opacity-10 mix-blend-luminosity" />
+          <div className="absolute inset-0 bg-cover bg-center opacity-10 mix-blend-luminosity" style={{ backgroundImage: `url('${homeData?.ctaSection?.backgroundImage || "/images/slides/commercial_rooftop_slide_1789677880098.jpg"}')` }} />
           <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/90 to-transparent" />
         </div>
 
@@ -440,29 +476,30 @@ const Index = async () => {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
           <div className="bg-white/10 backdrop-blur-md border border-white/20 p-10 md:p-16 rounded-[2rem] shadow-2xl text-center">
             <h2 className="text-4xl md:text-5xl font-bold font-heading text-white mb-6 tracking-tight">
-              Ready to Power Your Future?
+              {homeData?.ctaSection?.title || "Ready to Power Your Future?"}
             </h2>
             <p className="text-xl text-white/90 mb-10 max-w-2xl mx-auto font-medium leading-relaxed">
-              Let's work together to implement sustainable and intelligent solutions that scale with your ambitions. Get in touch with us today!
+              {homeData?.ctaSection?.text || "Let's work together to implement sustainable and intelligent solutions that scale with your ambitions. Get in touch with us today!"}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Link
-                href={siteSettings?.footerContactButtonLink || "/contact"}
+                href={homeData?.ctaSection?.primaryButton?.link || siteSettings?.footerContactButtonLink || "/contact"}
                 className="group relative inline-flex items-center justify-center px-8 py-4 bg-white text-primary hover:bg-gray-50 font-bold rounded-xl transition-all duration-300 shadow-lg transform hover:-translate-y-1 w-full sm:w-auto"
               >
-                <span className="relative z-10 text-lg">Get Started Today</span>
+                <span className="relative z-10 text-lg">{homeData?.ctaSection?.primaryButton?.label || "Get Started Today"}</span>
                 <ArrowRight className="relative z-10 ml-3 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
-                href="/services"
+                href={homeData?.ctaSection?.secondaryButton?.link || "/services"}
                 className="inline-flex items-center justify-center px-8 py-4 border-2 border-white/30 text-white font-semibold rounded-xl hover:bg-white/10 hover:border-white/50 transition-all duration-300 transform hover:-translate-y-1 w-full sm:w-auto text-lg"
               >
-                View Our Work
+                {homeData?.ctaSection?.secondaryButton?.label || "View Our Work"}
               </Link>
             </div>
           </div>
         </div>
       </section>
+      )}
     </main></div>
   );
 };

@@ -32,14 +32,13 @@ export default function AdminLayout({
 
   const navItems = [
     { name: 'Dashboard', path: '/admin', icon: LayoutDashboard },
+    { name: 'Home Page Editor', path: '/admin/home', icon: FileText },
     { name: 'Team Members', path: '/admin/team', icon: Users },
     { name: 'About Section', path: '/admin/about', icon: FileText },
     { name: 'Company Profile Data', path: '/admin/company-profile-data', icon: FileText },
     { name: 'Projects', path: '/admin/projects', icon: Briefcase },
     { name: 'Services', path: '/admin/services', icon: Wrench },
     { name: 'Partners', path: '/admin/partners', icon: Building2 },
-    { name: 'Homepage Hero', path: '/admin/hero', icon: ImageIcon },
-    { name: 'Why Choose Us', path: '/admin/reasons', icon: HelpCircle },
     { name: 'Testimonials', path: '/admin/testimonials', icon: Star },
     { name: 'Contact Info', path: '/admin/contact', icon: Phone },
     { name: 'Legal Pages', path: '/admin/legal', icon: Shield },

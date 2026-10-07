@@ -46,9 +46,9 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${outfit.variable} font-sans antialiased`} suppressHydrationWarning>
         <Providers>
-          <Header navbarContactButtonLink={siteSettings?.navbarContactButtonLink || "/contact"} />
+          <Header siteSettings={siteSettings} />
             {children}
-          <Footer contactInfo={contactInfo} />
+          <Footer siteSettings={siteSettings} />
         </Providers>
       </body>
     </html>
