@@ -19,27 +19,32 @@ export default function HoneycombGallery({ projects }: { projects: any[] }) {
           const marginLeft = !isEvenRow && index % 3 === 0 ? 'ml-[15%]' : '';
 
           return (
-            <div 
-              key={project._id || index} 
-              className={`relative w-[45%] md:w-[28%] lg:w-[22%] aspect-[8/9] overflow-hidden group cursor-pointer ${marginTop} ${marginLeft}`}
-              style={{
-                clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
-                transition: 'all 0.5s ease'
-              }}
-              onClick={() => setSelectedProject(project)}
+            <div
+              key={project._id || index}
+              className={`relative w-[45%] md:w-[28%] lg:w-[22%] aspect-[8/9] ${marginTop} ${marginLeft} animate-float`}
+              style={{ animationDelay: `${index * 0.3}s` }}
             >
-              <img 
-                src={project.imageUrl || "/placeholder.jpg"} 
-                alt={project.title} 
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
-              />
-              <div className="absolute inset-0 bg-primary/40 group-hover:bg-primary/20 transition-colors duration-300"></div>
-              
-              {/* Text Overlay */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-black/40">
-                <h3 className="text-white font-bold text-lg md:text-xl transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                  {project.title}
-                </h3>
+              <div 
+                className="w-full h-full overflow-hidden group cursor-pointer"
+                style={{
+                  clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+                  transition: 'all 0.5s ease'
+                }}
+                onClick={() => setSelectedProject(project)}
+              >
+                <img 
+                  src={project.imageUrl || "/placeholder.jpg"} 
+                  alt={project.title} 
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                />
+                <div className="absolute inset-0 bg-primary/40 group-hover:bg-primary/20 transition-colors duration-300"></div>
+                
+                {/* Text Overlay */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-black/40">
+                  <h3 className="text-white font-bold text-lg md:text-xl transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                    {project.title}
+                  </h3>
+                </div>
               </div>
             </div>
           );
