@@ -97,8 +97,8 @@ export default {
 					'100%': { transform: 'translateY(0)', opacity: '1' }
 				},
 				'float': {
-					'0%, 100%': { transform: 'translateY(0)' },
-					'50%': { transform: 'translateY(-15px)' }
+					'0%, 100%': { transform: 'translateY(0) scale(1)' },
+					'50%': { transform: 'translateY(-15px) scale(1.03)' }
 				}
 			}
 		}
