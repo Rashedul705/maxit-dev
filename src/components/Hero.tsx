@@ -68,11 +68,19 @@ const Hero = ({ content, siteSettings }: HeroProps) => {
         {backgroundImages.map((img, index) => (
           <div
             key={img}
-            className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ease-in-out ${
-              index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+              index === currentImageIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'
             }`}
-            style={{ backgroundImage: `url('${img}')` }}
-          />
+          >
+            <div
+              className="w-full h-full bg-cover bg-center origin-center"
+              style={{ 
+                backgroundImage: `url('${img}')`,
+                transform: index === currentImageIndex ? 'scale(1.1)' : 'scale(1)',
+                transition: index === currentImageIndex ? 'transform 20s linear' : 'transform 15s linear'
+              }}
+            />
+          </div>
         ))}
         <div className="absolute inset-0 bg-slate-900/40" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-transparent" />
