@@ -156,6 +156,8 @@ export default function HomeAdmin() {
           {activeTab === 'header' && (
             <div className="space-y-6">
               <h2 className="text-xl font-bold border-b pb-2">Header Settings</h2>
+              
+              {/* Logo Upload */}
               <div>
                 <label className="block text-sm font-medium mb-1">Header Logo</label>
                 <div className="flex items-center gap-4">
@@ -163,32 +165,76 @@ export default function HomeAdmin() {
                   <input type="file" onChange={(e) => handleImageUpload(e, (url) => updateSetting('headerLogo', url))} className="text-sm" />
                 </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Contact Button Link</label>
-                <input type="text" value={siteSettings.navbarContactButtonLink || ''} onChange={(e) => updateSetting('navbarContactButtonLink', e.target.value)} className="w-full border p-2 rounded" />
+
+              {/* CTA "Get Started" Button */}
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 space-y-3">
+                <h3 className="font-semibold text-sm text-blue-800 flex items-center gap-2">
+                  🔘 CTA Button (Header Right Side)
+                </h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs text-gray-600 mb-1">Button Text</label>
+                    <input type="text" value={siteSettings.navbarContactButtonText || 'Get Started'} onChange={(e) => updateSetting('navbarContactButtonText', e.target.value)} className="w-full border p-2 rounded" placeholder="e.g. Get Started" />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-gray-600 mb-1">Button Link</label>
+                    <input type="text" value={siteSettings.navbarContactButtonLink || ''} onChange={(e) => updateSetting('navbarContactButtonLink', e.target.value)} className="w-full border p-2 rounded" placeholder="e.g. /contact" />
+                  </div>
+                </div>
               </div>
-              {/* Nav Items Array */}
-              <div className="space-y-2">
-                <label className="block text-sm font-medium">Navigation Menu Items</label>
+
+              {/* Navigation Menu Items */}
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <label className="block text-sm font-medium">Navigation Menu Items</label>
+                  <span className="text-xs text-gray-400">{siteSettings?.navItems?.length || 0} items</span>
+                </div>
                 {siteSettings?.navItems?.map((item: any, idx: number) => (
-                  <div key={idx} className="flex gap-2 items-center">
+                  <div key={idx} className="flex gap-2 items-center bg-gray-50 p-3 rounded-lg border">
+                    <span className="text-xs text-gray-400 font-mono w-6 text-center">{idx + 1}</span>
                     <input type="text" value={item.label} onChange={(e) => {
                       const newArr = [...(siteSettings?.navItems || [])];
-                      newArr[idx].label = e.target.value;
+                      newArr[idx] = { ...newArr[idx], label: e.target.value };
                       updateSetting('navItems', newArr);
-                    }} className="flex-1 border p-2 rounded" placeholder="Label" />
+                    }} className="flex-1 border p-2 rounded text-sm" placeholder="Label (e.g. Home)" />
                     <input type="text" value={item.link} onChange={(e) => {
                       const newArr = [...(siteSettings?.navItems || [])];
-                      newArr[idx].link = e.target.value;
+                      newArr[idx] = { ...newArr[idx], link: e.target.value };
                       updateSetting('navItems', newArr);
-                    }} className="flex-1 border p-2 rounded" placeholder="Link" />
+                    }} className="flex-1 border p-2 rounded text-sm" placeholder="Link (e.g. /)" />
+                    {/* Move Up */}
+                    <button
+                      disabled={idx === 0}
+                      onClick={() => {
+                        const newArr = [...(siteSettings?.navItems || [])];
+                        [newArr[idx - 1], newArr[idx]] = [newArr[idx], newArr[idx - 1]];
+                        newArr.forEach((item: any, i: number) => item.order = i);
+                        updateSetting('navItems', newArr);
+                      }}
+                      className="p-1.5 text-gray-400 hover:text-gray-700 disabled:opacity-30"
+                      title="Move Up"
+                    ><ChevronUp size={16} /></button>
+                    {/* Move Down */}
+                    <button
+                      disabled={idx === (siteSettings?.navItems?.length || 0) - 1}
+                      onClick={() => {
+                        const newArr = [...(siteSettings?.navItems || [])];
+                        [newArr[idx], newArr[idx + 1]] = [newArr[idx + 1], newArr[idx]];
+                        newArr.forEach((item: any, i: number) => item.order = i);
+                        updateSetting('navItems', newArr);
+                      }}
+                      className="p-1.5 text-gray-400 hover:text-gray-700 disabled:opacity-30"
+                      title="Move Down"
+                    ><ChevronDown size={16} /></button>
+                    {/* Delete */}
                     <button onClick={() => {
                       const newArr = siteSettings?.navItems?.filter((_:any, i:number) => i !== idx);
+                      newArr.forEach((item: any, i: number) => item.order = i);
                       updateSetting('navItems', newArr);
-                    }} className="p-2 text-red-500"><Trash2 size={16} /></button>
+                    }} className="p-1.5 text-red-400 hover:text-red-600" title="Delete"><Trash2 size={16} /></button>
                   </div>
                 ))}
-                <button onClick={() => updateSetting('navItems', [...(siteSettings.navItems||[]), { label: 'New', link: '/', order: siteSettings.navItems?.length||0 }])} className="text-sm text-primary flex items-center mt-2"><Plus size={16} /> Add Nav Item</button>
+                <button onClick={() => updateSetting('navItems', [...(siteSettings.navItems||[]), { label: 'New Page', link: '/', order: siteSettings.navItems?.length||0 }])} className="text-sm text-primary flex items-center mt-2 hover:underline"><Plus size={16} className="mr-1" /> Add Nav Item</button>
               </div>
             </div>
           )}

@@ -35,6 +35,7 @@ const Header = ({ siteSettings }: { siteSettings?: any }) => {
 
   const logoUrl = siteSettings?.headerLogo || "/logo.png";
   const contactBtnLink = siteSettings?.navbarContactButtonLink || "/contact";
+  const contactBtnText = siteSettings?.navbarContactButtonText || "Get Started";
 
   if (pathname.startsWith('/admin')) return null;
 
@@ -78,7 +79,7 @@ const Header = ({ siteSettings }: { siteSettings?: any }) => {
               href={contactBtnLink} 
               className="px-6 py-2.5 text-sm font-medium text-white bg-primary hover:bg-primary/90 shadow-sm rounded-md transition-all duration-300"
             >
-              Get Started
+              {contactBtnText}
             </Link>
           </div>
 
@@ -118,7 +119,7 @@ const Header = ({ siteSettings }: { siteSettings?: any }) => {
                 className="flex justify-center w-full px-6 py-3 text-sm font-medium text-white bg-primary hover:bg-primary/90 rounded-md transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Get Started
+                {contactBtnText}
               </Link>
             </div>
           </nav>

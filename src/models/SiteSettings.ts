@@ -17,6 +17,7 @@ const SiteSettingsSchema = new mongoose.Schema(
     heroPrimaryButtonLink: { type: String, default: "/services" },
     heroSecondaryButtonLink: { type: String, default: "/contact" },
     navbarContactButtonLink: { type: String, default: "/contact" },
+    navbarContactButtonText: { type: String, default: "Get Started" },
     footerContactButtonLink: { type: String, default: "/contact" },
 
     // Featured Solar Block (Shared)

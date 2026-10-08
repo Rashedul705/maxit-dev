@@ -40,7 +40,32 @@ export default async function RootLayout({
   const contactDoc = await (GlobalContact.findOne as any)().lean();
   const contactInfo = contactDoc ? JSON.parse(JSON.stringify(contactDoc)) : null;
   const settingsDoc = await (SiteSettings.findOne as any)().lean();
-  const siteSettings = settingsDoc ? JSON.parse(JSON.stringify(settingsDoc)) : null;
+  const rawSettings = settingsDoc ? JSON.parse(JSON.stringify(settingsDoc)) : null;
+  
+  // Merge with defaults so new fields (navItems, navbarContactButtonText, etc.) always have values
+  const defaultSettings = {
+    headerLogo: "/logo.png",
+    navItems: [
+      { label: "Home", link: "/", order: 0 },
+      { label: "Services", link: "/services", order: 1 },
+      { label: "Projects", link: "/projects", order: 2 },
+      { label: "Team", link: "/team", order: 3 },
+      { label: "About", link: "/about", order: 4 },
+      { label: "Contact", link: "/contact", order: 5 }
+    ],
+    navbarContactButtonText: "Get Started",
+    navbarContactButtonLink: "/contact",
+    footerLogo: "/logo.png",
+  };
+  const siteSettings = rawSettings ? {
+    ...defaultSettings,
+    ...Object.fromEntries(
+      Object.entries(rawSettings).filter(([, v]) => {
+        if (Array.isArray(v)) return v.length > 0;
+        return v !== undefined && v !== null && v !== '';
+      })
+    )
+  } : defaultSettings;
 
   return (
     <html lang="en" suppressHydrationWarning>

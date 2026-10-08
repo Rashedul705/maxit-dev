@@ -2,7 +2,7 @@ import Hero from '../components/Hero';
 import SolarInnovation from '../components/SolarInnovation';
 import ServiceCard from '../components/ServiceCard';
 import TestimonialCard from '../components/TestimonialCard';
-import { Settings, ArrowRight, Sun, Sprout, Zap, Leaf, Cpu, Headphones, TrendingDown, Wifi, Cctv, Droplets, RadioTower, Lightbulb, Activity, Target, Home, Building2, Factory, GraduationCap, Landmark, Shield, Briefcase, Phone } from 'lucide-react';
+import { Settings, ArrowRight, Sun, Sprout, Zap, Leaf, Cpu, Headphones, TrendingDown, Wifi, Cctv, Droplets, RadioTower, Lightbulb, Activity, Target, Home, Building2, Factory, GraduationCap, Landmark, Shield, Briefcase, Phone, CheckCircle2, Image as ImageIcon } from 'lucide-react';
 import Link from "next/link";
 import Partners from '../components/Partners';
 import dbConnect from '@/lib/mongodb';
@@ -196,9 +196,8 @@ const Index = async () => {
           <p className="text-gray-500 max-w-3xl mx-auto mb-16 leading-relaxed">
             {homeData?.servicesSection?.subtext || "From solar and irrigation to networking, automation, electrical work, and CCTV, we handle the full job so you deal with one reliable team."}
           </p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 border border-gray-200 rounded-2xl overflow-hidden bg-white">
-            {displayServices.slice(0, 6).map((service: any, index: number) => {
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-gray-200 border border-gray-200 rounded-2xl overflow-hidden">
+            {services.map((service: any, index: number) => {
               const iconMap: Record<string, React.ReactNode> = {
                 Cpu: <Cpu className="w-8 h-8 text-primary" />,
                 Activity: <Activity className="w-8 h-8 text-primary" />,
@@ -216,12 +215,11 @@ const Index = async () => {
                 Droplets: <Droplets className="w-8 h-8 text-primary" />,
                 Zap: <Zap className="w-8 h-8 text-primary" />,
               };
+              
               return (
               <div 
-                key={index} 
-                className={`flex flex-col items-center p-10 group transition-colors hover:bg-gray-50/50 ${
-                  index % 3 !== 2 ? 'md:border-r border-gray-200' : ''
-                } ${index < 3 ? 'border-b border-gray-200' : ''} ${index >= 3 && index < 5 ? 'border-b md:border-b-0 border-gray-200' : ''}`}
+                key={service._id || index} 
+                className="flex flex-col items-center p-10 group transition-colors hover:bg-gray-50/50 bg-white text-center"
               >
                 <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center border-2 border-primary/20 group-hover:border-primary/50 transition-colors mb-6 shadow-sm overflow-hidden">
                   {service.iconUrl ? (
@@ -232,7 +230,7 @@ const Index = async () => {
                 </div>
                 <h3 className="text-lg font-bold text-gray-900 mb-3">{service.title}</h3>
                 {service.subServices && service.subServices.length > 0 && (
-                  <p className="text-sm text-gray-500 leading-relaxed text-center max-w-sm">
+                  <p className="text-sm text-gray-500 leading-relaxed max-w-sm">
                     {service.subServices.join(" • ")}
                   </p>
                 )}

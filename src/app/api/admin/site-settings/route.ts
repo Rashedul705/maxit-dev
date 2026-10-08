@@ -33,6 +33,8 @@ const DEFAULT_SETTINGS = {
     { label: "About", link: "/about", order: 4 },
     { label: "Contact", link: "/contact", order: 5 }
   ],
+  navbarContactButtonText: "Get Started",
+  navbarContactButtonLink: "/contact",
   footerLogo: "/logo.png",
   footerDescription: "Your partner for sustainable energy, advanced agro-tech, and intelligent automation solutions. Empowering a greener tomorrow.",
   socialLinks: [
@@ -63,6 +65,29 @@ export async function GET() {
     let settings = await (SiteSettings.findOne as any)().lean();
     if (!settings) {
       settings = DEFAULT_SETTINGS;
+    } else {
+      // Merge defaults with stored settings so any missing fields get populated.
+      // For arrays: use the stored value only if it exists and has items; otherwise use the default.
+      const merged: any = { ...DEFAULT_SETTINGS };
+      for (const key of Object.keys(merged)) {
+        const storedVal = (settings as any)[key];
+        if (Array.isArray(merged[key])) {
+          // Use stored array if it exists and has items
+          if (Array.isArray(storedVal) && storedVal.length > 0) {
+            merged[key] = storedVal;
+          }
+        } else {
+          // Use stored scalar if it's defined and not empty string
+          if (storedVal !== undefined && storedVal !== null && storedVal !== '') {
+            merged[key] = storedVal;
+          }
+        }
+      }
+      // Also carry over _id and timestamps from stored doc
+      if ((settings as any)._id) merged._id = (settings as any)._id;
+      if ((settings as any).createdAt) merged.createdAt = (settings as any).createdAt;
+      if ((settings as any).updatedAt) merged.updatedAt = (settings as any).updatedAt;
+      settings = merged;
     }
     return NextResponse.json(settings);
   } catch (error) {
