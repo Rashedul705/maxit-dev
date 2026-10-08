@@ -12,6 +12,7 @@ const DEFAULT_SETTINGS = {
   contactHeaderSubtitle: "Ready to start your next project or need technical assistance? Our team of experts is here to help.",
   contactInfoSectionTitle: "Contact Information",
   teamHeaderTitle: "Complete Corporate Governance and Web Team Directory",
+  teamHeaderCompanyName: "Max iT Solution Ltd.",
   teamHeaderSubtitle: "Corporate Organogram and Profile Layout with Global Supply Chain Network.",
   
   featuredServiceTitle: "Solar & Renewable Energy",

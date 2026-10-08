@@ -11,6 +11,7 @@ export default function HomeAdmin() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [activeTab, setActiveTab] = useState('header');
+  const [draggedIdx, setDraggedIdx] = useState<number | null>(null);
 
   const [homeData, setHomeData] = useState<any>({});
   const [siteSettings, setSiteSettings] = useState<any>({});
@@ -117,6 +118,28 @@ export default function HomeAdmin() {
 
   const updateSetting = (field: string, value: any) => {
     setSiteSettings({ ...siteSettings, [field]: value });
+  };
+
+  const handleDragStart = (e: React.DragEvent, idx: number) => {
+    setDraggedIdx(idx);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragOver = (e: React.DragEvent, idx: number) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const handleDrop = (e: React.DragEvent, idx: number) => {
+    e.preventDefault();
+    if (draggedIdx === null || draggedIdx === idx) return;
+
+    const newArr = [...(homeData.hero?.backgroundImages || [])];
+    const item = newArr.splice(draggedIdx, 1)[0];
+    newArr.splice(idx, 0, item);
+    
+    updateHome('hero', 'backgroundImages', newArr);
+    setDraggedIdx(null);
   };
 
   return (
@@ -250,11 +273,36 @@ export default function HomeAdmin() {
                 </label>
               </div>
               
-              <div>
-                <label className="block text-sm font-medium mb-1">Background Image</label>
+              <div className="space-y-2">
+                <label className="block text-sm font-medium mb-1">Background Images (Slider)</label>
+                <div className="flex flex-wrap gap-4 mb-2">
+                  {(homeData.hero?.backgroundImages || []).map((img: string, idx: number) => (
+                    <div 
+                      key={idx} 
+                      className={`relative group cursor-move border-2 rounded-lg p-1 ${draggedIdx === idx ? 'opacity-50 border-blue-500' : 'border-transparent'}`}
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, idx)}
+                      onDragOver={(e) => handleDragOver(e, idx)}
+                      onDrop={(e) => handleDrop(e, idx)}
+                    >
+                      <img src={img} className="h-24 w-40 object-cover rounded shadow-sm" />
+                      <div className="absolute top-2 left-2 bg-black/60 text-white text-xs px-2 py-1 rounded">
+                        Slide {idx + 1}
+                      </div>
+                      <button type="button" onClick={() => {
+                        const newArr = (homeData.hero?.backgroundImages || []).filter((_: any, i: number) => i !== idx);
+                        updateHome('hero', 'backgroundImages', newArr);
+                      }} className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full opacity-100 hover:bg-red-600 transition-colors shadow-md">
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
                 <div className="flex items-center gap-4">
-                  {homeData.hero?.backgroundImage && <img src={homeData.hero.backgroundImage} className="h-20 w-32 object-cover rounded" />}
-                  <input type="file" onChange={(e) => handleImageUpload(e, (url) => updateHome('hero', 'backgroundImage', url))} className="text-sm" />
+                  <input type="file" onChange={(e) => handleImageUpload(e, (url) => {
+                    const newArr = [...(homeData.hero?.backgroundImages || []), url];
+                    updateHome('hero', 'backgroundImages', newArr);
+                  })} className="text-sm" />
                 </div>
               </div>
 

@@ -14,32 +14,41 @@ const defaultImages = [
 
 interface HeroProps {
   content?: {
-    brandingText: string;
-    titleLine1: string;
-    titleLine2: string;
-    description: string;
-    backgroundImage?: string;
-    stats: { end: number; suffix: string; label: string }[];
+    brandingText?: string;
+    titleLine1?: string;
+    titleLine2?: string;
+    subtitle?: string;
+    backgroundImages?: string[];
+    stats?: { number?: string; label?: string }[];
   },
   siteSettings?: any;
 }
 
 const Hero = ({ content, siteSettings }: HeroProps) => {
   const defaultStats = [
-    { end: 50, suffix: '+', label: 'Projects' },
-    { end: 30, suffix: '+', label: 'Clients' },
-    { end: 10, suffix: '+', label: 'Years Exp' },
-    { end: 24, suffix: '/7', label: 'Support' }
+    { number: '50+', label: 'Projects' },
+    { number: '30+', label: 'Clients' },
+    { number: '10+', label: 'Years Exp' },
+    { number: '24/7', label: 'Support' }
   ];
 
-  const stats = content?.stats || defaultStats;
+  const rawStats = content?.stats && content.stats.length > 0 ? content.stats : defaultStats;
+  
+  const stats = rawStats.map(stat => {
+    const numStr = stat.number || '';
+    const numMatch = numStr.match(/\d+/);
+    const end = numMatch ? parseInt(numMatch[0]) : 0;
+    const suffix = numStr.replace(/\d+/g, '');
+    return { end, suffix, label: stat.label };
+  });
+
   const brandingText = content?.brandingText || "Max iT";
   const titleLine1 = content?.titleLine1 || "Solar Energy &";
   const titleLine2 = content?.titleLine2 || "Smart Automation";
-  const description = content?.description || "Empowering your future with sustainable energy solutions, advanced agro-technology, and intelligent industrial automation.";
+  const description = content?.subtitle || "Empowering your future with sustainable energy solutions, advanced agro-technology, and intelligent industrial automation.";
   
-  const backgroundImages = content?.backgroundImage 
-    ? [content.backgroundImage, ...defaultImages.filter(img => img !== content.backgroundImage)]
+  const backgroundImages = content?.backgroundImages && content.backgroundImages.length > 0
+    ? content.backgroundImages
     : defaultImages;
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);

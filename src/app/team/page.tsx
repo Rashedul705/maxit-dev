@@ -45,6 +45,7 @@ export default async function Team() {
   const { ceo, members = [], sections = [], settings } = teamData;
   
   const headerTitle = settings?.teamHeaderTitle || "Complete Corporate Governance and Web Team Directory";
+  const headerCompanyName = settings?.teamHeaderCompanyName || "Max iT Solution Ltd.";
   const headerSubtitle = settings?.teamHeaderSubtitle || "Corporate Organogram and Profile Layout with Global Supply Chain Network.";
   
   // Sort members by order
@@ -89,7 +90,7 @@ export default async function Team() {
                 )}
               </h1>
               <p className="text-2xl text-gray-800 font-bold mb-4">
-                Max iT Solution Ltd.
+                {headerCompanyName}
               </p>
               <p className="text-xl text-gray-700 font-medium leading-relaxed">
                 {headerSubtitle}

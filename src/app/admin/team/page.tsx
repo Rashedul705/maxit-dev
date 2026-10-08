@@ -55,6 +55,7 @@ export default function TeamManagement() {
   const [editId, setEditId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [siteSettings, setSiteSettings] = useState<any>(null);
   
   // Section Management State
   const [isSectionModalOpen, setIsSectionModalOpen] = useState(false);
@@ -78,10 +79,11 @@ export default function TeamManagement() {
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      const [ceoRes, membersRes, sectionsRes] = await Promise.all([
+      const [ceoRes, membersRes, sectionsRes, settingsRes] = await Promise.all([
         fetch('/api/admin/ceo'),
         fetch('/api/admin/team'),
-        fetch('/api/admin/team-sections')
+        fetch('/api/admin/team-sections'),
+        fetch('/api/admin/site-settings')
       ]);
       
       if (ceoRes.ok) setCeoData(await ceoRes.json());
@@ -93,6 +95,7 @@ export default function TeamManagement() {
           setMemberForm(prev => ({ ...prev, section: data[0].name }));
         }
       }
+      if (settingsRes.ok) setSiteSettings(await settingsRes.json());
     } catch (err) {
       console.error("Failed to fetch data", err);
     } finally {
@@ -488,13 +491,13 @@ export default function TeamManagement() {
             {/* Team Page Header Settings */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden p-6 mb-8">
               <h2 className="text-xl font-bold text-gray-900 mb-4 border-b border-gray-100 pb-2">Team Page Header</h2>
-              <form onSubmit={async (e) => {
+              <form key={siteSettings ? 'loaded' : 'loading'} onSubmit={async (e) => {
                 e.preventDefault();
+                const formData = new FormData(e.currentTarget);
                 setIsSavingCeo(true); // Reusing state for button loading
                 try {
                   const currentRes = await fetch('/api/admin/site-settings');
                   const currentSettings = currentRes.ok ? await currentRes.json() : {};
-                  const formData = new FormData(e.currentTarget);
                   
                   const res = await fetch('/api/admin/site-settings', {
                     method: 'POST',
@@ -502,6 +505,7 @@ export default function TeamManagement() {
                     body: JSON.stringify({
                       ...currentSettings,
                       teamHeaderTitle: formData.get('teamHeaderTitle'),
+                      teamHeaderCompanyName: formData.get('teamHeaderCompanyName'),
                       teamHeaderSubtitle: formData.get('teamHeaderSubtitle'),
                     })
                   });
@@ -521,16 +525,25 @@ export default function TeamManagement() {
                     <input
                       name="teamHeaderTitle"
                       type="text" required
-                      defaultValue="Complete Corporate Governance and Web Team Directory"
+                      defaultValue={siteSettings?.teamHeaderTitle || "Complete Corporate Governance and Web Team Directory"}
                       className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20"
                     />
                   </div>
                   <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Company Name</label>
+                    <input
+                      name="teamHeaderCompanyName"
+                      type="text" required
+                      defaultValue={siteSettings?.teamHeaderCompanyName || "Max iT Solution Ltd."}
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20"
+                    />
+                  </div>
+                  <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-1">Subtitle</label>
                     <textarea
                       name="teamHeaderSubtitle"
                       required
-                      defaultValue="Corporate Organogram and Profile Layout with Global Supply Chain Network."
+                      defaultValue={siteSettings?.teamHeaderSubtitle || "Corporate Organogram and Profile Layout with Global Supply Chain Network."}
                       className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 h-20 resize-none"
                     />
                   </div>

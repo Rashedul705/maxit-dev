@@ -6,7 +6,12 @@ import { revalidatePath } from 'next/cache';
 const DEFAULT_HOME = {
   hero: {
     visible: true,
-    backgroundImage: '/images/hero-bg.jpg',
+    backgroundImages: [
+      '/images/hero-bg.jpg', 
+      '/images/slides/solar_automation_slide_1789677805531.jpg', 
+      '/images/slides/commercial_rooftop_slide_1789677880098.jpg', 
+      '/images/slides/agro_solar_slide_1789677870674.jpg'
+    ],
     titleLine1: 'Solar Energy &',
     titleLine2: 'Smart Automation',
     subtitle: 'Empowering your future with sustainable energy solutions, advanced agro-technology, and intelligent industrial automation.',
@@ -104,6 +109,12 @@ export async function GET() {
     if (!content) {
       content = DEFAULT_HOME;
     }
+    
+    // Migration for backgroundImages if missing
+    if (content && content.hero && (!content.hero.backgroundImages || content.hero.backgroundImages.length === 0)) {
+      content.hero.backgroundImages = DEFAULT_HOME.hero.backgroundImages;
+    }
+
     return NextResponse.json(content);
   } catch (error) {
     console.error('Error fetching home content:', error);

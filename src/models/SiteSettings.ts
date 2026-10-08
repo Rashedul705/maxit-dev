@@ -11,6 +11,7 @@ const SiteSettingsSchema = new mongoose.Schema(
     contactHeaderSubtitle: { type: String, default: "Ready to start your next project or need technical assistance? Our team of experts is here to help." },
     contactInfoSectionTitle: { type: String, default: "Contact Information" },
     teamHeaderTitle: { type: String, default: "Complete Corporate Governance and Web Team Directory" },
+    teamHeaderCompanyName: { type: String, default: "Max iT Solution Ltd." },
     teamHeaderSubtitle: { type: String, default: "Corporate Organogram and Profile Layout with Global Supply Chain Network." },
 
     // Button Links

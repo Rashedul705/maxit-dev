@@ -4,7 +4,7 @@ const HomeContentSchema = new mongoose.Schema(
   {
     hero: {
       visible: { type: Boolean, default: true },
-      backgroundImage: { type: String, default: '/images/hero-bg.jpg' },
+      backgroundImages: { type: [String], default: ['/images/hero-bg.jpg', '/images/slides/solar_automation_slide_1789677805531.jpg', '/images/slides/commercial_rooftop_slide_1789677880098.jpg', '/images/slides/agro_solar_slide_1789677870674.jpg'] },
       titleLine1: { type: String, default: 'Solar Energy &' },
       titleLine2: { type: String, default: 'Smart Automation' },
       subtitle: { type: String, default: 'Empowering your future with sustainable energy solutions, advanced agro-technology, and intelligent industrial automation.' },
