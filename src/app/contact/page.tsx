@@ -62,47 +62,59 @@ export default async function Contact() {
         </section>
 
         <section className="pb-32 bg-white relative z-10">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-gray-100 flex flex-col lg:flex-row">
               
-              {/* Contact Information */}
-              <div>
-                <h2 className="text-3xl font-bold font-heading text-primary mb-8">{infoTitle}</h2>
-                <div className="space-y-8">
-                  <div className="flex items-start">
-                    <div className="flex-shrink-0 w-12 h-12 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mr-6">
-                      <MapPin className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-primary mb-1">Our Location</h3>
-                      <p className="text-gray-700 font-medium">{addressLine1}<br /> {addressLine2} <br /> {addressLine3}</p>
-                    </div>
-                  </div>
+              {/* Contact Information (Left Panel) */}
+              <div className="lg:w-2/5 bg-primary p-10 md:p-14 text-white flex flex-col justify-between relative overflow-hidden">
+                {/* Decorative background elements */}
+                <div className="absolute top-0 right-0 w-72 h-72 bg-white/10 rounded-full blur-[60px] transform translate-x-1/3 -translate-y-1/3" />
+                <div className="absolute bottom-0 left-0 w-72 h-72 bg-accent/20 rounded-full blur-[60px] transform -translate-x-1/3 translate-y-1/3" />
+                
+                <div className="relative z-10">
+                  <h2 className="text-3xl font-bold font-heading mb-10 text-white">{infoTitle}</h2>
                   
-                  <div className="flex items-start">
-                    <div className="flex-shrink-0 w-12 h-12 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mr-6">
-                      <Phone className="w-6 h-6" />
+                  <div className="space-y-10">
+                    <div className="flex items-start group">
+                      <div className="flex-shrink-0 w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center mr-6 border border-white/20 group-hover:bg-white/20 transition-colors shadow-lg">
+                        <MapPin className="w-7 h-7 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold mb-2 text-white tracking-wide">Our Location</h3>
+                        <p className="text-white/80 leading-relaxed font-medium">{addressLine1}<br /> {addressLine2} <br /> {addressLine3}</p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-primary mb-1">Phone Number</h3>
-                      <p className="text-gray-700 font-medium">{phone}</p>
+                    
+                    <div className="flex items-start group">
+                      <div className="flex-shrink-0 w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center mr-6 border border-white/20 group-hover:bg-white/20 transition-colors shadow-lg">
+                        <Phone className="w-7 h-7 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold mb-2 text-white tracking-wide">Phone Number</h3>
+                        <p className="text-white/80 leading-relaxed font-medium">{phone}</p>
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="flex items-start">
-                    <div className="flex-shrink-0 w-12 h-12 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mr-6">
-                      <Mail className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-primary mb-1">Email Address</h3>
-                      <p className="text-gray-700 font-medium">{email}</p>
+                    <div className="flex items-start group">
+                      <div className="flex-shrink-0 w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center mr-6 border border-white/20 group-hover:bg-white/20 transition-colors shadow-lg">
+                        <Mail className="w-7 h-7 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold mb-2 text-white tracking-wide">Email Address</h3>
+                        <p className="text-white/80 leading-relaxed font-medium">{email}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
+                
+                <div className="relative z-10 mt-16 pt-8 border-t border-white/10">
+                  <p className="text-white/60 font-medium">We typically respond within 24 hours.</p>
+                </div>
               </div>
 
-              {/* Contact Form */}
-              <div className="bg-white p-8 md:p-12 rounded-3xl shadow-xl shadow-primary/5 border border-gray-100">
+              {/* Contact Form (Right Panel) */}
+              <div className="lg:w-3/5 p-10 md:p-14 bg-white">
+                <h3 className="text-3xl font-bold font-heading text-gray-900 mb-8">Send us a message</h3>
                 <ContactForm />
               </div>
 
