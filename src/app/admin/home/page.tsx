@@ -593,6 +593,10 @@ export default function HomeAdmin() {
                 <div><label className="block text-sm font-medium mb-1">Heading Normal</label><input type="text" value={homeData.partnersSection?.headingNormal || ''} onChange={(e) => updateHome('partnersSection', 'headingNormal', e.target.value)} className="w-full border p-2 rounded" /></div>
                 <div><label className="block text-sm font-medium mb-1">Heading Highlight</label><input type="text" value={homeData.partnersSection?.headingHighlight || ''} onChange={(e) => updateHome('partnersSection', 'headingHighlight', e.target.value)} className="w-full border p-2 rounded" /></div>
               </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Subtext / Description</label>
+                <textarea rows={2} value={homeData.partnersSection?.subtext || ''} onChange={(e) => updateHome('partnersSection', 'subtext', e.target.value)} className="w-full border p-2 rounded" />
+              </div>
             </div>
           )}
 
