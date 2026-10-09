@@ -163,10 +163,7 @@ const Index = async () => {
     ];
   }
 
-  // Use homeData services if they exist and have items, otherwise fallback to DB services
-  const displayServices = homeData?.servicesSection?.services?.length > 0 
-    ? [...homeData.servicesSection.services].sort((a:any, b:any) => a.order - b.order)
-    : services;
+
 
   const displayStats = homeData?.milestones?.stats?.length > 0 
     ? [...homeData.milestones.stats].sort((a:any, b:any) => a.order - b.order)
@@ -305,8 +302,12 @@ const Index = async () => {
               >
                 <div className={`absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br ${reason.gradient || reason.accentColor || 'from-blue-500 to-cyan-500'} opacity-10 rounded-full group-hover:scale-150 transition-transform duration-700 ease-out`} />
                 
-                <div className={`relative z-10 w-16 h-16 rounded-2xl bg-gradient-to-br ${reason.gradient || reason.accentColor || 'from-blue-500 to-cyan-500'} flex items-center justify-center text-white mb-6 shadow-md transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
-                  {iconMap[reason.iconCategory || reason.icon] || <Settings className="w-8 h-8" />}
+                <div className={`relative z-10 w-16 h-16 rounded-2xl bg-gradient-to-br ${reason.gradient || reason.accentColor || 'from-blue-500 to-cyan-500'} flex items-center justify-center text-white mb-6 shadow-md transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 overflow-hidden`}>
+                  {reason.isCustomIcon ? (
+                    <img src={reason.icon} alt={reason.title} className="w-10 h-10 object-contain drop-shadow-md" />
+                  ) : (
+                    iconMap[reason.iconCategory || reason.icon] || <Settings className="w-8 h-8" />
+                  )}
                 </div>
                 
                 <h3 className="relative z-10 text-2xl font-bold font-heading text-primary mb-3">{reason.title}</h3>

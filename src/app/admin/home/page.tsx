@@ -363,22 +363,11 @@ export default function HomeAdmin() {
               </div>
               <div><label className="block text-sm font-medium mb-1">Subtext</label><textarea rows={2} value={homeData.servicesSection?.subtext || ''} onChange={(e) => updateHome('servicesSection', 'subtext', e.target.value)} className="w-full border p-2 rounded" /></div>
               
-              <div className="space-y-2">
-                <label className="block text-sm font-medium">Service Cards</label>
-                {homeData.servicesSection?.services.map((srv: any, idx: number) => (
-                  <div key={idx} className="bg-gray-50 p-4 rounded border space-y-3">
-                    <div className="flex justify-between">
-                      <h4 className="font-semibold text-sm">Card {idx + 1}</h4>
-                      <button onClick={() => { const newArr = homeData.servicesSection?.services?.filter((_:any, i:number) => i !== idx); updateHome('servicesSection', 'services', newArr); }} className="text-red-500"><Trash2 size={16} /></button>
-                    </div>
-                    <div className="flex gap-2 items-center">
-                      <input type="text" value={srv.icon} onChange={(e) => { const newArr = [...(homeData.servicesSection?.services || [])]; newArr[idx].icon = e.target.value; updateHome('servicesSection', 'services', newArr); }} className="w-32 border p-2 rounded text-sm" placeholder="Lucide Icon (e.g. Sun)" />
-                      <input type="text" value={srv.title} onChange={(e) => { const newArr = [...(homeData.servicesSection?.services || [])]; newArr[idx].title = e.target.value; updateHome('servicesSection', 'services', newArr); }} className="flex-1 border p-2 rounded text-sm" placeholder="Title" />
-                    </div>
-                    <textarea value={srv.description} onChange={(e) => { const newArr = [...(homeData.servicesSection?.services || [])]; newArr[idx].description = e.target.value; updateHome('servicesSection', 'services', newArr); }} className="w-full border p-2 rounded text-sm" placeholder="Description" rows={2} />
-                  </div>
-                ))}
-                <button onClick={() => updateHome('servicesSection', 'services', [...(homeData.servicesSection?.services||[]), { icon: 'Settings', title: 'New Service', description: '', order: homeData.servicesSection?.services?.length||0 }])} className="text-sm text-primary flex items-center mt-2"><Plus size={16} /> Add Service Card</button>
+              <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded mt-6">
+                <p className="text-sm text-blue-700">
+                  <strong>Note:</strong> Service cards on the home page are automatically pulled from your Services database. 
+                  To add, remove, or edit services (including their icons, titles, and sub-services), please use the dedicated <strong>Services</strong> management page.
+                </p>
               </div>
             </div>
           )}
@@ -437,13 +426,27 @@ export default function HomeAdmin() {
                       newArr[idx].youtubeLink = e.target.value; 
                       newArr[idx].videoId = extractYoutubeId(e.target.value) || '';
                       updateHome('videosSection', 'videos', newArr); 
-                    }} className="w-full border p-2 rounded text-sm" placeholder="YouTube Link (e.g. https://youtube.com/watch?v=...)" />
-                    {vid.videoId && (
-                      <div className="flex gap-4 items-center mt-2">
+                    }} className="w-full border p-2 rounded text-sm" placeholder="Link (YouTube or other)" />
+                    
+                    <div className="flex gap-4 items-center mt-2">
+                      {vid.customThumbnail ? (
+                        <img src={vid.customThumbnail} className="h-20 w-32 object-cover rounded shadow" />
+                      ) : vid.videoId ? (
                         <img src={`https://img.youtube.com/vi/${vid.videoId}/hqdefault.jpg`} className="h-20 w-32 object-cover rounded shadow" />
-                        <span className="text-xs text-green-600 font-medium">Valid YouTube ID: {vid.videoId}</span>
+                      ) : (
+                        <div className="h-20 w-32 bg-gray-200 rounded flex items-center justify-center text-xs text-gray-500">No Image</div>
+                      )}
+                      
+                      <div className="flex flex-col gap-1">
+                        <label className="text-xs font-medium text-gray-600">Upload Image (Optional)</label>
+                        <input type="file" onChange={(e) => handleImageUpload(e, (url) => { 
+                          const newArr = [...(homeData.videosSection?.videos || [])]; 
+                          newArr[idx].customThumbnail = url; 
+                          updateHome('videosSection', 'videos', newArr); 
+                        })} className="text-sm" />
+                        {vid.videoId && !vid.customThumbnail && <span className="text-xs text-green-600 font-medium">Using YouTube Thumbnail</span>}
                       </div>
-                    )}
+                    </div>
                     <input type="text" value={vid.title || ''} onChange={(e) => { const newArr = [...(homeData.videosSection?.videos || [])]; newArr[idx].title = e.target.value; updateHome('videosSection', 'videos', newArr); }} className="w-full border p-2 rounded text-sm" placeholder="Title on Image" />
                     <textarea value={vid.description || ''} onChange={(e) => { const newArr = [...(homeData.videosSection?.videos || [])]; newArr[idx].description = e.target.value; updateHome('videosSection', 'videos', newArr); }} className="w-full border p-2 rounded text-sm" placeholder="Short description" rows={2} />
                   </div>
@@ -477,9 +480,31 @@ export default function HomeAdmin() {
                 {homeData.whyChooseUs?.cards.map((card: any, idx: number) => (
                   <div key={idx} className="bg-gray-50 p-4 rounded border space-y-2">
                     <div className="flex justify-between"><h4 className="font-semibold text-sm">Card {idx + 1}</h4><button onClick={() => { const newArr = homeData.whyChooseUs?.cards?.filter((_:any, i:number) => i !== idx); updateHome('whyChooseUs', 'cards', newArr); }} className="text-red-500"><Trash2 size={16} /></button></div>
-                    <div className="grid grid-cols-3 gap-2">
-                      <input type="text" value={card.icon || ''} onChange={(e) => { const newArr = [...(homeData.whyChooseUs?.cards || [])]; newArr[idx].icon = e.target.value; updateHome('whyChooseUs', 'cards', newArr); }} className="border p-2 rounded text-sm" placeholder="Icon" />
-                      <input type="text" value={card.title || ''} onChange={(e) => { const newArr = [...(homeData.whyChooseUs?.cards || [])]; newArr[idx].title = e.target.value; updateHome('whyChooseUs', 'cards', newArr); }} className="col-span-2 border p-2 rounded text-sm" placeholder="Title" />
+                    <div className="flex flex-col md:flex-row gap-2 md:items-center">
+                      <div className="flex gap-2 items-center w-full md:w-auto">
+                        <select 
+                          value={card.isCustomIcon ? 'image' : 'lucide'} 
+                          onChange={(e) => { 
+                            const newArr = [...(homeData.whyChooseUs?.cards || [])]; 
+                            newArr[idx].isCustomIcon = e.target.value === 'image'; 
+                            newArr[idx].icon = ''; 
+                            updateHome('whyChooseUs', 'cards', newArr); 
+                          }}
+                          className="border p-2 rounded text-sm bg-white"
+                        >
+                          <option value="lucide">Lucide</option>
+                          <option value="image">Image</option>
+                        </select>
+                        {!card.isCustomIcon ? (
+                          <input type="text" value={card.icon || ''} onChange={(e) => { const newArr = [...(homeData.whyChooseUs?.cards || [])]; newArr[idx].icon = e.target.value; updateHome('whyChooseUs', 'cards', newArr); }} className="w-24 border p-2 rounded text-sm" placeholder="Icon" />
+                        ) : (
+                          <div className="flex items-center gap-2">
+                            {card.icon && <img src={card.icon} alt="icon" className="w-8 h-8 object-contain bg-gray-200 rounded p-1" />}
+                            <input type="file" onChange={(e) => handleImageUpload(e, (url) => { const newArr = [...(homeData.whyChooseUs?.cards || [])]; newArr[idx].icon = url; updateHome('whyChooseUs', 'cards', newArr); })} className="text-sm w-48" />
+                          </div>
+                        )}
+                      </div>
+                      <input type="text" value={card.title || ''} onChange={(e) => { const newArr = [...(homeData.whyChooseUs?.cards || [])]; newArr[idx].title = e.target.value; updateHome('whyChooseUs', 'cards', newArr); }} className="flex-1 border p-2 rounded text-sm" placeholder="Title" />
                     </div>
                     <textarea value={card.description || ''} onChange={(e) => { const newArr = [...(homeData.whyChooseUs?.cards || [])]; newArr[idx].description = e.target.value; updateHome('whyChooseUs', 'cards', newArr); }} className="w-full border p-2 rounded text-sm" placeholder="Description" rows={2} />
                   </div>

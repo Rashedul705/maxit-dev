@@ -86,7 +86,7 @@ const SolarInnovation = ({ content }: { content?: any }) => {
             {slides.map((slide, index) => (
               <div key={index} className="flex-[0_0_100%] min-w-0 relative group h-[500px] md:h-[600px]">
                 <img 
-                  src={slide.image} 
+                  src={slide.customThumbnail || slide.image || (slide.videoId ? `https://img.youtube.com/vi/${slide.videoId}/hqdefault.jpg` : '')} 
                   alt={slide.title} 
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
                 />
@@ -94,21 +94,24 @@ const SolarInnovation = ({ content }: { content?: any }) => {
                 {/* Gradient Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-90" />
                 
-                {/* Videography Play Button */}
+                {/* Videography Play Button or Link */}
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  {slide.videoUrl && (
+                  {(slide.youtubeLink || slide.videoUrl) && (
                     <div 
                       className="w-24 h-24 rounded-full bg-primary/90 flex items-center justify-center backdrop-blur-md text-white shadow-[0_0_40px_rgba(4,107,210,0.4)] transform group-hover:scale-110 group-hover:bg-primary transition-all duration-500 cursor-pointer pointer-events-auto"
                       onClick={() => {
-                        // Extract video ID safely
-                        let embedUrl = slide.videoUrl;
-                        if (slide.videoUrl.includes('youtube.com/watch') || slide.videoUrl.includes('youtu.be/')) {
-                          const idMatch = slide.videoUrl.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+                        const link = slide.youtubeLink || slide.videoUrl;
+                        if (link.includes('youtube.com/watch') || link.includes('youtu.be/')) {
+                          const idMatch = link.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
                           if (idMatch && idMatch[1]) {
-                            embedUrl = `https://www.youtube.com/embed/${idMatch[1]}?autoplay=1`;
+                            setSelectedVideoUrl(`https://www.youtube.com/embed/${idMatch[1]}?autoplay=1`);
+                            return;
                           }
                         }
-                        setSelectedVideoUrl(embedUrl);
+                        // Fallback to open link in new tab if not a youtube video
+                        if (link) {
+                          window.open(link, '_blank');
+                        }
                       }}
                     >
                       <Play fill="currentColor" className="w-8 h-8 ml-2" />
