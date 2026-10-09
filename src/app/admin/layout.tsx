@@ -19,7 +19,8 @@ import {
   HelpCircle,
   Image as ImageIcon,
   Phone,
-  Shield
+  Shield,
+  MessageSquare
 } from 'lucide-react';
 
 export default function AdminLayout({
@@ -32,6 +33,7 @@ export default function AdminLayout({
 
   const navItems = [
     { name: 'Dashboard', path: '/admin', icon: LayoutDashboard },
+    { name: 'Inbox', path: '/admin/inbox', icon: MessageSquare },
     { name: 'Home Page Editor', path: '/admin/home', icon: FileText },
     { name: 'Team Members', path: '/admin/team', icon: Users },
     { name: 'About Section', path: '/admin/about', icon: FileText },
