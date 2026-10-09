@@ -84,7 +84,16 @@ const SolarInnovation = ({ content }: { content?: any }) => {
         <div className="overflow-hidden rounded-3xl shadow-2xl border border-white/10" ref={emblaRef}>
           <div className="flex">
             {slides.map((slide, index) => (
-              <div key={index} className="flex-[0_0_100%] min-w-0 relative group h-[500px] md:h-[600px]">
+              <div 
+                key={index} 
+                className={`flex-[0_0_100%] min-w-0 relative group h-[500px] md:h-[600px] ${(slide.youtubeLink || slide.videoUrl) ? 'cursor-pointer' : ''}`}
+                onClick={() => {
+                  const link = slide.youtubeLink || slide.videoUrl;
+                  if (link) {
+                    window.open(link, '_blank');
+                  }
+                }}
+              >
                 <img 
                   src={slide.customThumbnail || slide.image || (slide.videoId ? `https://img.youtube.com/vi/${slide.videoId}/hqdefault.jpg` : '')} 
                   alt={slide.title} 
@@ -92,31 +101,13 @@ const SolarInnovation = ({ content }: { content?: any }) => {
                 />
                 
                 {/* Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-90" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-90 pointer-events-none" />
                 
-                {/* Videography Play Button or Link */}
+                {/* Videography Play Button */}
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  {(slide.youtubeLink || slide.videoUrl) && (
-                    <div 
-                      className="w-24 h-24 rounded-full bg-primary/90 flex items-center justify-center backdrop-blur-md text-white shadow-[0_0_40px_rgba(4,107,210,0.4)] transform group-hover:scale-110 group-hover:bg-primary transition-all duration-500 cursor-pointer pointer-events-auto"
-                      onClick={() => {
-                        const link = slide.youtubeLink || slide.videoUrl;
-                        if (link.includes('youtube.com/watch') || link.includes('youtu.be/')) {
-                          const idMatch = link.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
-                          if (idMatch && idMatch[1]) {
-                            setSelectedVideoUrl(`https://www.youtube.com/embed/${idMatch[1]}?autoplay=1`);
-                            return;
-                          }
-                        }
-                        // Fallback to open link in new tab if not a youtube video
-                        if (link) {
-                          window.open(link, '_blank');
-                        }
-                      }}
-                    >
-                      <Play fill="currentColor" className="w-8 h-8 ml-2" />
-                    </div>
-                  )}
+                  <div className="w-24 h-24 rounded-full bg-primary/90 flex items-center justify-center backdrop-blur-md text-white shadow-[0_0_40px_rgba(4,107,210,0.4)] transform group-hover:scale-110 group-hover:bg-primary transition-all duration-500">
+                    <Play fill="currentColor" className="w-8 h-8 ml-2" />
+                  </div>
                 </div>
 
                 <div className="absolute text-left bottom-0 left-0 right-0 p-8 md:p-16">

@@ -439,7 +439,7 @@ export default function HomeAdmin() {
                       
                       <div className="flex flex-col gap-1">
                         <label className="text-xs font-medium text-gray-600">Upload Image (Optional)</label>
-                        <input type="file" onChange={(e) => handleImageUpload(e, (url) => { 
+                        <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, (url) => { 
                           const newArr = [...(homeData.videosSection?.videos || [])]; 
                           newArr[idx].customThumbnail = url; 
                           updateHome('videosSection', 'videos', newArr); 
@@ -526,9 +526,17 @@ export default function HomeAdmin() {
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Image</label>
-                <div className="flex items-center gap-4">
-                  {homeData.aboutPreview?.image && <img src={homeData.aboutPreview.image} className="h-20 w-32 object-cover rounded" />}
-                  <input type="file" onChange={(e) => handleImageUpload(e, (url) => updateHome('aboutPreview', 'image', url))} className="text-sm" />
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center gap-4">
+                    {homeData.aboutPreview?.image ? <img src={homeData.aboutPreview.image} className="h-20 w-32 object-cover rounded border" /> : <div className="h-20 w-32 bg-gray-100 rounded flex items-center justify-center text-xs text-gray-400 border">No Image</div>}
+                    <div className="flex flex-col gap-2 w-full max-w-md">
+                      <input type="text" value={homeData.aboutPreview?.image || ''} onChange={(e) => updateHome('aboutPreview', 'image', e.target.value)} className="w-full border p-2 rounded text-sm" placeholder="Paste Image URL here" />
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-medium text-gray-500">Or upload:</span>
+                        <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, (url) => updateHome('aboutPreview', 'image', url))} className="text-sm" />
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">

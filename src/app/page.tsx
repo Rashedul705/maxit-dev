@@ -2,7 +2,7 @@ import Hero from '../components/Hero';
 import SolarInnovation from '../components/SolarInnovation';
 import ServiceCard from '../components/ServiceCard';
 import TestimonialCard from '../components/TestimonialCard';
-import { Settings, ArrowRight, Sun, Sprout, Zap, Leaf, Cpu, Headphones, TrendingDown, Wifi, Cctv, Droplets, RadioTower, Lightbulb, Activity, Target, Home, Building2, Factory, GraduationCap, Landmark, Shield, Briefcase, Phone, CheckCircle2, Image as ImageIcon } from 'lucide-react';
+import { Settings, ArrowRight, Sun, Sprout, Zap, Leaf, Cpu, Headphones, TrendingDown, Wifi, Cctv, Droplets, RadioTower, Lightbulb, Activity, Target, Home, Building2, Factory, GraduationCap, Landmark, Shield, Briefcase, Phone, CheckCircle2, Image as ImageIcon, ShieldCheck, Headset } from 'lucide-react';
 import Link from "next/link";
 import Partners from '../components/Partners';
 import dbConnect from '@/lib/mongodb';
@@ -293,8 +293,14 @@ const Index = async () => {
                 Building2: <Building2 className="w-8 h-8" />,
                 Factory: <Factory className="w-8 h-8" />,
                 GraduationCap: <GraduationCap className="w-8 h-8" />,
-                Landmark: <Landmark className="w-8 h-8" />
+                Landmark: <Landmark className="w-8 h-8" />,
+                ShieldCheck: <ShieldCheck className="w-8 h-8" />,
+                Headset: <Headset className="w-8 h-8" />,
+                Zap: <Zap className="w-8 h-8" />
               };
+              
+              // Ensure Tailwind compiles dynamic gradient classes
+              const _tw = "from-green-500 to-emerald-500 from-blue-500 to-indigo-500 from-yellow-400 to-orange-500 from-purple-500 to-pink-500 from-blue-500 to-cyan-500";
               return (
               <div 
                 key={index} 
