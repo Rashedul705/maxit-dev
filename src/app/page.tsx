@@ -411,7 +411,7 @@ const Index = async () => {
 
       {/* Partners Section */}
       {(!homeData || homeData.partnersSection?.visible !== false) && (
-        <Partners />
+        <Partners content={homeData?.partnersSection} />
       )}
 
       {/* Team Preview Section */}

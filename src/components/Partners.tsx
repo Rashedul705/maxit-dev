@@ -12,7 +12,7 @@ type Partner = {
   description?: string;
 };
 
-const Partners = ({ isGrid = false }: { isGrid?: boolean }) => {
+const Partners = ({ isGrid = false, content }: { isGrid?: boolean, content?: any }) => {
   const [partnersList, setPartnersList] = useState<Partner[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -51,11 +51,17 @@ const Partners = ({ isGrid = false }: { isGrid?: boolean }) => {
     <section className={`py-24 border-y border-white/10 overflow-hidden relative ${!isGrid ? 'bg-primary' : 'bg-[#f8fafe]'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 text-center">
         <h2 className={`text-4xl md:text-5xl font-bold font-heading mb-6 ${!isGrid ? 'text-white' : 'text-primary'}`}>
-          Technologies & Partners with <span className={!isGrid ? "text-yellow-400 drop-shadow-md" : "text-orange-500 font-black"}>Max iT</span>
+          {content?.headingNormal || "Technologies & Partners with "}<span className={!isGrid ? "text-yellow-400 drop-shadow-md" : "text-orange-500 font-black"}>{content?.headingHighlight || "Max iT"}</span>
         </h2>
-        <p className={`max-w-2xl mx-auto font-medium text-lg leading-relaxed ${!isGrid ? 'text-white/80' : 'text-gray-600'}`}>
-          We are proud to partner with top government institutions, corporations, educational facilities, and NGOs to deliver engineering excellence.
-        </p>
+        {content?.subtext ? (
+          <p className={`max-w-2xl mx-auto font-medium text-lg leading-relaxed ${!isGrid ? 'text-white/80' : 'text-gray-600'}`}>
+            {content.subtext}
+          </p>
+        ) : (
+          <p className={`max-w-2xl mx-auto font-medium text-lg leading-relaxed ${!isGrid ? 'text-white/80' : 'text-gray-600'}`}>
+            We are proud to partner with top government institutions, corporations, educational facilities, and NGOs to deliver engineering excellence.
+          </p>
+        )}
       </div>
 
       <style>{`
