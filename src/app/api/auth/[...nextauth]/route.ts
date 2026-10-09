@@ -4,7 +4,9 @@ import bcrypt from "bcryptjs";
 import dbConnect from "@/lib/mongodb";
 import Admin from "@/models/Admin";
 
-const handler = NextAuth({
+import { NextAuthOptions } from "next-auth";
+
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Admin Login",
@@ -55,6 +57,8 @@ const handler = NextAuth({
     }
   },
   secret: process.env.NEXTAUTH_SECRET || "fallback_secret_for_development_only_12345",
-});
+};
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };
