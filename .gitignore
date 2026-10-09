@@ -35,3 +35,7 @@ build
 tsconfig.tsbuildinfo
 
 .env
+
+# Backup files
+*_old.*
+*.bak

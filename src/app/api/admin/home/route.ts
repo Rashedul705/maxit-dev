@@ -128,7 +128,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     
     // Explicitly update all fields or create new document
-    const content = await HomeContent.findOneAndUpdate({}, body, { new: true, upsert: true });
+    const content = await (HomeContent.findOneAndUpdate as any)({}, body, { new: true, upsert: true });
     
     revalidatePath('/');
     

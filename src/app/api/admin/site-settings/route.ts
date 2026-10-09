@@ -102,7 +102,7 @@ export async function POST(request: Request) {
     await dbConnect();
     const body = await request.json();
     
-    const settings = await SiteSettings.findOneAndUpdate({}, body, { new: true, upsert: true });
+    const settings = await (SiteSettings.findOneAndUpdate as any)({}, body, { new: true, upsert: true });
 
     revalidatePath('/', 'layout');
     
