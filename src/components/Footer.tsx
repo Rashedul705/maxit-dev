@@ -40,9 +40,10 @@ const Footer = ({ siteSettings }: { siteSettings?: any }) => {
   if (pathname.startsWith('/admin')) return null;
 
   return (
-    <footer className="bg-slate-900 text-white relative overflow-hidden">
+    <footer className="bg-[#00008B] text-white relative overflow-hidden border-t border-white/10">
       {/* Background decoration */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-[100px] pointer-events-none transform translate-x-1/2 -translate-y-1/2"></div>
+      <div className="absolute bottom-0 left-0 w-80 h-80 bg-blue-400/10 rounded-full blur-[100px] pointer-events-none transform -translate-x-1/3 translate-y-1/3"></div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 text-center md:text-left">
@@ -53,7 +54,7 @@ const Footer = ({ siteSettings }: { siteSettings?: any }) => {
                 <img src={logoUrl} alt="Max iT Solution Logo" className="h-10 w-auto" />
               </div>
             </Link>
-            <p className="text-white/80 mb-8 max-w-md leading-relaxed mx-auto md:mx-0">
+            <p className="text-blue-100/80 mb-8 max-w-md leading-relaxed mx-auto md:mx-0 font-normal">
               {description}
             </p>
             <div className="flex space-x-4 justify-center md:justify-start">
@@ -72,15 +73,15 @@ const Footer = ({ siteSettings }: { siteSettings?: any }) => {
 
           {/* Quick Links */}
           <div className="flex flex-col items-center md:items-start">
-            <h3 className="text-lg font-semibold font-heading mb-6 tracking-wide uppercase text-white">Quick Links</h3>
+            <h3 className="text-lg font-bold font-heading mb-6 tracking-wide uppercase text-white">Quick Links</h3>
             <ul className="space-y-3 w-full">
               {quickLinks.map((link: any, index: number) => (
                 <li key={index} className="flex justify-center md:justify-start">
                   <Link 
                     href={link.link} 
-                    className="flex items-center text-white/80 hover:text-white transition-colors group"
+                    className="flex items-center text-blue-100/80 hover:text-white transition-colors group font-medium"
                   >
-                    <ArrowRight size={14} className="mr-2 opacity-0 -ml-4 group-hover:opacity-100 group-hover:ml-0 transition-all duration-300 hidden md:block text-white" />
+                    <ArrowRight size={14} className="mr-2 opacity-0 -ml-4 group-hover:opacity-100 group-hover:ml-0 transition-all duration-300 hidden md:block text-blue-300" />
                     <span>{link.label}</span>
                   </Link>
                 </li>
@@ -90,25 +91,25 @@ const Footer = ({ siteSettings }: { siteSettings?: any }) => {
 
           {/* Contact Info */}
           <div className="flex flex-col items-center md:items-start">
-            <h3 className="text-lg font-semibold font-heading mb-6 tracking-wide uppercase text-white">Contact</h3>
+            <h3 className="text-lg font-bold font-heading mb-6 tracking-wide uppercase text-white">Contact</h3>
             <ul className="space-y-4 w-full">
               <li className="flex items-center md:items-start justify-center md:justify-start space-x-3 group cursor-pointer">
                 <div className="p-2 rounded-lg bg-white/10 group-hover:bg-white/20 transition-colors mt-0 md:mt-0.5">
                   <Mail size={16} className="text-white" />
                 </div>
-                <span className="text-white/80 text-sm group-hover:text-white transition-colors">{email}</span>
+                <span className="text-blue-100/80 text-sm group-hover:text-white transition-colors font-medium">{email}</span>
               </li>
               <li className="flex items-center md:items-start justify-center md:justify-start space-x-3 group cursor-pointer">
                 <div className="p-2 rounded-lg bg-white/10 group-hover:bg-white/20 transition-colors mt-0 md:mt-0.5">
                   <Phone size={16} className="text-white" />
                 </div>
-                <span className="text-white/80 text-sm group-hover:text-white transition-colors">{phone}</span>
+                <span className="text-blue-100/80 text-sm group-hover:text-white transition-colors font-medium">{phone}</span>
               </li>
               <li className="flex items-center md:items-start justify-center md:justify-start space-x-3 group cursor-pointer text-left md:text-left">
                 <div className="p-2 rounded-lg bg-white/10 group-hover:bg-white/20 transition-colors mt-0 md:mt-0.5 flex-shrink-0">
                   <MapPin size={16} className="text-white" />
                 </div>
-                <span className="text-white/80 text-sm leading-relaxed group-hover:text-white transition-colors">
+                <span className="text-blue-100/80 text-sm leading-relaxed group-hover:text-white transition-colors font-medium">
                   {addressLine1}<br className="hidden md:block" />
                   <span className="md:hidden"> </span>{addressLine2}<br className="hidden md:block" />
                   <span className="md:hidden"> </span>{addressLine3}
@@ -118,11 +119,11 @@ const Footer = ({ siteSettings }: { siteSettings?: any }) => {
           </div>
         </div>
 
-        <div className="border-t border-white/10 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-white/60">
+        <div className="border-t border-white/10 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-blue-200/60">
           <p>{copyrightText}</p>
           <div className="flex space-x-6 mt-4 md:mt-0">
-            <Link href={privacyPolicyLink} className="hover:text-white transition-colors">Privacy Policy</Link>
-            <Link href={termsOfServiceLink} className="hover:text-white transition-colors">Terms of Service</Link>
+            <Link href={privacyPolicyLink} className="hover:text-white transition-colors font-medium">Privacy Policy</Link>
+            <Link href={termsOfServiceLink} className="hover:text-white transition-colors font-medium">Terms of Service</Link>
           </div>
         </div>
       </div>

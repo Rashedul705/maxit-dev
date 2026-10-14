@@ -31,7 +31,7 @@ const SiteSettingsSchema = new mongoose.Schema(
 
     // Header Settings
     headerLogo: { type: String, default: "/logo.png" },
-    navItems: [{ label: String, link: String, order: { type: Number, default: 0 } }],
+    navItems: [{ label: String, link: String, openInNewTab: { type: Boolean, default: false }, order: { type: Number, default: 0 } }],
 
     // Footer Settings
     footerLogo: { type: String, default: "/logo.png" },
@@ -48,7 +48,11 @@ const SiteSettingsSchema = new mongoose.Schema(
     footerAddressLine2: { type: String, default: "Uposhohor Newmarket," },
     footerAddressLine3: { type: String, default: "Rajshahi-6000" }
   },
-  { timestamps: true }
+  { timestamps: true, strict: false }
 );
+
+if (mongoose.models && (mongoose.models as any).SiteSettings) {
+  delete (mongoose.models as any).SiteSettings;
+}
 
 export default mongoose.models.SiteSettings || mongoose.model('SiteSettings', SiteSettingsSchema);

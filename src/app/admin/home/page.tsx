@@ -242,18 +242,52 @@ export default function HomeAdmin() {
                   <span className="text-xs text-gray-400">{siteSettings?.navItems?.length || 0} items</span>
                 </div>
                 {siteSettings?.navItems?.map((item: any, idx: number) => (
-                  <div key={idx} className="flex gap-2 items-center bg-gray-50 p-3 rounded-lg border">
+                  <div key={idx} className="flex flex-col sm:flex-row gap-2 items-start sm:items-center bg-gray-50 p-3 rounded-lg border">
                     <span className="text-xs text-gray-400 font-mono w-6 text-center">{idx + 1}</span>
-                    <input type="text" value={item.label} onChange={(e) => {
-                      const newArr = [...(siteSettings?.navItems || [])];
-                      newArr[idx] = { ...newArr[idx], label: e.target.value };
-                      updateSetting('navItems', newArr);
-                    }} className="flex-1 border p-2 rounded text-sm" placeholder="Label (e.g. Home)" />
-                    <input type="text" value={item.link} onChange={(e) => {
-                      const newArr = [...(siteSettings?.navItems || [])];
-                      newArr[idx] = { ...newArr[idx], link: e.target.value };
-                      updateSetting('navItems', newArr);
-                    }} className="flex-1 border p-2 rounded text-sm" placeholder="Link (e.g. /)" />
+                    <input 
+                      type="text" 
+                      value={item.label} 
+                      onChange={(e) => {
+                        const newArr = [...(siteSettings?.navItems || [])];
+                        newArr[idx] = { ...newArr[idx], label: e.target.value };
+                        updateSetting('navItems', newArr);
+                      }} 
+                      className="w-full sm:w-1/3 border p-2 rounded text-sm bg-white" 
+                      placeholder="Label (e.g. Shop)" 
+                    />
+                    <input 
+                      type="text" 
+                      value={item.link} 
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        const isExt = val.startsWith('http://') || val.startsWith('https://');
+                        const newArr = [...(siteSettings?.navItems || [])];
+                        newArr[idx] = { 
+                          ...newArr[idx], 
+                          link: val,
+                          openInNewTab: item.openInNewTab !== undefined ? item.openInNewTab : isExt
+                        };
+                        updateSetting('navItems', newArr);
+                      }} 
+                      className="flex-1 border p-2 rounded text-sm bg-white" 
+                      placeholder="Link (e.g. /shop or https://...)" 
+                    />
+                    
+                    {/* Open in New Tab Toggle */}
+                    <label className="flex items-center gap-1.5 text-xs text-gray-600 cursor-pointer whitespace-nowrap bg-white border px-2.5 py-2 rounded shadow-xs hover:bg-gray-50">
+                      <input
+                        type="checkbox"
+                        checked={item.openInNewTab || item.link?.startsWith('http://') || item.link?.startsWith('https://')}
+                        onChange={(e) => {
+                          const newArr = [...(siteSettings?.navItems || [])];
+                          newArr[idx] = { ...newArr[idx], openInNewTab: e.target.checked };
+                          updateSetting('navItems', newArr);
+                        }}
+                        className="rounded text-primary focus:ring-primary w-3.5 h-3.5 cursor-pointer"
+                      />
+                      <span>New Tab</span>
+                    </label>
+
                     {/* Move Up */}
                     <button
                       disabled={idx === 0}
@@ -286,7 +320,20 @@ export default function HomeAdmin() {
                     }} className="p-1.5 text-red-400 hover:text-red-600" title="Delete"><Trash2 size={16} /></button>
                   </div>
                 ))}
-                <button onClick={() => updateSetting('navItems', [...(siteSettings.navItems||[]), { label: 'New Page', link: '/', order: siteSettings.navItems?.length||0 }])} className="text-sm text-primary flex items-center mt-2 hover:underline"><Plus size={16} className="mr-1" /> Add Nav Item</button>
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pt-1">
+                  <button 
+                    onClick={() => updateSetting('navItems', [
+                      ...(siteSettings.navItems||[]), 
+                      { label: 'Shop', link: '#', openInNewTab: false, order: siteSettings.navItems?.length||0 }
+                    ])} 
+                    className="text-sm text-primary flex items-center hover:underline font-medium"
+                  >
+                    <Plus size={16} className="mr-1" /> Add Nav Item
+                  </button>
+                  <p className="text-xs text-gray-500">
+                    💡 Supports both internal routes (e.g. <code>/shop</code>) and external links (e.g. <code>https://store.example.com</code>).
+                  </p>
+                </div>
               </div>
             </div>
           )}

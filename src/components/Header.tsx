@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ExternalLink } from 'lucide-react';
 
 const Header = ({ siteSettings }: { siteSettings?: any }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -11,6 +11,12 @@ const Header = ({ siteSettings }: { siteSettings?: any }) => {
   const pathname = usePathname();
 
   const isActive = (path: string) => pathname === path;
+
+  const checkIsExternal = (link: string, openInNewTab?: boolean) => {
+    if (openInNewTab) return true;
+    if (!link || link === '#') return false;
+    return link.startsWith('http://') || link.startsWith('https://');
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,6 +30,7 @@ const Header = ({ siteSettings }: { siteSettings?: any }) => {
     { label: 'Home', link: '/' },
     { label: 'Services', link: '/services' },
     { label: 'Projects', link: '/projects' },
+    { label: 'Shop', link: '#' },
     { label: 'Team', link: '/team' },
     { label: 'About', link: '/about' },
     { label: 'Contact', link: '/contact' },
@@ -55,22 +62,35 @@ const Header = ({ siteSettings }: { siteSettings?: any }) => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-2">
-            {navItems.map((item: any, index: number) => (
-              <Link
-                key={index}
-                href={item.link}
-                className={`relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-md overflow-hidden group ${
-                  isActive(item.link)
-                    ? 'text-primary'
-                    : 'text-foreground hover:text-primary'
-                }`}
-              >
-                <span className="relative z-10">{item.label}</span>
-                {isActive(item.link) && (
-                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-0.5 rounded-full bg-primary transition-all"></span>
-                )}
-              </Link>
-            ))}
+            {navItems.map((item: any, index: number) => {
+              const isExternal = checkIsExternal(item.link, item.openInNewTab);
+              return (
+                <Link
+                  key={index}
+                  href={item.link || '#'}
+                  target={isExternal ? '_blank' : undefined}
+                  rel={isExternal ? 'noopener noreferrer' : undefined}
+                  onClick={(e) => {
+                    if (item.link === '#') {
+                      e.preventDefault();
+                    }
+                  }}
+                  className={`relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-md overflow-hidden group inline-flex items-center gap-1.5 ${
+                    isActive(item.link)
+                      ? 'text-primary'
+                      : 'text-foreground hover:text-primary'
+                  }`}
+                >
+                  <span className="relative z-10">{item.label}</span>
+                  {isExternal && (
+                    <ExternalLink size={12} className="relative z-10 opacity-60 group-hover:opacity-100 transition-opacity" />
+                  )}
+                  {isActive(item.link) && (
+                    <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-0.5 rounded-full bg-primary transition-all"></span>
+                  )}
+                </Link>
+              );
+            })}
           </nav>
 
           {/* Desktop CTA */}
@@ -99,20 +119,31 @@ const Header = ({ siteSettings }: { siteSettings?: any }) => {
           }`}
         >
           <nav className="flex flex-col p-4 space-y-2">
-            {navItems.map((item: any, index: number) => (
-              <Link
-                key={index}
-                href={item.link}
-                className={`px-4 py-3 text-base font-medium rounded-md transition-colors duration-200 ${
-                  isActive(item.link)
-                    ? 'text-primary bg-primary/5'
-                    : 'text-foreground hover:text-primary hover:bg-gray-50'
-                }`}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {item.label}
-              </Link>
-            ))}
+            {navItems.map((item: any, index: number) => {
+              const isExternal = checkIsExternal(item.link, item.openInNewTab);
+              return (
+                <Link
+                  key={index}
+                  href={item.link || '#'}
+                  target={isExternal ? '_blank' : undefined}
+                  rel={isExternal ? 'noopener noreferrer' : undefined}
+                  className={`px-4 py-3 text-base font-medium rounded-md transition-colors duration-200 flex items-center justify-between ${
+                    isActive(item.link)
+                      ? 'text-primary bg-primary/5'
+                      : 'text-foreground hover:text-primary hover:bg-gray-50'
+                  }`}
+                  onClick={(e) => {
+                    if (item.link === '#') {
+                      e.preventDefault();
+                    }
+                    setIsMenuOpen(false);
+                  }}
+                >
+                  <span>{item.label}</span>
+                  {isExternal && <ExternalLink size={14} className="opacity-60" />}
+                </Link>
+              );
+            })}
             <div className="pt-4 mt-2 border-t">
               <Link 
                 href={contactBtnLink} 

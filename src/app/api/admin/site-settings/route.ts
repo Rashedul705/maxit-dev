@@ -30,9 +30,10 @@ const DEFAULT_SETTINGS = {
     { label: "Home", link: "/", order: 0 },
     { label: "Services", link: "/services", order: 1 },
     { label: "Projects", link: "/projects", order: 2 },
-    { label: "Team", link: "/team", order: 3 },
-    { label: "About", link: "/about", order: 4 },
-    { label: "Contact", link: "/contact", order: 5 }
+    { label: "Shop", link: "#", order: 3 },
+    { label: "Team", link: "/team", order: 4 },
+    { label: "About", link: "/about", order: 5 },
+    { label: "Contact", link: "/contact", order: 6 }
   ],
   navbarContactButtonText: "Get Started",
   navbarContactButtonLink: "/contact",
@@ -102,9 +103,15 @@ export async function POST(request: Request) {
     await dbConnect();
     const body = await request.json();
     
-    const settings = await (SiteSettings.findOneAndUpdate as any)({}, body, { new: true, upsert: true });
+    const { _id, __v, createdAt, updatedAt, ...updateData } = body;
+    const settings = await (SiteSettings.findOneAndUpdate as any)(
+      {},
+      { $set: updateData },
+      { new: true, upsert: true, returnDocument: 'after' }
+    );
 
     revalidatePath('/', 'layout');
+    revalidatePath('/', 'page');
     
     return NextResponse.json(settings);
   } catch (error) {
