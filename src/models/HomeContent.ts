@@ -26,7 +26,12 @@ const HomeContentSchema = new mongoose.Schema(
         title: String,
         description: String,
         order: { type: Number, default: 0 }
-      }]
+      }],
+      button: {
+        visible: { type: Boolean, default: true },
+        label: { type: String, default: 'Explore All Services' },
+        link: { type: String, default: '/services' }
+      }
     },
 
     milestones: {
@@ -130,7 +135,11 @@ const HomeContentSchema = new mongoose.Schema(
       backgroundImage: { type: String, default: '/images/slides/commercial_rooftop_slide_1789677880098.jpg' }
     }
   },
-  { timestamps: true }
+  { timestamps: true, strict: false }
 );
+
+if (mongoose.models && (mongoose.models as any).HomeContent) {
+  delete (mongoose.models as any).HomeContent;
+}
 
 export default mongoose.models.HomeContent || mongoose.model('HomeContent', HomeContentSchema);

@@ -32,7 +32,12 @@ const DEFAULT_HOME = {
       { icon: 'Sprout', isCustomIcon: false, title: 'Solar Pump & Smart Irrigation', description: 'Advanced solar-powered pumping systems.', order: 1 },
       { icon: 'Cpu', isCustomIcon: false, title: 'Industrial Automation', description: 'Smart control systems for industries.', order: 2 },
       { icon: 'Wifi', isCustomIcon: false, title: 'Networking Services', description: 'Robust network infrastructure design.', order: 3 }
-    ]
+    ],
+    button: {
+      visible: true,
+      label: 'Explore All Services',
+      link: '/services'
+    }
   },
   milestones: {
     visible: true,
@@ -127,10 +132,17 @@ export async function POST(request: Request) {
     await dbConnect();
     const body = await request.json();
     
-    // Explicitly update all fields or create new document
-    const content = await (HomeContent.findOneAndUpdate as any)({}, body, { new: true, upsert: true });
+    const { _id, __v, createdAt, updatedAt, ...updateData } = body;
     
-    revalidatePath('/');
+    // Explicitly update all fields or create new document
+    const content = await (HomeContent.findOneAndUpdate as any)(
+      {},
+      { $set: updateData },
+      { new: true, upsert: true, returnDocument: 'after' }
+    );
+    
+    revalidatePath('/', 'page');
+    revalidatePath('/', 'layout');
     
     return NextResponse.json(content);
   } catch (error) {

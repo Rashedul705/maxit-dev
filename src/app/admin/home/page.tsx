@@ -33,6 +33,14 @@ export default function HomeAdmin() {
       const homeJson = await homeRes.json();
       const settingsJson = await settingsRes.json();
       
+      if (homeJson.servicesSection && !homeJson.servicesSection.button) {
+        homeJson.servicesSection.button = {
+          visible: true,
+          label: 'Explore All Services',
+          link: '/services'
+        };
+      }
+      
       setHomeData(homeJson);
       setDefaultHomeData(homeJson); // Storing initial fetch as default for simplicity, or we can fetch a specific /default route
       
@@ -114,6 +122,27 @@ export default function HomeAdmin() {
 
   const updateHome = (section: string, field: string, value: any) => {
     setHomeData({ ...homeData, [section]: { ...homeData[section], [field]: value } });
+  };
+
+  const updateServiceButton = (field: string, value: any) => {
+    setHomeData((prev: any) => {
+      const currentSection = prev.servicesSection || {};
+      const currentButton = currentSection.button || {
+        visible: true,
+        label: 'Explore All Services',
+        link: '/services'
+      };
+      return {
+        ...prev,
+        servicesSection: {
+          ...currentSection,
+          button: {
+            ...currentButton,
+            [field]: value
+          }
+        }
+      };
+    });
   };
 
   const updateSetting = (field: string, value: any) => {
@@ -363,6 +392,51 @@ export default function HomeAdmin() {
               </div>
               <div><label className="block text-sm font-medium mb-1">Subtext</label><textarea rows={2} value={homeData.servicesSection?.subtext || ''} onChange={(e) => updateHome('servicesSection', 'subtext', e.target.value)} className="w-full border p-2 rounded" /></div>
               
+              <div className="border-t pt-5 space-y-4">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <h3 className="text-base font-semibold text-gray-800">Action Button</h3>
+                    <p className="text-xs text-gray-500">Call-to-action button displayed under the services grid</p>
+                  </div>
+                  <label className="flex items-center gap-2 cursor-pointer bg-gray-50 hover:bg-gray-100 border px-3 py-1.5 rounded-lg transition-colors">
+                    <input
+                      type="checkbox"
+                      checked={homeData.servicesSection?.button?.visible ?? true}
+                      onChange={(e) => updateServiceButton('visible', e.target.checked)}
+                      className="rounded text-primary focus:ring-primary w-4 h-4 cursor-pointer"
+                    />
+                    <span className="text-sm font-medium text-gray-700">
+                      {(homeData.servicesSection?.button?.visible ?? true) ? 'Visible' : 'Hidden'}
+                    </span>
+                  </label>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Button Label</label>
+                    <input
+                      type="text"
+                      disabled={homeData.servicesSection?.button?.visible === false}
+                      value={homeData.servicesSection?.button?.label ?? 'Explore All Services'}
+                      onChange={(e) => updateServiceButton('label', e.target.value)}
+                      className="w-full border p-2 rounded disabled:bg-gray-100 disabled:text-gray-400"
+                      placeholder="Explore All Services"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Button Link</label>
+                    <input
+                      type="text"
+                      disabled={homeData.servicesSection?.button?.visible === false}
+                      value={homeData.servicesSection?.button?.link ?? '/services'}
+                      onChange={(e) => updateServiceButton('link', e.target.value)}
+                      className="w-full border p-2 rounded disabled:bg-gray-100 disabled:text-gray-400"
+                      placeholder="/services"
+                    />
+                  </div>
+                </div>
+              </div>
+
               <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded mt-6">
                 <p className="text-sm text-blue-700">
                   <strong>Note:</strong> Service cards on the home page are automatically pulled from your Services database. 

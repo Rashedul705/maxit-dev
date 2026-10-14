@@ -37,12 +37,12 @@ const TestimonialCard = ({ name, company, testimonial, rating, image }: Testimon
       </p>
       
       <div className="flex items-center space-x-4 relative z-10 pt-6 border-t border-white/10 mt-auto">
-        <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-accent/20 group-hover:border-accent transition-colors duration-300 shadow-lg">
+        <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-white/20 group-hover:border-white/50 transition-colors duration-300 shadow-lg">
           <img src={image} alt={name} className="w-full h-full object-cover" />
         </div>
         <div>
           <div className="font-bold font-heading text-white text-lg">{name}</div>
-          <div className="text-sm text-accent font-medium tracking-wide uppercase">{company}</div>
+          <div className="text-sm text-blue-200 font-medium tracking-wide uppercase">{company}</div>
         </div>
       </div>
     </div>

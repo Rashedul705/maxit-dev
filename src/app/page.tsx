@@ -214,26 +214,39 @@ const Index = async () => {
               };
               
               return (
-              <div 
-                key={service._id || index} 
-                className="flex flex-col items-center p-10 group transition-colors hover:bg-gray-50/50 bg-white text-center"
+              <Link 
+                key={service._id || index}
+                href={homeData?.servicesSection?.button?.link || "/services"} 
+                className="flex flex-col items-center p-10 group transition-all duration-300 hover:bg-gray-50/80 bg-white text-center cursor-pointer"
               >
-                <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center border-2 border-primary/20 group-hover:border-primary/50 transition-colors mb-6 shadow-sm overflow-hidden">
+                <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center border-2 border-primary/20 group-hover:border-primary/50 group-hover:scale-105 transition-all mb-6 shadow-sm overflow-hidden">
                   {service.iconUrl ? (
                     <img src={service.iconUrl} alt={service.title} className="w-10 h-10 object-contain" />
                   ) : (
                     (service.iconCategory || service.icon) && iconMap[service.iconCategory || service.icon] ? iconMap[service.iconCategory || service.icon] : <Settings className="w-8 h-8 text-primary" />
                   )}
                 </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-3">{service.title}</h3>
+                <h3 className="text-lg font-bold text-gray-900 group-hover:text-primary transition-colors mb-3">{service.title}</h3>
                 {service.subServices && service.subServices.length > 0 && (
                   <p className="text-sm text-gray-500 leading-relaxed max-w-sm">
                     {service.subServices.join(" • ")}
                   </p>
                 )}
-              </div>
+              </Link>
             )})}
           </div>
+
+          {homeData?.servicesSection?.button?.visible !== false && (
+            <div className="text-center mt-12">
+              <Link
+                href={homeData?.servicesSection?.button?.link || "/services"}
+                className="inline-flex items-center px-8 py-4 bg-primary text-white font-semibold rounded-2xl hover:bg-primary/90 shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 transform hover:-translate-y-1 group"
+              >
+                {homeData?.servicesSection?.button?.label || "Explore All Services"}
+                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+          )}
         </div>
       </section>
       )}
