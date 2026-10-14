@@ -2,82 +2,176 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import Conversation from '@/models/Conversation';
 import Message from '@/models/Message';
-import { sendContactEmail } from '@/lib/mailer';
+import { sendAdminNewMessageEmail, sendVisitorConfirmationEmail } from '@/lib/mail';
 
-// Simple in-memory rate limiting for the contact route
-const rateLimitMap = new Map<string, { count: number, timestamp: number }>();
+// In-memory rate limiting map: IP -> { count, timestamp }
+const rateLimitMap = new Map<string, { count: number; timestamp: number }>();
 const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
-const MAX_REQUESTS = 3;
+const MAX_REQUESTS_PER_WINDOW = 5;
+
+// Periodically prune stale rate limit entries
+function cleanupRateLimitMap() {
+  const now = Date.now();
+  for (const [ip, entry] of rateLimitMap.entries()) {
+    if (now - entry.timestamp > RATE_LIMIT_WINDOW * 2) {
+      rateLimitMap.delete(ip);
+    }
+  }
+}
 
 export async function POST(req: Request) {
   try {
-    const ip = req.headers.get('x-forwarded-for') || 'unknown';
+    // 1. IP extraction & Rate limiting
+    const forwarded = req.headers.get('x-forwarded-for');
+    const ip = forwarded ? forwarded.split(',')[0].trim() : '127.0.0.1';
     const now = Date.now();
+
+    cleanupRateLimitMap();
+
     const rateData = rateLimitMap.get(ip) || { count: 0, timestamp: now };
-    
     if (now - rateData.timestamp > RATE_LIMIT_WINDOW) {
       rateData.count = 1;
       rateData.timestamp = now;
     } else {
-      rateData.count++;
-      if (rateData.count > MAX_REQUESTS) {
-        return NextResponse.json({ error: 'Too many requests, please try again later.' }, { status: 429 });
+      rateData.count += 1;
+      if (rateData.count > MAX_REQUESTS_PER_WINDOW) {
+        return NextResponse.json(
+          { error: 'Too many requests. Please wait a minute and try again.' },
+          { status: 429 }
+        );
       }
     }
     rateLimitMap.set(ip, rateData);
 
-    const { name, email, message: body, honeypot } = await req.json();
+    // 2. Parse request body
+    const bodyJson = await req.json();
+    const { name, email, phone, subject, message: messageText, honeypot } = bodyJson;
 
+    // Honeypot spam protection: bots fill invisible fields
     if (honeypot) {
-      // Spam detected via honeypot
-      return NextResponse.json({ success: true }); // pretend it succeeded
+      console.warn(`[Spam Blocked] Submission with honeypot detected from IP: ${ip}`);
+      return NextResponse.json({ success: true, message: 'Message received.' });
     }
 
-    if (!name || !email || !body) {
-      return NextResponse.json({ error: 'Name, email, and message are required.' }, { status: 400 });
+    // 3. Validation
+    if (!name || typeof name !== 'string' || name.trim().length === 0) {
+      return NextResponse.json({ error: 'Full name is required.' }, { status: 400 });
     }
+
+    if (!email || typeof email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      return NextResponse.json({ error: 'A valid email address is required.' }, { status: 400 });
+    }
+
+    if (!messageText || typeof messageText !== 'string' || messageText.trim().length === 0) {
+      return NextResponse.json({ error: 'Message content cannot be empty.' }, { status: 400 });
+    }
+
+    const cleanName = name.trim();
+    const cleanEmail = email.trim().toLowerCase();
+    const cleanPhone = phone && typeof phone === 'string' ? phone.trim() : undefined;
+    const cleanSubject = subject && typeof subject === 'string' && subject.trim().length > 0 
+      ? subject.trim() 
+      : 'Website Inquiry';
+    const cleanBody = messageText.trim();
 
     await dbConnect();
 
-    // 1. Save to Database
-    let conversation = await Conversation.findOne({ email });
+    // 4. Create unique Message-ID for email thread referencing in Gmail
+    const domain = (process.env.SITE_URL || 'https://m4xit.com').replace(/^https?:\/\//, '').replace(/\/.*$/, '') || 'm4xit.com';
+    const threadMessageId = `<msg-${Date.now()}-${Math.random().toString(36).substring(2, 9)}@${domain}>`;
 
-    if (!conversation) {
-      conversation = new Conversation({
-        name,
-        email,
-        status: 'new',
-        unreadCount: 1,
-      });
-    } else {
-      conversation.status = 'open';
-      conversation.unreadCount += 1;
-      conversation.name = name; // Update name in case they changed it
-      conversation.lastMessageAt = new Date();
-    }
-    
+    // 5. Save to database as a new conversation with status "unread"
+    const conversation = new Conversation({
+      name: cleanName,
+      email: cleanEmail,
+      phone: cleanPhone,
+      subject: cleanSubject,
+      status: 'unread',
+      unreadCount: 1,
+      lastMessagePreview: cleanBody.substring(0, 160),
+      threadMessageId,
+      emailStatus: 'pending',
+      lastMessageAt: new Date(),
+    });
     await conversation.save();
 
     const newMessage = new Message({
       conversationId: conversation._id,
       direction: 'incoming',
-      body,
+      senderName: cleanName,
+      senderEmail: cleanEmail,
+      subject: cleanSubject,
+      body: cleanBody,
+      messageId: threadMessageId,
+      emailStatus: 'pending',
     });
-    
     await newMessage.save();
 
-    // 2. Send Email Notification
+    // 6. Send notification emails asynchronously (Admin + Visitor)
+    // If email sending fails, we STILL return success to the visitor and log the error.
+    let overallEmailStatus: 'sent' | 'failed' = 'sent';
+    let emailErrorMsg: string | undefined;
+
     try {
-      await sendContactEmail(name, email, body);
-    } catch (emailError) {
-      console.error('Failed to send SMTP email notification:', emailError);
-      // We don't fail the request if the email fails, since the DB save succeeded
+      const [adminResult, visitorResult] = await Promise.allSettled([
+        sendAdminNewMessageEmail({
+          conversationId: conversation._id.toString(),
+          name: cleanName,
+          email: cleanEmail,
+          phone: cleanPhone,
+          subject: cleanSubject,
+          message: cleanBody,
+          threadMessageId,
+        }),
+        sendVisitorConfirmationEmail({
+          name: cleanName,
+          email: cleanEmail,
+          phone: cleanPhone,
+          subject: cleanSubject,
+          message: cleanBody,
+          threadMessageId,
+        }),
+      ]);
+
+      const adminFailed = adminResult.status === 'rejected' || (adminResult.status === 'fulfilled' && !adminResult.value.success);
+      const visitorFailed = visitorResult.status === 'rejected' || (visitorResult.status === 'fulfilled' && !visitorResult.value.success);
+
+      if (adminFailed || visitorFailed) {
+        overallEmailStatus = 'failed';
+        emailErrorMsg = [
+          adminFailed ? `Admin email error: ${adminResult.status === 'rejected' ? adminResult.reason : (adminResult as any).value?.error}` : null,
+          visitorFailed ? `Visitor email error: ${visitorResult.status === 'rejected' ? visitorResult.reason : (visitorResult as any).value?.error}` : null,
+        ].filter(Boolean).join('; ');
+
+        console.error('[Contact Email Warning]', emailErrorMsg);
+      }
+    } catch (sendErr: any) {
+      overallEmailStatus = 'failed';
+      emailErrorMsg = sendErr?.message || 'Unexpected email sending failure';
+      console.error('[Contact Email Exception]', sendErr);
     }
 
-    return NextResponse.json({ success: true, message: 'Message sent successfully.' });
+    // Update emailStatus on conversation and message records
+    conversation.emailStatus = overallEmailStatus;
+    await conversation.save();
 
-  } catch (error) {
-    console.error('Contact API Error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    newMessage.emailStatus = overallEmailStatus;
+    if (emailErrorMsg) {
+      newMessage.errorDetails = emailErrorMsg;
+    }
+    await newMessage.save();
+
+    return NextResponse.json({
+      success: true,
+      message: 'Thank you! Your message has been sent successfully.',
+      conversationId: conversation._id,
+    });
+
+  } catch (error: any) {
+    console.error('Contact Form Submission Error:', error);
+    return NextResponse.json(
+      { error: 'An unexpected error occurred while sending your message. Please try again.' },
+      { status: 500 }
+    );
   }
 }

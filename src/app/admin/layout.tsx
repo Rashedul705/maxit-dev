@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
@@ -29,11 +29,30 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState<number>(0);
   const pathname = usePathname();
+
+  useEffect(() => {
+    fetchUnreadCount();
+    const interval = setInterval(fetchUnreadCount, 25000);
+    return () => clearInterval(interval);
+  }, [pathname]);
+
+  const fetchUnreadCount = async () => {
+    try {
+      const res = await fetch('/api/admin/inbox/unread-count');
+      if (res.ok) {
+        const data = await res.json();
+        setUnreadCount(data.unreadCount || 0);
+      }
+    } catch {
+      // Ignore background fetch error
+    }
+  };
 
   const navItems = [
     { name: 'Dashboard', path: '/admin', icon: LayoutDashboard },
-    { name: 'Inbox', path: '/admin/inbox', icon: MessageSquare },
+    { name: 'Inbox', path: '/admin/inbox', icon: MessageSquare, badge: unreadCount },
     { name: 'Home Page Editor', path: '/admin/home', icon: FileText },
     { name: 'Team Members', path: '/admin/team', icon: Users },
     { name: 'About Section', path: '/admin/about', icon: FileText },
@@ -65,15 +84,22 @@ export default function AdminLayout({
             <Link 
               key={item.name}
               href={item.path} 
-              className={`flex items-center px-4 py-3 rounded-xl transition-colors font-medium ${
+              className={`flex items-center px-4 py-3 rounded-xl transition-colors font-medium relative ${
                 isActive 
                   ? 'bg-primary text-white shadow-md' 
                   : 'text-gray-700 hover:bg-primary/5 hover:text-primary'
               }`}
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              <item.icon className="w-5 h-5 mr-3" />
-              {item.name}
+              <item.icon className="w-5 h-5 mr-3 flex-shrink-0" />
+              <span className="flex-1">{item.name}</span>
+              {item.name === 'Inbox' && item.badge > 0 && (
+                <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${
+                  isActive ? 'bg-white text-primary' : 'bg-red-500 text-white shadow-sm'
+                }`}>
+                  {item.badge}
+                </span>
+              )}
             </Link>
           );
         })}
