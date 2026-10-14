@@ -12,6 +12,7 @@ export async function GET() {
         addressLine2: 'Uposhohor Newmarket,',
         addressLine3: 'Rajshahi-6000',
         phoneNumber: '+88 01733-272445',
+        whatsappNumber: '01733272445',
         email: 'sales@m4xit.com',
         facebookUrl: '#',
         linkedinUrl: '#',
@@ -36,6 +37,7 @@ export async function POST(request: Request) {
       contact.addressLine2 = body.addressLine2;
       contact.addressLine3 = body.addressLine3;
       contact.phoneNumber = body.phoneNumber;
+      contact.whatsappNumber = body.whatsappNumber || '01733272445';
       contact.email = body.email;
       contact.facebookUrl = body.facebookUrl;
       contact.linkedinUrl = body.linkedinUrl;

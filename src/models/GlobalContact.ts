@@ -18,6 +18,10 @@ const GlobalContactSchema = new mongoose.Schema(
       type: String,
       default: '+88 01733-272445',
     },
+    whatsappNumber: {
+      type: String,
+      default: '01733272445',
+    },
     email: {
       type: String,
       default: 'sales@m4xit.com',

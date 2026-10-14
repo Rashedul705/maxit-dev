@@ -8,6 +8,7 @@ type GlobalContact = {
   addressLine2: string;
   addressLine3: string;
   phoneNumber: string;
+  whatsappNumber?: string;
   email: string;
   facebookUrl: string;
   linkedinUrl: string;
@@ -178,7 +179,7 @@ export default function ContactManagement() {
           <div className="space-y-4">
             <h3 className="text-xl font-bold text-gray-900 border-b border-gray-100 pb-2">Primary Contact</h3>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
                 <input
@@ -196,6 +197,16 @@ export default function ContactManagement() {
                   required
                   value={content.phoneNumber}
                   onChange={(e) => setContent({ ...content, phoneNumber: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">WhatsApp Number</label>
+                <input
+                  type="text"
+                  value={content.whatsappNumber || "01733272445"}
+                  onChange={(e) => setContent({ ...content, whatsappNumber: e.target.value })}
+                  placeholder="01733272445"
                   className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20"
                 />
               </div>
