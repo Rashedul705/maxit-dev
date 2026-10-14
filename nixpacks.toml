@@ -1,6 +1,7 @@
 [variables]
 PUPPETEER_SKIP_DOWNLOAD = "true"
-NODE_OPTIONS = "--max-old-space-size=4096"
+NODE_OPTIONS = "--max-old-space-size=2048"
+NEXT_TELEMETRY_DISABLED = "1"
 
 [phases.setup]
 nixPkgs = ["nodejs_22"]
