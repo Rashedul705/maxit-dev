@@ -101,6 +101,18 @@ const healthHandler = (req: express.Request, res: express.Response) => {
 app.get('/health', healthHandler);
 app.get('/api/health', healthHandler);
 
+// Root endpoint for API status
+app.get('/', (req, res) => {
+  const dbState = getDbState();
+  res.status(200).json({
+    name: 'MaxIT Backend API',
+    status: 'running',
+    db: dbState,
+    health: '/health',
+    timestamp: new Date().toISOString(),
+  });
+});
+
 // Configure upload directory on startup (mount point for Coolify volume)
 const uploadsDir = getUploadsDirectory();
 if (!fs.existsSync(uploadsDir)) {
