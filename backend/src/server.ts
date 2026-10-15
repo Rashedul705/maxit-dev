@@ -43,12 +43,21 @@ app.use(helmet({
   crossOriginResourcePolicy: { policy: 'cross-origin' },
 }));
 
-// 3. CORS: Allow FRONTEND_URL with credentials
+// 3. CORS: Allow FRONTEND_URL with credentials (supports www and apex domain)
+const configuredFrontend = (process.env.FRONTEND_URL || 'http://localhost:3000').replace(/\/$/, '');
+const allowedOrigins = [
+  configuredFrontend,
+  configuredFrontend.replace('://www.', '://'),
+  configuredFrontend.replace('://', '://www.'),
+  'https://www.m4xit.com',
+  'https://m4xit.com',
+];
+
 app.use(cors({
   origin: (origin, callback) => {
     const isAllowed = 
       !origin || 
-      origin === FRONTEND_URL || 
+      allowedOrigins.includes(origin) || 
       (process.env.NODE_ENV !== 'production' && (origin === 'http://localhost:3000' || origin === 'http://127.0.0.1:3000'));
     
     if (isAllowed) {
