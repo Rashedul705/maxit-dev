@@ -27,6 +27,7 @@ import uploadRoutes from './routes/upload.routes.js';
 
 import fs from 'fs';
 import { getUploadsDirectory } from './routes/upload.routes.js';
+import { renderStatusPage } from './views/statusPage.js';
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -101,9 +102,23 @@ const healthHandler = (req: express.Request, res: express.Response) => {
 app.get('/health', healthHandler);
 app.get('/api/health', healthHandler);
 
-// Root endpoint for API status
+// Root endpoint for API status (renders sleek infrastructure dashboard or JSON)
 app.get('/', (req, res) => {
   const dbState = getDbState();
+  const acceptsHtml = req.accepts('html', 'json') === 'html';
+
+  if (acceptsHtml && !req.xhr && !req.headers['x-requested-with']) {
+    return res.status(200).send(renderStatusPage({
+      uptimeSeconds: Math.floor(process.uptime()),
+      environment: process.env.NODE_ENV || 'production',
+      port: PORT,
+      dbStatus: dbState,
+      dbSystem: 'MongoDB Atlas',
+      emailSyncStatus: 'Active',
+      syncIntervalSeconds: Number(process.env.SYNC_INTERVAL_SECONDS || 15),
+    }));
+  }
+
   res.status(200).json({
     name: 'MaxIT Backend API',
     status: 'running',
