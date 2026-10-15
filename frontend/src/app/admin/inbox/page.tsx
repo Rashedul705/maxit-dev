@@ -55,6 +55,7 @@ function InboxContent() {
   const urlConvoId = searchParams.get('id');
 
   const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [isLoadingConversations, setIsLoadingConversations] = useState(true);
   const [selectedConvoId, setSelectedConvoId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
@@ -79,27 +80,36 @@ function InboxContent() {
   const [showListOnMobile, setShowListOnMobile] = useState(true);
 
   // Fetch conversations matching current filter and search
-  const fetchConversations = async (targetFilter = filter, targetSearch = search) => {
+  const fetchConversations = async (targetFilter = filter, targetSearch = search, isInitial = false) => {
+    if (isInitial && conversations.length === 0) {
+      setIsLoadingConversations(true);
+    }
     try {
       const params = new URLSearchParams();
       if (targetFilter !== 'all') params.set('filter', targetFilter);
       if (targetSearch.trim()) params.set('search', targetSearch.trim());
       const queryStr = params.toString() ? `?${params.toString()}` : '';
 
-      const res = await fetch(`/api/admin/inbox${queryStr}`);
+      const res = await fetch(`/api/admin/inbox${queryStr}`, {
+        cache: 'no-store',
+      });
       if (res.ok) {
         const data = await res.json();
         setConversations(data);
+      } else if (res.status === 401) {
+        window.location.href = '/admin/login';
       }
     } catch (err) {
       console.error('Error fetching conversations:', err);
+    } finally {
+      setIsLoadingConversations(false);
     }
   };
 
   // Initial load & Polling (every 8 seconds for real-time responsiveness)
   useEffect(() => {
-    fetchConversations(filter, search);
-    const interval = setInterval(() => fetchConversations(filter, search), 8000);
+    fetchConversations(filter, search, true);
+    const interval = setInterval(() => fetchConversations(filter, search, false), 8000);
     return () => clearInterval(interval);
   }, [filter, search]);
 
@@ -145,7 +155,9 @@ function InboxContent() {
       setIsLoadingMessages(true);
     }
     try {
-      const res = await fetch(`/api/admin/inbox/${convoId}`);
+      const res = await fetch(`/api/admin/inbox/${convoId}`, {
+        cache: 'no-store',
+      });
       if (res.ok) {
         const data = await res.json();
         setMessages(data.messages || []);
@@ -314,7 +326,7 @@ function InboxContent() {
         <div className="flex items-center gap-2">
           <span className="font-semibold text-gray-800">Admin Inbox</span>
           <span>&bull;</span>
-          <span>{conversations.length} total conversations</span>
+          <span>{isLoadingConversations && conversations.length === 0 ? 'Loading...' : `${conversations.length} total conversations`}</span>
           {unreadTotal > 0 && (
             <span className="bg-red-100 text-red-700 font-bold px-2 py-0.5 rounded-full text-[11px]">
               {unreadTotal} unread
@@ -401,7 +413,13 @@ function InboxContent() {
           </div>
 
           <div className="flex-1 overflow-y-auto divide-y divide-gray-100 bg-white">
-            {filteredConversations.length === 0 ? (
+            {isLoadingConversations && conversations.length === 0 ? (
+              <div className="p-12 text-center text-gray-400 text-sm flex flex-col items-center justify-center">
+                <RefreshCw className="w-8 h-8 text-primary animate-spin mb-3" />
+                <p className="font-semibold text-gray-700">Loading inbox conversations...</p>
+                <p className="text-xs text-gray-400 mt-1">Fetching live chat threads</p>
+              </div>
+            ) : filteredConversations.length === 0 ? (
               <div className="p-10 text-center text-gray-500 text-sm flex flex-col items-center">
                 <Mail className="w-10 h-10 text-gray-300 mb-2" />
                 <p className="font-medium text-gray-600">No conversations found.</p>

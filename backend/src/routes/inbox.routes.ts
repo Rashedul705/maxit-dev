@@ -18,10 +18,11 @@ const router = Router();
 // GET /api/admin/inbox - List conversations
 router.get('/admin/inbox', requireAuth, async (req: AuthRequest, res: Response) => {
   try {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
     startImapScheduler();
 
-    // Opportunistically sync incoming replies from Gmail
-    await syncReplies().catch(err => console.error('[Inbox Auto-Sync Error]', err));
+    // Trigger sync in background without blocking database query response
+    syncReplies().catch(err => console.error('[Inbox Auto-Sync Error]', err));
 
     const search = typeof req.query.search === 'string' ? req.query.search.trim() : '';
     const filter = typeof req.query.filter === 'string' ? req.query.filter : 'all';
@@ -60,6 +61,7 @@ router.get('/admin/inbox', requireAuth, async (req: AuthRequest, res: Response) 
 // GET /api/admin/inbox/unread-count
 router.get('/admin/inbox/unread-count', requireAuth, async (req: AuthRequest, res: Response) => {
   try {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
     await dbConnect();
     const count = await Conversation.countDocuments({
       status: { $ne: 'archived' },
@@ -271,10 +273,11 @@ router.post('/inbox/sync', cronOrAuth, async (req: Request, res: Response) => {
 // GET /api/admin/inbox/:id - Get conversation detail & messages
 router.get('/admin/inbox/:id', requireAuth, async (req: AuthRequest, res: Response) => {
   try {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
     const { id } = req.params;
 
-    // Opportunistically sync incoming replies from Gmail
-    await syncReplies().catch(err => console.error('[Inbox Detail Auto-Sync Error]', err));
+    // Trigger sync in background without blocking message retrieval
+    syncReplies().catch(err => console.error('[Inbox Detail Auto-Sync Error]', err));
 
     await dbConnect();
 
