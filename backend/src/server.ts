@@ -15,7 +15,7 @@ if (!process.env.JWT_SECRET) {
   process.exit(1);
 }
 
-import dbConnect from './db.js';
+import dbConnect, { getDbState } from './db.js';
 import { startImapScheduler, stopImapScheduler } from './services/imapScheduler.service.js';
 
 // Route modules
@@ -85,14 +85,21 @@ const contactLimiter = rateLimit({
   validate: { xForwardedForHeader: false },
 });
 
-// Health check endpoints
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'ok', uptime: process.uptime(), timestamp: new Date().toISOString() });
-});
+// Health check endpoints (reports server uptime & database connection status)
+const healthHandler = (req: express.Request, res: express.Response) => {
+  const dbState = getDbState();
+  const isHealthy = dbState === 'connected';
 
-app.get('/api/health', (req, res) => {
-  res.status(200).json({ status: 'ok', uptime: process.uptime(), timestamp: new Date().toISOString() });
-});
+  res.status(isHealthy ? 200 : 503).json({
+    status: isHealthy ? 'ok' : 'degraded',
+    db: dbState,
+    uptime: Math.floor(process.uptime()),
+    timestamp: new Date().toISOString(),
+  });
+};
+
+app.get('/health', healthHandler);
+app.get('/api/health', healthHandler);
 
 // Configure upload directory on startup (mount point for Coolify volume)
 const uploadsDir = getUploadsDirectory();
