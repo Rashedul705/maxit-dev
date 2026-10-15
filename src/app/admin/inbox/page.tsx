@@ -66,6 +66,10 @@ function InboxContent() {
   const [isSending, setIsSending] = useState(false);
   const [sendFeedback, setSendFeedback] = useState<{ type: 'success' | 'warning' | 'error'; text: string } | null>(null);
 
+  // Sync state for IMAP incoming replies
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [syncStatus, setSyncStatus] = useState<{ message: string; isError?: boolean } | null>(null);
+
   // Test SMTP Modal
   const [isTestModalOpen, setIsTestModalOpen] = useState(false);
   const [testEmailInput, setTestEmailInput] = useState('');
@@ -74,24 +78,15 @@ function InboxContent() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [showListOnMobile, setShowListOnMobile] = useState(true);
 
-  // Initial load & Polling (every 25 seconds)
-  useEffect(() => {
-    fetchConversations();
-    const interval = setInterval(fetchConversations, 25000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Sync selected conversation from URL param if provided
-  useEffect(() => {
-    if (urlConvoId && (!selectedConvoId || selectedConvoId !== urlConvoId)) {
-      setSelectedConvoId(urlConvoId);
-      setShowListOnMobile(false);
-    }
-  }, [urlConvoId]);
-
-  const fetchConversations = async () => {
+  // Fetch conversations matching current filter and search
+  const fetchConversations = async (targetFilter = filter, targetSearch = search) => {
     try {
-      const res = await fetch('/api/admin/inbox');
+      const params = new URLSearchParams();
+      if (targetFilter !== 'all') params.set('filter', targetFilter);
+      if (targetSearch.trim()) params.set('search', targetSearch.trim());
+      const queryStr = params.toString() ? `?${params.toString()}` : '';
+
+      const res = await fetch(`/api/admin/inbox${queryStr}`);
       if (res.ok) {
         const data = await res.json();
         setConversations(data);
@@ -101,8 +96,54 @@ function InboxContent() {
     }
   };
 
-  const fetchMessages = async (convoId: string) => {
-    setIsLoadingMessages(true);
+  // Initial load & Polling (every 8 seconds for real-time responsiveness)
+  useEffect(() => {
+    fetchConversations(filter, search);
+    const interval = setInterval(() => fetchConversations(filter, search), 8000);
+    return () => clearInterval(interval);
+  }, [filter, search]);
+
+  // Sync selected conversation from URL param if provided
+  useEffect(() => {
+    if (urlConvoId && (!selectedConvoId || selectedConvoId !== urlConvoId)) {
+      setSelectedConvoId(urlConvoId);
+      setShowListOnMobile(false);
+    }
+  }, [urlConvoId]);
+
+  const handleSyncNow = async () => {
+    if (isSyncing) return;
+    setIsSyncing(true);
+    setSyncStatus(null);
+    try {
+      const res = await fetch('/api/admin/inbox/sync', { method: 'POST' });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        if (data.synced > 0) {
+          setSyncStatus({ message: `Synced ${data.synced} new customer repl${data.synced === 1 ? 'y' : 'ies'}!` });
+        } else {
+          setSyncStatus({ message: 'Mailbox is up to date (no new replies).' });
+        }
+        await fetchConversations(filter, search);
+        if (selectedConvoId) {
+          await fetchMessages(selectedConvoId, true);
+        }
+        window.dispatchEvent(new Event('inbox-updated'));
+      } else {
+        setSyncStatus({ message: `Sync error: ${data.error || 'Check server logs'}`, isError: true });
+      }
+    } catch (err: any) {
+      setSyncStatus({ message: 'Network error while checking for replies', isError: true });
+    } finally {
+      setIsSyncing(false);
+      setTimeout(() => setSyncStatus(null), 5000);
+    }
+  };
+
+  const fetchMessages = async (convoId: string, isSilent = false) => {
+    if (!isSilent) {
+      setIsLoadingMessages(true);
+    }
     try {
       const res = await fetch(`/api/admin/inbox/${convoId}`);
       if (res.ok) {
@@ -113,25 +154,28 @@ function InboxContent() {
         setConversations(prev => prev.map(c => 
           c._id === convoId ? { ...c, unreadCount: 0, status: c.status === 'unread' || c.status === 'new' ? 'open' : c.status } : c
         ));
+        window.dispatchEvent(new Event('inbox-updated'));
       }
     } catch (err) {
       console.error('Error fetching messages:', err);
     } finally {
-      setIsLoadingMessages(false);
+      if (!isSilent) {
+        setIsLoadingMessages(false);
+      }
     }
   };
 
   // When a conversation is selected
   useEffect(() => {
     if (selectedConvoId) {
-      fetchMessages(selectedConvoId);
+      fetchMessages(selectedConvoId, false);
       setShowListOnMobile(false);
       setSendFeedback(null);
 
-      // Poll current conversation messages every 25 seconds
+      // Poll current conversation messages every 8 seconds for live chat feel
       const interval = setInterval(() => {
-        fetchMessages(selectedConvoId);
-      }, 25000);
+        fetchMessages(selectedConvoId, true);
+      }, 8000);
       return () => clearInterval(interval);
     }
   }, [selectedConvoId]);
@@ -276,12 +320,28 @@ function InboxContent() {
               {unreadTotal} unread
             </span>
           )}
+          {syncStatus && (
+            <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-semibold transition-all ${
+              syncStatus.isError ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-800'
+            }`}>
+              {syncStatus.message}
+            </span>
+          )}
         </div>
         <div className="flex items-center gap-3">
           <button 
+            onClick={() => handleSyncNow()}
+            disabled={isSyncing}
+            className="flex items-center text-primary font-semibold hover:bg-primary/10 transition-colors gap-1.5 px-3 py-1 rounded-lg border border-primary/20 bg-primary/5 disabled:opacity-50 text-xs"
+            title="Fetch customer email replies from Gmail right now"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin text-primary' : ''}`} />
+            <span>{isSyncing ? 'Syncing replies...' : 'Sync now'}</span>
+          </button>
+          <button 
             onClick={() => fetchConversations()}
             className="flex items-center text-gray-500 hover:text-primary transition-colors gap-1"
-            title="Refresh conversations"
+            title="Refresh conversations list"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Refresh</span>

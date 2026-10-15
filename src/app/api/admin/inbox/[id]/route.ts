@@ -4,6 +4,9 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import dbConnect from '@/lib/mongodb';
 import Conversation from '@/models/Conversation';
 import Message from '@/models/Message';
+import { syncReplies } from '@/lib/imap';
+
+export const dynamic = 'force-dynamic';
 
 // GET /api/admin/inbox/[id]: Fetch conversation details and messages, marking as read
 export async function GET(req: Request, context: { params: Promise<{ id: string }> }) {
@@ -14,6 +17,9 @@ export async function GET(req: Request, context: { params: Promise<{ id: string 
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized access.' }, { status: 401 });
     }
+
+    // Opportunistically sync incoming replies from Gmail (throttled to at most once per 6s)
+    await syncReplies().catch(err => console.error('[Inbox Detail Auto-Sync Error]', err));
 
     await dbConnect();
 

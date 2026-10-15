@@ -34,8 +34,13 @@ export default function AdminLayout({
 
   useEffect(() => {
     fetchUnreadCount();
-    const interval = setInterval(fetchUnreadCount, 25000);
-    return () => clearInterval(interval);
+    const interval = setInterval(fetchUnreadCount, 10000);
+    const handleInboxUpdated = () => fetchUnreadCount();
+    window.addEventListener('inbox-updated', handleInboxUpdated);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('inbox-updated', handleInboxUpdated);
+    };
   }, [pathname]);
 
   const fetchUnreadCount = async () => {

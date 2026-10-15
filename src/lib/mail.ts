@@ -1,4 +1,30 @@
 import nodemailer from 'nodemailer';
+import crypto from 'crypto';
+
+/**
+ * Generate a unique Message-ID for emails
+ */
+export function generateMessageId(domain?: string): string {
+  const hostDomain = domain || (process.env.SITE_URL || 'https://m4xit.com').replace(/^https?:\/\//, '').replace(/\/.*$/, '') || 'm4xit.com';
+  const randomPart = crypto.randomBytes(12).toString('hex');
+  return `<msg-${Date.now()}-${randomPart}@${hostDomain}>`;
+}
+
+/**
+ * Generates Reply-To address with +conversationId for automated incoming sync
+ * Gmail delivers replies to m4xit.raj+{conversationId}@gmail.com to m4xit.raj@gmail.com
+ */
+export function getConversationReplyToEmail(conversationId: string): string {
+  const config = getMailConfig();
+  const rawEmail = config.user || 'm4xit.raj@gmail.com';
+  const atIdx = rawEmail.indexOf('@');
+  if (atIdx > 0) {
+    const userPart = rawEmail.substring(0, atIdx).split('+')[0];
+    const domainPart = rawEmail.substring(atIdx);
+    return `${userPart}+${conversationId}${domainPart}`;
+  }
+  return `m4xit.raj+${conversationId}@gmail.com`;
+}
 
 /**
  * Mail configuration helper reading strictly from process.env
@@ -177,7 +203,10 @@ export async function sendAdminNewMessageEmail(params: {
   phone?: string;
   subject?: string;
   message: string;
+  messageId?: string;
   threadMessageId?: string;
+  inReplyTo?: string;
+  references?: string | string[];
 }): Promise<{ success: boolean; messageId?: string; error?: string }> {
   const config = getMailConfig();
   if (!config.pass) {
@@ -190,6 +219,10 @@ export async function sendAdminNewMessageEmail(params: {
   const cleanSubject = params.subject?.trim() || 'Website Inquiry';
   const emailSubject = `New message from ${params.name}: ${cleanSubject}`;
   const inboxUrl = `${config.siteUrl}/admin/inbox?id=${params.conversationId}`;
+  const replyToAddress = getConversationReplyToEmail(params.conversationId);
+  const outgoingMessageId = params.messageId || generateMessageId();
+  const inReplyTo = params.inReplyTo || params.threadMessageId;
+  const references = params.references || (params.threadMessageId ? [params.threadMessageId] : undefined);
 
   const messageHtml = `
     <p style="font-size: 16px; font-weight: 600; color: #0f172a; margin-top: 0; margin-bottom: 20px;">
@@ -252,7 +285,7 @@ sales@m4xit.com
     const info = await transporter.sendMail({
       from: config.mailFrom,
       to: config.adminEmail,
-      replyTo: `${params.name} <${params.email}>`,
+      replyTo: replyToAddress,
       subject: emailSubject,
       text: plainText,
       html: renderBaseEmailTemplate({
@@ -263,14 +296,16 @@ sales@m4xit.com
           url: inboxUrl,
         },
       }),
-      messageId: params.threadMessageId,
-      headers: params.threadMessageId ? {
+      messageId: outgoingMessageId,
+      inReplyTo,
+      references,
+      headers: {
         'X-Conversation-Id': params.conversationId,
-      } : undefined,
+      },
     });
 
-    console.log(`[SMTP] Admin notification sent: ${info.messageId}`);
-    return { success: true, messageId: info.messageId };
+    console.log(`[SMTP] Admin notification sent: ${info.messageId || outgoingMessageId}`);
+    return { success: true, messageId: info.messageId || outgoingMessageId };
   } catch (error: any) {
     console.error('[SMTP] Failed to send admin notification:', error?.message || error);
     return { success: false, error: error?.message || 'Failed to send admin email' };
@@ -281,12 +316,16 @@ sales@m4xit.com
  * 2. Send friendly confirmation email to Visitor
  */
 export async function sendVisitorConfirmationEmail(params: {
+  conversationId: string;
   name: string;
   email: string;
   phone?: string;
   subject?: string;
   message: string;
+  messageId?: string;
   threadMessageId?: string;
+  inReplyTo?: string;
+  references?: string | string[];
 }): Promise<{ success: boolean; messageId?: string; error?: string }> {
   const config = getMailConfig();
   if (!config.pass) {
@@ -298,6 +337,10 @@ export async function sendVisitorConfirmationEmail(params: {
 
   const cleanSubject = params.subject?.trim() || 'Your message';
   const emailSubject = `We received your message`;
+  const replyToAddress = getConversationReplyToEmail(params.conversationId);
+  const outgoingMessageId = params.messageId || generateMessageId();
+  const inReplyTo = params.inReplyTo || params.threadMessageId;
+  const references = params.references || (params.threadMessageId ? [params.threadMessageId] : undefined);
 
   const visitorHtml = `
     <p style="font-size: 16px; color: #0f172a; margin-top: 0;">
@@ -351,19 +394,23 @@ sales@m4xit.com
     const info = await transporter.sendMail({
       from: config.mailFrom,
       to: `${params.name} <${params.email}>`,
-      replyTo: config.adminEmail,
+      replyTo: replyToAddress,
       subject: emailSubject,
       text: plainText,
       html: renderBaseEmailTemplate({
         headline: 'We Received Your Message',
         contentHtml: visitorHtml,
       }),
-      inReplyTo: params.threadMessageId,
-      references: params.threadMessageId ? [params.threadMessageId] : undefined,
+      messageId: outgoingMessageId,
+      inReplyTo,
+      references,
+      headers: {
+        'X-Conversation-Id': params.conversationId,
+      },
     });
 
-    console.log(`[SMTP] Visitor confirmation sent: ${info.messageId}`);
-    return { success: true, messageId: info.messageId };
+    console.log(`[SMTP] Visitor confirmation sent: ${info.messageId || outgoingMessageId}`);
+    return { success: true, messageId: info.messageId || outgoingMessageId };
   } catch (error: any) {
     console.error('[SMTP] Failed to send visitor confirmation:', error?.message || error);
     return { success: false, error: error?.message || 'Failed to send visitor email' };
@@ -374,11 +421,15 @@ sales@m4xit.com
  * 3. Send Admin reply to Visitor with Gmail threading headers
  */
 export async function sendAdminReplyEmail(params: {
+  conversationId: string;
   visitorName: string;
   visitorEmail: string;
   originalSubject?: string;
   replyText: string;
+  messageId?: string;
   threadMessageId?: string;
+  inReplyTo?: string;
+  references?: string | string[];
 }): Promise<{ success: boolean; messageId?: string; error?: string }> {
   const config = getMailConfig();
   if (!config.pass) {
@@ -388,8 +439,12 @@ export async function sendAdminReplyEmail(params: {
   }
   const transporter = createMailTransporter();
 
-  const baseSubject = (params.originalSubject || 'Your inquiry to Max iT Solution').replace(/^Re:\s*/i, '');
+  const baseSubject = (params.originalSubject || 'Your inquiry to Max iT Solution').replace(/^(Re:\s*)+/i, '').trim();
   const emailSubject = `Re: ${baseSubject}`;
+  const replyToAddress = getConversationReplyToEmail(params.conversationId);
+  const outgoingMessageId = params.messageId || generateMessageId();
+  const inReplyTo = params.inReplyTo || params.threadMessageId;
+  const references = params.references || (params.threadMessageId ? [params.threadMessageId] : undefined);
 
   const replyHtml = `
     <p style="font-size: 16px; color: #0f172a; margin-top: 0;">
@@ -425,19 +480,23 @@ sales@m4xit.com
     const info = await transporter.sendMail({
       from: config.mailFrom,
       to: `${params.visitorName} <${params.visitorEmail}>`,
-      replyTo: config.adminEmail,
+      replyTo: replyToAddress,
       subject: emailSubject,
       text: plainText,
       html: renderBaseEmailTemplate({
         headline: 'Update on Your Inquiry',
         contentHtml: replyHtml,
       }),
-      inReplyTo: params.threadMessageId,
-      references: params.threadMessageId ? [params.threadMessageId] : undefined,
+      messageId: outgoingMessageId,
+      inReplyTo,
+      references,
+      headers: {
+        'X-Conversation-Id': params.conversationId,
+      },
     });
 
-    console.log(`[SMTP] Reply sent to ${params.visitorEmail}: ${info.messageId}`);
-    return { success: true, messageId: info.messageId };
+    console.log(`[SMTP] Reply sent to ${params.visitorEmail}: ${info.messageId || outgoingMessageId}`);
+    return { success: true, messageId: info.messageId || outgoingMessageId };
   } catch (error: any) {
     console.error(`[SMTP] Failed to send reply to ${params.visitorEmail}:`, error?.message || error);
     return { success: false, error: error?.message || 'Failed to send reply email' };

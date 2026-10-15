@@ -124,12 +124,15 @@ export async function POST(req: Request) {
           threadMessageId,
         }),
         sendVisitorConfirmationEmail({
+          conversationId: conversation._id.toString(),
           name: cleanName,
           email: cleanEmail,
           phone: cleanPhone,
           subject: cleanSubject,
           message: cleanBody,
           threadMessageId,
+          inReplyTo: threadMessageId,
+          references: [threadMessageId],
         }),
       ]);
 

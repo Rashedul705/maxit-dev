@@ -23,7 +23,7 @@ const MessageSchema = new Schema<IMessage>(
     senderEmail: { type: String },
     subject: { type: String },
     body: { type: String, required: true },
-    messageId: { type: String },
+    messageId: { type: String, unique: true, sparse: true, index: true },
     readAt: { type: Date },
     emailStatus: { type: String, enum: ['sent', 'failed', 'pending', 'skipped'], default: 'pending' },
     errorDetails: { type: String }

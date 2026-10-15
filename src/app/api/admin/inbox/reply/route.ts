@@ -33,7 +33,30 @@ export async function POST(req: Request) {
     const cleanReplyText = body.trim();
     const cleanSubject = `Re: ${(conversation.subject || 'Website Inquiry').replace(/^Re:\s*/i, '')}`;
 
-    // 1. Create and save the outgoing reply message
+    // Gather previous message IDs in the conversation for Gmail threading
+    const previousMessages = await Message.find({ conversationId: conversation._id })
+      .sort({ createdAt: 1 })
+      .select('messageId')
+      .lean();
+
+    const previousMessageIds: string[] = [];
+    if (conversation.threadMessageId) {
+      previousMessageIds.push(conversation.threadMessageId);
+    }
+    for (const m of previousMessages) {
+      if (m.messageId && !previousMessageIds.includes(m.messageId)) {
+        previousMessageIds.push(m.messageId);
+      }
+    }
+
+    const lastMessageId = previousMessageIds.length > 0 
+      ? previousMessageIds[previousMessageIds.length - 1] 
+      : conversation.threadMessageId;
+
+    const domain = (process.env.SITE_URL || 'https://m4xit.com').replace(/^https?:\/\//, '').replace(/\/.*$/, '') || 'm4xit.com';
+    const replyMessageId = `<msg-${Date.now()}-${Math.random().toString(36).substring(2, 9)}@${domain}>`;
+
+    // 1. Create and save the outgoing reply message with generated messageId
     const newMessage = new Message({
       conversationId: conversation._id,
       direction: 'outgoing',
@@ -41,6 +64,7 @@ export async function POST(req: Request) {
       senderEmail: (session.user as any)?.email || process.env.ADMIN_EMAIL || 'm4xit.raj@gmail.com',
       subject: cleanSubject,
       body: cleanReplyText,
+      messageId: replyMessageId,
       emailStatus: 'pending',
     });
     await newMessage.save();
@@ -55,11 +79,14 @@ export async function POST(req: Request) {
     // 3. Dispatch the email with Gmail threading headers (In-Reply-To & References)
     try {
       const emailResult = await sendAdminReplyEmail({
+        conversationId: conversation._id.toString(),
         visitorName: conversation.name,
         visitorEmail: conversation.email,
         originalSubject: conversation.subject || 'Website Inquiry',
         replyText: cleanReplyText,
-        threadMessageId: conversation.threadMessageId,
+        messageId: replyMessageId,
+        inReplyTo: lastMessageId,
+        references: previousMessageIds,
       });
 
       if (emailResult.success) {

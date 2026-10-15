@@ -4,14 +4,23 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import dbConnect from '@/lib/mongodb';
 import Conversation from '@/models/Conversation';
 import Message from '@/models/Message';
+import { startImapScheduler } from '@/lib/imapScheduler';
+import { syncReplies } from '@/lib/imap';
+
+export const dynamic = 'force-dynamic';
 
 // GET /api/admin/inbox: Retrieve list of conversations with search and filter
 export async function GET(req: Request) {
   try {
+    startImapScheduler();
+
     const session = await getServerSession(authOptions);
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized access.' }, { status: 401 });
     }
+
+    // Opportunistically sync incoming replies from Gmail (throttled to at most once per 6s)
+    await syncReplies().catch(err => console.error('[Inbox Auto-Sync Error]', err));
 
     const { searchParams } = new URL(req.url);
     const search = searchParams.get('search')?.trim();
