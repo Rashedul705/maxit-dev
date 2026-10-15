@@ -1,8 +1,7 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Calendar, User, Tag, CheckCircle2, MapPin, Building, ChevronRight, Zap, Clock, Battery } from 'lucide-react';
-import dbConnect from '@/lib/mongodb';
-import Project from '@/models/Project';
+import { fetchFromBackend } from '@/lib/api';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,11 +11,10 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
 
   const slugify = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
   
-  await dbConnect();
   let project = null;
   let nextProject = null;
   try {
-    const allProjects = await (Project as any).find({}).sort({ order: 1, _id: 1 }).lean();
+    const allProjects = (await fetchFromBackend<any[]>('/api/admin/projects')) || [];
     
     const found = allProjects.find((p: any) => 
       (p.slug && p.slug === decodedName) || slugify(p.title) === decodedName || p.title === decodedName

@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { signOut } from 'next-auth/react';
+import { usePathname, useRouter } from 'next/navigation';
 import { 
   LayoutDashboard, 
   Users, 
@@ -71,6 +70,13 @@ export default function AdminLayout({
     { name: 'Site Settings', path: '/admin/settings', icon: Settings },
   ];
 
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+    } catch {}
+    window.location.href = '/admin/login';
+  };
+
   const SidebarContent = () => (
     <>
       <div className="h-16 flex items-center px-6 border-b border-gray-100">
@@ -112,8 +118,8 @@ export default function AdminLayout({
 
       <div className="p-4 border-t border-gray-100">
         <button 
-          onClick={() => signOut({ callbackUrl: '/' })}
-          className="flex items-center justify-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors font-medium"
+          onClick={handleLogout}
+          className="flex items-center justify-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors font-medium cursor-pointer"
         >
           <LogOut className="w-4 h-4 mr-2" />
           Logout

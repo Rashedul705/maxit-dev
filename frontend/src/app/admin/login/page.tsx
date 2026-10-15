@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Shield } from "lucide-react";
 
@@ -18,14 +17,16 @@ export default function AdminLogin() {
     setError("");
 
     try {
-      const res = await signIn("credentials", {
-        redirect: false,
-        email,
-        password,
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
       });
 
-      if (res?.error) {
-        setError("Invalid email or password");
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        setError(data?.error || "Invalid email or password");
         setIsLoading(false);
       } else {
         router.push("/admin");

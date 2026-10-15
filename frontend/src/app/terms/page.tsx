@@ -1,17 +1,10 @@
-import dbConnect from "@/lib/mongodb";
-import LegalPage from "@/models/LegalPage";
+import { fetchFromBackend } from "@/lib/api";
 
 export const dynamic = 'force-dynamic';
 
 async function getTermsOfService() {
-  try {
-    await dbConnect();
-    const doc = await (LegalPage.findOne as any)().lean();
-    return doc?.termsOfService || "Terms of Service content goes here...";
-  } catch (error) {
-    console.error(error);
-    return "Terms of Service content goes here...";
-  }
+  const doc = await fetchFromBackend<any>('/api/admin/legal');
+  return doc?.termsOfService || "Terms of Service content goes here...";
 }
 
 export default async function Terms() {

@@ -4,12 +4,12 @@ import "./globals.css";
 import { Providers } from "@/components/Providers";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import dbConnect from "@/lib/mongodb";
-import GlobalContact from "@/models/GlobalContact";
-import SiteSettings from "@/models/SiteSettings";
+import { fetchFromBackend } from "@/lib/api";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
+
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: "Max iT Solution - Solar Energy, Agro Tech & Automation",
@@ -36,11 +36,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  await dbConnect();
-  const contactDoc = await (GlobalContact.findOne as any)().lean();
-  const contactInfo = contactDoc ? JSON.parse(JSON.stringify(contactDoc)) : null;
-  const settingsDoc = await (SiteSettings.findOne as any)().lean();
-  const rawSettings = settingsDoc ? JSON.parse(JSON.stringify(settingsDoc)) : null;
+  const [contactInfo, rawSettings] = await Promise.all([
+    fetchFromBackend<any>('/api/admin/contact'),
+    fetchFromBackend<any>('/api/admin/site-settings'),
+  ]);
   
   // Merge with defaults so new fields (navItems, navbarContactButtonText, etc.) always have values
   const defaultSettings = {

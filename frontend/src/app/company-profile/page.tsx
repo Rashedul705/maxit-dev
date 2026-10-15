@@ -8,42 +8,32 @@ import {
 
 import Partners from '@/components/Partners';
 
-import dbConnect from '@/lib/mongodb';
-import TeamMember from '@/models/TeamMember';
-import Service from '@/models/Service';
-import Project from '@/models/Project';
-import GlobalContact from '@/models/GlobalContact';
-import CompanyProfileData from '@/models/CompanyProfileData';
-import SiteSettings from '@/models/SiteSettings';
-import TeamSection from '@/models/TeamSection';
+import { fetchFromBackend } from '@/lib/api';
 
 export const dynamic = 'force-dynamic';
 
 async function getTeamData() {
   try {
-    await dbConnect();
-    let ceoDoc = await (TeamMember.findOne as any)({ isCeo: true }).lean();
-    let membersDocs = await (TeamMember.find as any)({ isCeo: false }).sort({ order: 1 }).lean();
-    let sectionsDocs = await (TeamSection.find as any)({}).sort({ order: 1 }).lean();
-    
-    // Fallback: extract CEO from membersDocs if not found by isCeo flag
-    if (!ceoDoc) {
+    const [ceoDoc, allMembers, sectionsDocs] = await Promise.all([
+      fetchFromBackend<any>('/api/admin/ceo'),
+      fetchFromBackend<any[]>('/api/admin/team').then(res => res || []),
+      fetchFromBackend<any[]>('/api/admin/team-sections').then(res => res || []),
+    ]);
+
+    let ceo = ceoDoc && ceoDoc._id ? { ...ceoDoc } : null;
+    let membersDocs = allMembers.filter((m: any) => !m.isCeo);
+
+    if (!ceo) {
       const ceoIndex = membersDocs.findIndex((m: any) => m.name.toLowerCase().includes('zahangir') || m.isCeo);
       if (ceoIndex !== -1) {
-        ceoDoc = membersDocs[ceoIndex];
+        ceo = membersDocs[ceoIndex];
         membersDocs.splice(ceoIndex, 1);
       }
     } else {
-      // Ensure CEO is not in membersDocs
       membersDocs = membersDocs.filter((m: any) => !m.name.toLowerCase().includes('zahangir') && !m.isCeo);
     }
     
-    // Parse to stringify ObjectIds for Next.js
-    const ceo = JSON.parse(JSON.stringify(ceoDoc || {}));
-    const members = JSON.parse(JSON.stringify(membersDocs));
-    const sections = JSON.parse(JSON.stringify(sectionsDocs || []));
-    
-    return { ceo, members, sections };
+    return { ceo: ceo || {}, members: membersDocs, sections: sectionsDocs };
   } catch (error) {
     console.error('Error fetching team data:', error);
     return { ceo: {}, members: [], sections: [] };
@@ -51,60 +41,26 @@ async function getTeamData() {
 }
 
 async function getServicesData() {
-  try {
-    await dbConnect();
-    const servicesDocs = await (Service.find as any)({}).sort({ order: 1 }).lean();
-    return JSON.parse(JSON.stringify(servicesDocs));
-  } catch (error) {
-    console.error('Error fetching services:', error);
-    return [];
-  }
+  const docs = await fetchFromBackend<any[]>('/api/admin/services');
+  return docs || [];
 }
 
 async function getProjectsData() {
-  try {
-    await dbConnect();
-    const docs = await (Project.find as any)({}).sort({ order: 1 }).lean();
-    return JSON.parse(JSON.stringify(docs));
-  } catch (error) {
-    console.error('Error fetching projects:', error);
-    return [];
-  }
+  const docs = await fetchFromBackend<any[]>('/api/admin/projects');
+  return docs || [];
 }
 
 async function getContactInfo() {
-  try {
-    await dbConnect();
-    const doc = await (GlobalContact.findOne as any)().lean();
-    return doc ? JSON.parse(JSON.stringify(doc)) : null;
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
+  return await fetchFromBackend<any>('/api/admin/contact');
 }
 
 async function getCompanyProfileData() {
-  try {
-    await dbConnect();
-    const doc = await (CompanyProfileData.findOne as any)().lean();
-    return doc ? JSON.parse(JSON.stringify(doc)) : {
-      stats: [], howWeWork: [], industries: []
-    };
-  } catch (error) {
-    console.error(error);
-    return { stats: [], howWeWork: [], industries: [], capabilities: [], whyChooseUs: [] };
-  }
+  const doc = await fetchFromBackend<any>('/api/admin/company-profile-data');
+  return doc || { stats: [], howWeWork: [], industries: [], capabilities: [], whyChooseUs: [] };
 }
 
 async function getSiteSettings() {
-  try {
-    await dbConnect();
-    const settings = await (SiteSettings.findOne as any)().lean();
-    return settings ? JSON.parse(JSON.stringify(settings)) : null;
-  } catch (error) {
-    console.error('Error fetching site settings:', error);
-    return null;
-  }
+  return await fetchFromBackend<any>('/api/admin/site-settings');
 }
 
 export default async function CompanyProfile() {

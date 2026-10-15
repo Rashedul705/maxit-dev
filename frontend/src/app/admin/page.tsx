@@ -1,41 +1,17 @@
 import { Users, FileText, Briefcase, MessageSquare, Mail, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-import dbConnect from '@/lib/mongodb';
-import Conversation from '@/models/Conversation';
-import TeamMember from '@/models/TeamMember';
-import Project from '@/models/Project';
+import { fetchFromBackend } from '@/lib/api';
 
 export const dynamic = 'force-dynamic';
 
 async function getDashboardStats() {
-  try {
-    await dbConnect();
-
-    const [unreadCount, totalInquiries, teamCount, projectCount] = await Promise.all([
-      Conversation.countDocuments({
-        status: { $ne: 'archived' },
-        $or: [{ status: 'unread' }, { unreadCount: { $gt: 0 } }]
-      }),
-      Conversation.countDocuments(),
-      TeamMember ? TeamMember.countDocuments().catch(() => 9) : 9,
-      Project ? Project.countDocuments().catch(() => 12) : 12,
-    ]);
-
-    return {
-      unreadCount,
-      totalInquiries,
-      teamCount: teamCount || 9,
-      projectCount: projectCount || 12,
-    };
-  } catch (error) {
-    console.error('Error fetching dashboard stats:', error);
-    return {
-      unreadCount: 0,
-      totalInquiries: 0,
-      teamCount: 9,
-      projectCount: 12,
-    };
-  }
+  const stats = await fetchFromBackend<any>('/api/admin/dashboard-stats');
+  return stats || {
+    unreadCount: 0,
+    totalInquiries: 0,
+    teamCount: 9,
+    projectCount: 12,
+  };
 }
 
 export default async function AdminDashboard() {

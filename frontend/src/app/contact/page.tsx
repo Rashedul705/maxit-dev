@@ -1,8 +1,6 @@
 import { Mail, Phone, MapPin } from "lucide-react";
 import ContactForm from "@/components/ContactForm";
-import dbConnect from "@/lib/mongodb";
-import GlobalContact from "@/models/GlobalContact";
-import SiteSettings from "@/models/SiteSettings";
+import { fetchFromBackend } from "@/lib/api";
 
 export const dynamic = 'force-dynamic';
 
@@ -31,25 +29,11 @@ function formatPhoneDisplay(num: string) {
 }
 
 async function getContactInfo() {
-  try {
-    await dbConnect();
-    const doc = await (GlobalContact.findOne as any)().lean();
-    return doc ? JSON.parse(JSON.stringify(doc)) : null;
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
+  return await fetchFromBackend<any>('/api/admin/contact');
 }
 
 async function getSiteSettings() {
-  try {
-    await dbConnect();
-    const settings = await (SiteSettings.findOne as any)().lean();
-    return settings ? JSON.parse(JSON.stringify(settings)) : null;
-  } catch (error) {
-    console.error('Error fetching site settings:', error);
-    return null;
-  }
+  return await fetchFromBackend<any>('/api/admin/site-settings');
 }
 
 export default async function Contact() {

@@ -1,39 +1,32 @@
 import { Mail, Linkedin, MessageCircle } from 'lucide-react';
-import dbConnect from '@/lib/mongodb';
-import TeamMember from '@/models/TeamMember';
-import TeamSection from '@/models/TeamSection';
-import SiteSettings from '@/models/SiteSettings';
+import { fetchFromBackend } from '@/lib/api';
 
 export const dynamic = 'force-dynamic';
 
 async function getTeamData() {
   try {
-    await dbConnect();
-    let ceoDoc = await (TeamMember.findOne as any)({ isCeo: true } as any).lean();
-    let membersDocs = await (TeamMember.find as any)({ isCeo: false }).sort({ order: 1 }).lean();
-    let sectionsDocs = await (TeamSection.find as any)({}).sort({ order: 1 }).lean();
-    
+    const [ceoDoc, allMembers, sectionsDocs, settingsDoc] = await Promise.all([
+      fetchFromBackend<any>('/api/admin/ceo'),
+      fetchFromBackend<any[]>('/api/admin/team').then(res => res || []),
+      fetchFromBackend<any[]>('/api/admin/team-sections').then(res => res || []),
+      fetchFromBackend<any>('/api/admin/site-settings'),
+    ]);
+
+    let ceo = ceoDoc && ceoDoc._id ? { ...ceoDoc } : null;
+    let membersDocs = allMembers.filter((m: any) => !m.isCeo);
+
     // Fallback: extract CEO from membersDocs if not found by isCeo flag
-    if (!ceoDoc) {
+    if (!ceo) {
       const ceoIndex = membersDocs.findIndex((m: any) => m.name.toLowerCase().includes('zahangir') || m.isCeo);
       if (ceoIndex !== -1) {
-        ceoDoc = membersDocs[ceoIndex];
+        ceo = membersDocs[ceoIndex];
         membersDocs.splice(ceoIndex, 1);
       }
     } else {
-      // Ensure CEO is not in membersDocs
       membersDocs = membersDocs.filter((m: any) => !m.name.toLowerCase().includes('zahangir') && !m.isCeo);
     }
     
-    // Parse to stringify ObjectIds for Next.js
-    const ceo = JSON.parse(JSON.stringify(ceoDoc || {}));
-    const members = JSON.parse(JSON.stringify(membersDocs));
-    const sections = JSON.parse(JSON.stringify(sectionsDocs || []));
-    
-    const settingsDoc = await (SiteSettings.findOne as any)().lean();
-    const settings = settingsDoc ? JSON.parse(JSON.stringify(settingsDoc)) : null;
-
-    return { ceo, members, sections, settings };
+    return { ceo: ceo || {}, members: membersDocs, sections: sectionsDocs, settings: settingsDoc };
   } catch (error) {
     console.error('Error fetching team data:', error);
     return { ceo: {}, members: [], sections: [], settings: null };

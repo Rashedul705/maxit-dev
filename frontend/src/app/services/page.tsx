@@ -2,32 +2,17 @@ import Link from "next/link";
 import { 
   Sun, ArrowRight, Cpu, Activity, Settings, Cctv, Target, Droplets, Sprout, Leaf, Wifi, RadioTower, Lightbulb, Home, Building2, Factory, GraduationCap, Landmark, Zap, CheckCircle2, Image as ImageIcon 
 } from 'lucide-react';
-import dbConnect from '@/lib/mongodb';
-import Service from '@/models/Service';
-import SiteSettings from '@/models/SiteSettings';
+import { fetchFromBackend } from '@/lib/api';
 
 export const dynamic = 'force-dynamic';
 
 async function getServicesData() {
-  try {
-    await dbConnect();
-    const servicesDocs = await (Service.find as any)({}).sort({ order: 1 }).lean();
-    return JSON.parse(JSON.stringify(servicesDocs));
-  } catch (error) {
-    console.error('Error fetching services:', error);
-    return [];
-  }
+  const docs = await fetchFromBackend<any[]>('/api/admin/services');
+  return docs || [];
 }
 
 async function getSiteSettings() {
-  try {
-    await dbConnect();
-    const settings = await (SiteSettings.findOne as any)().lean();
-    return settings ? JSON.parse(JSON.stringify(settings)) : null;
-  } catch (error) {
-    console.error('Error fetching site settings:', error);
-    return null;
-  }
+  return await fetchFromBackend<any>('/api/admin/site-settings');
 }
 
 export default async function Services() {

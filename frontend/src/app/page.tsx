@@ -5,108 +5,57 @@ import TestimonialCard from '../components/TestimonialCard';
 import { Settings, ArrowRight, Sun, Sprout, Zap, Leaf, Cpu, Headphones, TrendingDown, Wifi, Cctv, Droplets, RadioTower, Lightbulb, Activity, Target, Home, Building2, Factory, GraduationCap, Landmark, Shield, Briefcase, Phone, CheckCircle2, Image as ImageIcon, ShieldCheck, Headset } from 'lucide-react';
 import Link from "next/link";
 import Partners from '../components/Partners';
-import dbConnect from '@/lib/mongodb';
-import Testimonial from '@/models/Testimonial';
-import Reason from '@/models/Reason';
-import HomeContent from '@/models/HomeContent';
-import AboutContent from '@/models/AboutContent';
-import CompanyProfileData from '@/models/CompanyProfileData';
-import Service from '@/models/Service';
-import TeamMember from '@/models/TeamMember';
-import SiteSettings from '@/models/SiteSettings';
+import { fetchFromBackend } from '@/lib/api';
 
 export const dynamic = 'force-dynamic';
 
 async function getTestimonials() {
-  try {
-    await dbConnect();
-    const docs = await (Testimonial.find as any)({}).sort({ order: 1 }).lean();
-    return JSON.parse(JSON.stringify(docs));
-  } catch (error) {
-    console.error('Error fetching testimonials:', error);
-    return [];
-  }
+  const docs = await fetchFromBackend<any[]>('/api/admin/testimonials');
+  return docs || [];
 }
 
 async function getReasons() {
-  try {
-    await dbConnect();
-    const docs = await (Reason.find as any)({}).sort({ order: 1 }).lean();
-    return JSON.parse(JSON.stringify(docs));
-  } catch (error) {
-    console.error('Error fetching reasons:', error);
-    return [];
-  }
+  const docs = await fetchFromBackend<any[]>('/api/admin/reasons');
+  return docs || [];
 }
 
 async function getHomeData() {
-  try {
-    await dbConnect();
-    const doc = await (HomeContent.findOne as any)().lean();
-    if (!doc) {
-      // Return hardcoded default if empty
-      return null;
-    }
-    return JSON.parse(JSON.stringify(doc));
-  } catch (error) {
-    console.error('Error fetching home content:', error);
-    return null;
-  }
+  return await fetchFromBackend<any>('/api/admin/home');
 }
 
 async function getAboutData() {
-  try {
-    await dbConnect();
-    const doc = await (AboutContent.findOne as any)().lean();
-    return doc ? JSON.parse(JSON.stringify(doc)) : { journey: 'Leading technology and engineering solutions provider.' };
-  } catch (error) {
-    return { journey: 'Leading technology and engineering solutions provider.' };
-  }
+  const doc = await fetchFromBackend<any>('/api/admin/about');
+  return doc || { journey: 'Leading technology and engineering solutions provider.' };
 }
 
 async function getCompanyProfileData() {
-  try {
-    await dbConnect();
-    const doc = await (CompanyProfileData.findOne as any)().lean();
-    return doc ? JSON.parse(JSON.stringify(doc)) : { stats: [] };
-  } catch (error) {
-    return { stats: [] };
-  }
+  const doc = await fetchFromBackend<any>('/api/admin/company-profile-data');
+  return doc || { stats: [] };
 }
 
 async function getServicesData() {
-  try {
-    await dbConnect();
-    const docs = await (Service.find as any)({}).sort({ order: 1 }).lean();
-    return JSON.parse(JSON.stringify(docs));
-  } catch (error) {
-    return [];
-  }
+  const docs = await fetchFromBackend<any[]>('/api/admin/services');
+  return docs || [];
 }
 
 async function getSiteSettings() {
-  try {
-    await dbConnect();
-    const doc = await (SiteSettings.findOne as any)().lean();
-    return doc ? JSON.parse(JSON.stringify(doc)) : null;
-  } catch (error) {
-    return null;
-  }
+  return await fetchFromBackend<any>('/api/admin/site-settings');
 }
 
 async function getTeamData() {
   try {
-    await dbConnect();
-    let ceoDoc = await (TeamMember.findOne as any)({ isCeo: true }).lean();
-    let allMembers = await (TeamMember.find as any)({ isCeo: false }).sort({ order: 1 }).lean();
+    let ceoDoc = await fetchFromBackend<any>('/api/admin/ceo');
+    let allMembers = (await fetchFromBackend<any[]>('/api/admin/team')) || [];
     
     // Fallback: extract CEO
-    if (!ceoDoc) {
+    if (!ceoDoc || !ceoDoc._id) {
       const ceoIndex = allMembers.findIndex((m: any) => m.name.toLowerCase().includes('zahangir') || (m.officialTitle && m.officialTitle.toLowerCase().includes('ceo')));
       if (ceoIndex !== -1) {
         ceoDoc = allMembers[ceoIndex];
         allMembers.splice(ceoIndex, 1);
       }
+    } else {
+      allMembers = allMembers.filter((m: any) => !m.name.toLowerCase().includes('zahangir') && !m.isCeo);
     }
 
     const chairman = allMembers.find((m: any) => m.name.toLowerCase().includes('subnom') || (m.officialTitle && m.officialTitle.toLowerCase().includes('chair')));
@@ -115,7 +64,7 @@ async function getTeamData() {
     // Fallback for third member if Sarwer Jahan is not found
     const thirdMember = sarwer || allMembers.find((m: any) => m.officialTitle && m.officialTitle.toLowerCase().includes('director')) || allMembers[0];
     
-    const ceo = JSON.parse(JSON.stringify(ceoDoc || null));
+    const ceo = ceoDoc && ceoDoc._id ? { ...ceoDoc } : null;
     if (ceo) {
       ceo.officialTitle = "Chief Executive Officer (CEO)";
       ceo.functionalDesignation = " "; // Prevent fallback text

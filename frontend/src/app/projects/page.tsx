@@ -1,31 +1,16 @@
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import dbConnect from '@/lib/mongodb';
-import Project from '@/models/Project';
-import SiteSettings from '@/models/SiteSettings';
+import { fetchFromBackend } from '@/lib/api';
 
 export const dynamic = 'force-dynamic';
 
 async function getProjectsData() {
-  try {
-    await dbConnect();
-    const docs = await (Project.find as any)({}).sort({ order: 1 }).lean();
-    return JSON.parse(JSON.stringify(docs));
-  } catch (error) {
-    console.error('Error fetching projects:', error);
-    return [];
-  }
+  const docs = await fetchFromBackend<any[]>('/api/admin/projects');
+  return docs || [];
 }
 
 async function getSiteSettings() {
-  try {
-    await dbConnect();
-    const settings = await (SiteSettings.findOne as any)().lean();
-    return settings ? JSON.parse(JSON.stringify(settings)) : null;
-  } catch (error) {
-    console.error('Error fetching site settings:', error);
-    return null;
-  }
+  return await fetchFromBackend<any>('/api/admin/site-settings');
 }
 
 export default async function ProjectsPage() {

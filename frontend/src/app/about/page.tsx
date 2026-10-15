@@ -2,33 +2,21 @@ import Link from "next/link";
 import * as LucideIcons from 'lucide-react';
 import { ArrowRight, Target, Eye } from 'lucide-react';
 
-import dbConnect from '@/lib/mongodb';
-import AboutContent from '@/models/AboutContent';
+import { fetchFromBackend } from '@/lib/api';
 import AboutHeroSlider from '@/components/AboutHeroSlider';
 import HoneycombGallery from '@/components/HoneycombGallery';
 
 export const dynamic = 'force-dynamic';
 
 async function getAboutData() {
-  try {
-    await dbConnect();
-    let about = await (AboutContent.findOne as any)().lean();
-    if (!about) {
-      about = {
-        journey: "Founded with a passion for innovation, Max iT Solution began with a simple goal: to make industrial-grade engineering and sustainable energy accessible. Over the years, we have grown from a small technical startup into a trusted regional leader, driven by a commitment to reliability and engineering excellence.",
-        mission: "To empower businesses, industries, and communities by delivering robust, scalable, and sustainable technology solutions. We strive to solve complex engineering challenges with innovation, ensuring efficiency and long-term value for every client we serve.",
-        vision: "To be the region's most trusted engineering and technology partner, driving the transition towards smart automation, renewable energy, and intelligent infrastructure on a global scale.",
-      };
-    }
-    return JSON.parse(JSON.stringify(about));
-  } catch (error) {
-    console.error('Error fetching about data:', error);
-    return {
-      journey: "Founded with a passion for innovation, Max iT Solution began with a simple goal: to make industrial-grade engineering and sustainable energy accessible.",
-      mission: "To empower businesses, industries, and communities by delivering robust, scalable, and sustainable technology solutions.",
-      vision: "To be the region's most trusted engineering and technology partner, driving the transition towards smart automation.",
-    };
-  }
+  const defaultAbout = {
+    journey: "Founded with a passion for innovation, Max iT Solution began with a simple goal: to make industrial-grade engineering and sustainable energy accessible. Over the years, we have grown from a small technical startup into a trusted regional leader, driven by a commitment to reliability and engineering excellence.",
+    mission: "To empower businesses, industries, and communities by delivering robust, scalable, and sustainable technology solutions. We strive to solve complex engineering challenges with innovation, ensuring efficiency and long-term value for every client we serve.",
+    vision: "To be the region's most trusted engineering and technology partner, driving the transition towards smart automation, renewable energy, and intelligent infrastructure on a global scale.",
+  };
+
+  const about = await fetchFromBackend<any>('/api/admin/about');
+  return about || defaultAbout;
 }
 
 export default async function About() {
