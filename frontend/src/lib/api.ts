@@ -11,6 +11,7 @@ export async function fetchFromBackend<T = any>(endpoint: string, options?: Requ
     const res = await fetch(url, {
       ...options,
       cache: 'no-store',
+      signal: options?.signal || AbortSignal.timeout(3000),
     });
 
     if (!res.ok) {

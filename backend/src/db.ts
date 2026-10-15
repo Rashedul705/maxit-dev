@@ -13,7 +13,9 @@ export async function dbConnect() {
   }
 
   try {
-    const conn = await mongoose.connect(uri);
+    const conn = await mongoose.connect(uri, {
+      serverSelectionTimeoutMS: 3000,
+    });
     isConnected = true;
     console.log('[MongoDB] Connected to database successfully.');
     return conn.connection;
