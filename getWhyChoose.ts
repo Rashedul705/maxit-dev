@@ -1,3 +1,20 @@
 import mongoose from 'mongoose';  
-import HomeContent from './src/models/HomeContent.js';  
-mongoose.connect('mongodb+srv://m4xitraj_db_user:nYEzj5w4n0TfhiD7@maxit.iolovlb.mongodb.net/?appName=Maxit').then(async () => { const doc = await HomeContent.findOne(); console.log(JSON.stringify(doc?.whyChooseUs?.cards, null, 2)); mongoose.disconnect(); });  
+import dotenv from 'dotenv';
+import HomeContent from './backend/src/models/HomeContent.js';  
+
+dotenv.config();
+
+const uri = process.env.MONGODB_URI;
+if (!uri) {
+  console.error('MONGODB_URI is not set');
+  process.exit(1);
+}
+
+mongoose.connect(uri).then(async () => {
+  const doc = await HomeContent.findOne();
+  console.log(JSON.stringify(doc?.whyChooseUs?.cards, null, 2));
+  mongoose.disconnect();
+}).catch(err => {
+  console.error(err);
+  process.exit(1);
+});

@@ -1,9 +1,17 @@
 const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 
-const MONGODB_URI = 'mongodb+srv://m4xitraj_db_user:nYEzj5w4n0TfhiD7@maxit.iolovlb.mongodb.net/?appName=Maxit';
+dotenv.config();
+
+const MONGODB_URI = process.env.MONGODB_URI;
 const PROJECT_ID = '6ab6aff8722c1e45caf740ed';
 
 async function main() {
+  if (!MONGODB_URI) {
+    console.error('MONGODB_URI is not set');
+    process.exit(1);
+  }
+
   try {
     await mongoose.connect(MONGODB_URI);
     console.log('Connected to MongoDB');

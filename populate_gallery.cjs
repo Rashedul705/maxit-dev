@@ -1,7 +1,16 @@
 const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 const updateDb = async () => {
-  await mongoose.connect('mongodb+srv://m4xitraj_db_user:nYEzj5w4n0TfhiD7@maxit.iolovlb.mongodb.net/?appName=Maxit');
+  const uri = process.env.MONGODB_URI;
+  if (!uri) {
+    console.error('MONGODB_URI is not set');
+    process.exit(1);
+  }
+
+  await mongoose.connect(uri);
   console.log('Connected to DB');
 
   const AboutContentSchema = new mongoose.Schema({

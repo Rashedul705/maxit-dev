@@ -23,21 +23,34 @@ dist-ssr
 *.sln
 *.sw?
 
-# Next.js
+# Next.js & Builds
 .next
 out
 build
+dist
+dist-ssr
+tsconfig.tsbuildinfo
+
+# Dependencies
+node_modules/
+
+# Environment files
+.env
+.env.*
+.env.local
+.env.*.local
+!.env.example
 
 # Puppeteer Cache
 .cache/
 
-# TypeScript Build Info
-tsconfig.tsbuildinfo
-
-.env
-.env.local
-.env.*.local
-
 # Backup files
 *_old.*
 *.bak
+
+# Upload storage
+uploads/*
+!uploads/.gitkeep
+backend/uploads/*
+!backend/uploads/.gitkeep
+
