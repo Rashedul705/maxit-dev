@@ -3,7 +3,8 @@ const path = require('path');
 const fs = require('fs');
 
 async function generatePDF() {
-  const url = 'http://localhost:3000/company-profile';
+  const baseUrl = (process.env.SITE_URL || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000').replace(/\/$/, '');
+  const url = `${baseUrl}/company-profile`;
   const outputPath = path.join(process.cwd(), 'public', 'MaxIT_Company_Profile.pdf');
 
   console.log(`Starting PDF generation from ${url}...`);

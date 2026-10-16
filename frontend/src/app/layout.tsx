@@ -13,6 +13,9 @@ export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://www.m4xit.com'),
+  alternates: {
+    canonical: '/',
+  },
   title: "Max iT Solution - Solar Energy, Agro Tech & Automation",
   description: "Leading provider of solar home systems, smart irrigation, agricultural technology, and industrial automation solutions in Bangladesh.",
   keywords: "Solar Energy, Solar Home Systems, Rooftop Solar, Energy Efficiency, Green Power, Smart Irrigation, Agro Tech, Solar Pumps, Water Management, Electric Automation, Industrial Automation, Smart Home Control, Electric Systems, IoT Solutions",
@@ -22,6 +25,8 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Max iT Solution - Solar Energy, Agro Tech & Automation",
     description: "Leading provider of solar home systems, smart irrigation, agricultural technology, and industrial automation solutions in Bangladesh.",
+    url: "https://www.m4xit.com",
+    siteName: "Max iT Solution",
     type: "website",
     images: [{ url: "/images/slides/commercial_rooftop_slide_1789677880098.jpg" }]
   },

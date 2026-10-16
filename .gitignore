@@ -34,12 +34,18 @@ tsconfig.tsbuildinfo
 # Dependencies
 node_modules/
 
-# Environment files
+# Environment files & Secrets
 .env
+.env*
 .env.*
 .env.local
 .env.*.local
+*.env
+*.env.local
+*.local
 !.env.example
+!frontend/.env.example
+!backend/.env.example
 
 # Puppeteer Cache
 .cache/
