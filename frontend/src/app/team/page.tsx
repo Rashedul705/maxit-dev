@@ -70,8 +70,8 @@ export default async function Team() {
           <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-primary/10 rounded-full blur-[100px] pointer-events-none transform -translate-x-1/2 translate-y-1/2 z-0" />
 
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div className="text-center max-w-4xl mx-auto mb-0">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-primary mb-6 tracking-tight leading-tight">
+            <div className="text-left max-w-4xl mb-0">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-primary mb-6 tracking-tight leading-tight text-left">
                 {headerTitle.split('Web Team Directory').length > 1 ? (
                   <>
                     {headerTitle.split('Web Team Directory')[0]}
@@ -82,10 +82,10 @@ export default async function Team() {
                   headerTitle
                 )}
               </h1>
-              <p className="text-2xl text-gray-800 font-bold mb-4">
+              <p className="text-2xl text-gray-800 font-bold mb-4 text-left">
                 {headerCompanyName}
               </p>
-              <p className="text-xl text-gray-700 font-medium leading-relaxed">
+              <p className="text-xl text-gray-700 font-medium leading-relaxed text-left">
                 {headerSubtitle}
               </p>
             </div>
@@ -174,9 +174,9 @@ export default async function Team() {
             <div className="space-y-24">
               {groupedMembers.map((group, groupIndex) => (
                 <div key={groupIndex} className="relative">
-                  <div className="flex items-center justify-center mb-12 relative">
-                    <div className="absolute inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
-                    <h3 className="relative bg-gray-50/50 px-8 text-3xl font-bold font-heading text-primary text-center">
+                  <div className="flex items-center justify-start mb-12 relative">
+                    <div className="absolute inset-x-0 h-px bg-gradient-to-r from-primary/20 to-transparent" />
+                    <h3 className="relative bg-gray-50/50 pr-8 text-3xl font-bold font-heading text-primary text-left">
                       {groupIndex + 1}. {group.section}
                     </h3>
                   </div>
@@ -206,30 +206,30 @@ export default async function Team() {
                         </div>
 
                         {/* Content Block */}
-                        <div className="p-8 relative z-10 flex flex-col flex-grow bg-white text-center">
-                          <h4 className="text-2xl font-bold font-heading text-primary mb-3 group-hover:text-accent transition-colors duration-300">
+                        <div className="p-8 relative z-10 flex flex-col flex-grow bg-white text-left">
+                          <h4 className="text-2xl font-bold font-heading text-primary mb-3 group-hover:text-accent transition-colors duration-300 text-left">
                             {member.name}
                           </h4>
                           {member.officialTitle && (
-                            <p className="text-accent font-semibold tracking-wider capitalize text-sm mb-1">{member.officialTitle.toLowerCase()}</p>
+                            <p className="text-accent font-semibold tracking-wider capitalize text-sm mb-1 text-left">{member.officialTitle.toLowerCase()}</p>
                           )}
                           {member.functionalDesignation && (
-                            <p className="text-gray-500 font-medium tracking-wide text-xs mb-1 capitalize">{member.functionalDesignation.toLowerCase()}</p>
+                            <p className="text-gray-500 font-medium tracking-wide text-xs mb-1 capitalize text-left">{member.functionalDesignation.toLowerCase()}</p>
                           )}
                           {member.department && (
-                            <p className="text-gray-600 font-medium tracking-wide text-sm mb-4">
+                            <p className="text-gray-600 font-medium tracking-wide text-sm mb-4 text-left">
                               <span className="font-bold text-primary">Department:</span> {member.department}
                             </p>
                           )}
                           {member.bio && (
-                            <p className="text-gray-700 font-medium leading-relaxed mb-6 flex-grow whitespace-pre-wrap text-sm">
+                            <p className="text-gray-700 font-medium leading-relaxed mb-6 flex-grow whitespace-pre-wrap text-sm text-left">
                               {member.bio}
                             </p>
                           )}
 
                           {/* Social Buttons */}
                           {(member.socialLinks?.email || member.socialLinks?.whatsapp || member.socialLinks?.linkedin) && (
-                            <div className="flex justify-center space-x-3 pt-6 border-t border-gray-100 mt-auto">
+                            <div className="flex justify-start space-x-3 pt-6 border-t border-gray-100 mt-auto">
                               {member.socialLinks?.email && (
                                 <a
                                   href={`mailto:${member.socialLinks.email}`}

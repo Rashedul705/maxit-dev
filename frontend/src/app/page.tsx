@@ -135,11 +135,11 @@ const Index = async () => {
 
       {(!homeData || homeData.servicesSection?.visible !== false) && (
       <section className="py-20 bg-white border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-normal text-gray-900 mb-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-left">
+          <h2 className="text-3xl md:text-4xl font-normal text-gray-900 mb-4 text-left">
             {homeData?.servicesSection?.headingNormal || "Everything You Need, Under "}<span className="font-bold text-primary">{homeData?.servicesSection?.headingHighlight || "One Roof"}</span>
           </h2>
-          <p className="text-gray-500 max-w-3xl mx-auto mb-16 leading-relaxed">
+          <p className="text-gray-500 max-w-3xl mb-16 leading-relaxed text-left">
             {homeData?.servicesSection?.subtext || "From solar and irrigation to networking, automation, electrical work, and CCTV, we handle the full job so you deal with one reliable team."}
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-gray-200 border border-gray-200 rounded-2xl overflow-hidden">
@@ -162,11 +162,15 @@ const Index = async () => {
                 Zap: <Zap className="w-8 h-8 text-primary" />,
               };
               
+              const cleanedSubServices = (service.subServices || []).map((sub: string) => 
+                typeof sub === 'string' ? sub.replace(/Installationss/g, 'Installations') : sub
+              );
+
               return (
               <Link 
                 key={service._id || index}
                 href={homeData?.servicesSection?.button?.link || "/services"} 
-                className="flex flex-col items-center p-10 group transition-all duration-300 hover:bg-gray-50/80 bg-white text-center cursor-pointer"
+                className="flex flex-col items-start p-10 group transition-all duration-300 hover:bg-gray-50/80 bg-white text-left cursor-pointer"
               >
                 <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center border-2 border-primary/20 group-hover:border-primary/50 group-hover:scale-105 transition-all mb-6 shadow-sm overflow-hidden">
                   {service.iconUrl ? (
@@ -175,10 +179,10 @@ const Index = async () => {
                     (service.iconCategory || service.icon) && iconMap[service.iconCategory || service.icon] ? iconMap[service.iconCategory || service.icon] : <Settings className="w-8 h-8 text-primary" />
                   )}
                 </div>
-                <h3 className="text-lg font-bold text-gray-900 group-hover:text-primary transition-colors mb-3">{service.title}</h3>
-                {service.subServices && service.subServices.length > 0 && (
-                  <p className="text-sm text-gray-500 leading-relaxed max-w-sm">
-                    {service.subServices.join(" • ")}
+                <h3 className="text-lg font-bold text-gray-900 group-hover:text-primary transition-colors mb-3 text-left">{service.title}</h3>
+                {cleanedSubServices && cleanedSubServices.length > 0 && (
+                  <p className="text-sm text-gray-500 leading-relaxed max-w-sm text-left">
+                    {cleanedSubServices.join(" • ")}
                   </p>
                 )}
               </Link>
@@ -229,11 +233,11 @@ const Index = async () => {
         <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-accent/5 rounded-full blur-[100px] pointer-events-none" />
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-5xl font-bold font-heading text-primary mb-6">
+          <div className="text-left mb-20">
+            <h2 className="text-4xl md:text-5xl font-bold font-heading text-primary mb-6 text-left">
               {homeData?.whyChooseUs?.headingNormal || "Why Choose "}<span className="text-primary">{homeData?.whyChooseUs?.headingHighlight || "Max iT Solution?"}</span>
             </h2>
-            <p className="text-xl text-gray-700 max-w-3xl mx-auto font-medium leading-relaxed">
+            <p className="text-xl text-gray-700 max-w-3xl font-medium leading-relaxed text-left">
               {homeData?.whyChooseUs?.subtext || "We are dedicated to empowering businesses and homes with sustainable energy, advanced agricultural technology, and smart automation solutions."}
             </p>
           </div>
@@ -346,11 +350,11 @@ const Index = async () => {
         <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] pointer-events-none transform -translate-x-1/2 translate-y-1/2" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-5xl font-bold font-heading text-primary mb-6">
+          <div className="text-left mb-20">
+            <h2 className="text-4xl md:text-5xl font-bold font-heading text-primary mb-6 text-left">
               {homeData?.testimonialsSection?.headingNormal || "Client "}<span className="text-primary">{homeData?.testimonialsSection?.headingHighlight || "Success Stories"}</span>
             </h2>
-            <p className="text-xl text-gray-600 font-medium max-w-2xl mx-auto">
+            <p className="text-xl text-gray-600 font-medium max-w-2xl text-left">
               {homeData?.testimonialsSection?.subtext || "Don't just take our word for it — hear from the visionaries who have experienced the Max iT difference firsthand."}
             </p>
           </div>
@@ -380,11 +384,11 @@ const Index = async () => {
       {(!homeData || homeData.teamSection?.visible !== false) && teamMembers && teamMembers.length > 0 && (
         <section className="py-24 bg-[#141F4E] relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            <div className="text-left mb-16">
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 text-left">
                 {homeData?.teamSection?.headingNormal || "Max iT "}<span className="text-blue-400">{homeData?.teamSection?.headingHighlight || "Management"}</span>
               </h2>
-              <p className="text-lg text-gray-300/80 max-w-2xl mx-auto font-medium">
+              <p className="text-lg text-gray-300/80 max-w-2xl font-medium text-left">
                 {homeData?.teamSection?.subtext || "Meet the leaders driving our technology and engineering solutions forward."}
               </p>
             </div>
@@ -441,14 +445,14 @@ const Index = async () => {
         
         {/* Glassmorphism Container */}
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-          <div className="bg-white/10 backdrop-blur-md border border-white/20 p-10 md:p-16 rounded-[2rem] shadow-2xl text-center">
-            <h2 className="text-4xl md:text-5xl font-bold font-heading text-white mb-6 tracking-tight">
+          <div className="bg-white/10 backdrop-blur-md border border-white/20 p-10 md:p-16 rounded-[2rem] shadow-2xl text-left">
+            <h2 className="text-4xl md:text-5xl font-bold font-heading text-white mb-6 tracking-tight text-left">
               {homeData?.ctaSection?.title || "Ready to Power Your Future?"}
             </h2>
-            <p className="text-xl text-white/90 mb-10 max-w-2xl mx-auto font-medium leading-relaxed">
+            <p className="text-xl text-white/90 mb-10 max-w-2xl font-medium leading-relaxed text-left">
               {homeData?.ctaSection?.text || "Let's work together to implement sustainable and intelligent solutions that scale with your ambitions. Get in touch with us today!"}
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-start items-center">
               <Link
                 href={homeData?.ctaSection?.primaryButton?.link || siteSettings?.footerContactButtonLink || "/contact"}
                 className="group relative inline-flex items-center justify-center px-8 py-4 bg-white text-primary hover:bg-gray-50 font-bold rounded-xl transition-all duration-300 shadow-lg transform hover:-translate-y-1 w-full sm:w-auto"

@@ -1,7 +1,5 @@
 'use client';
 
-import { ArrowRight, Sun, Zap, Sprout } from 'lucide-react';
-import Link from "next/link";
 import CountUp from "@/components/ui/CountUp";
 import { useState, useEffect } from 'react';
 
@@ -45,7 +43,6 @@ const Hero = ({ content, siteSettings }: HeroProps) => {
   const brandingText = content?.brandingText || "Max iT";
   const titleLine1 = content?.titleLine1 || "Solar Energy &";
   const titleLine2 = content?.titleLine2 || "Smart Automation";
-  const description = content?.subtitle || "Empowering your future with sustainable energy solutions, advanced agro-technology, and intelligent industrial automation.";
   
   const backgroundImages = content?.backgroundImages && content.backgroundImages.length > 0
     ? content.backgroundImages
@@ -92,32 +89,12 @@ const Hero = ({ content, siteSettings }: HeroProps) => {
         <div className="text-center max-w-4xl mx-auto">
 
 
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-8 leading-tight font-heading tracking-tight drop-shadow-xl">
+          <h1 className="text-5xl md:text-7xl font-bold text-white mb-10 leading-tight font-heading tracking-tight drop-shadow-xl">
             {titleLine1} <br className="hidden md:block" />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-300 drop-shadow-md">
               {titleLine2}
             </span>
           </h1>
-
-          <p className="text-xl md:text-2xl text-gray-100 mb-10 max-w-3xl mx-auto leading-relaxed font-medium drop-shadow-lg">
-            {description}
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-5 justify-center mb-16 px-4">
-            <Link
-              href={siteSettings?.heroPrimaryButtonLink || "/services"}
-              className="group inline-flex items-center justify-center px-8 py-4 bg-primary text-white font-semibold rounded-2xl hover:bg-primary/90 shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 transition-all duration-300 transform hover:-translate-y-1"
-            >
-              Explore Services
-              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Link>
-            <Link
-              href={siteSettings?.heroSecondaryButtonLink || "/contact"}
-              className="inline-flex items-center justify-center px-8 py-4 bg-white border-2 border-gray-200 text-primary font-semibold rounded-2xl hover:border-primary hover:bg-gray-50 transition-all duration-300 transform hover:-translate-y-1"
-            >
-              Contact Us
-            </Link>
-          </div>
 
           {/* Stats Section with Glassmorphism */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto pt-8">

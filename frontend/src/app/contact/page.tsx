@@ -66,13 +66,13 @@ export default async function Contact() {
           <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-accent/5 rounded-full blur-[120px] pointer-events-none transform translate-x-1/3 -translate-y-1/3" />
           <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-primary/5 rounded-full blur-[100px] pointer-events-none transform -translate-x-1/2 translate-y-1/2" />
           
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-            <h1 className="text-5xl md:text-6xl font-bold font-heading text-primary mb-6 tracking-tight">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-left">
+            <h1 className="text-5xl md:text-6xl font-bold font-heading text-primary mb-6 tracking-tight text-left">
               {headerTitle.split(' ').map((word: string, i: number, arr: string[]) => 
                 i === arr.length - 1 ? <span key={i} className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">{word}</span> : <span key={i}>{word} </span>
               )}
             </h1>
-            <p className="text-xl text-gray-700 font-medium leading-relaxed max-w-2xl mx-auto">
+            <p className="text-xl text-gray-700 font-medium leading-relaxed max-w-2xl text-left">
               {headerSubtitle}
             </p>
           </div>
