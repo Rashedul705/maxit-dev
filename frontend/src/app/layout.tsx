@@ -75,14 +75,33 @@ export default async function RootLayout({
       }
     ]
   };
+  // Extract multiple footer addresses from rawSettings or parse backward-compatible payload in footerAddressLine3
+  let resolvedAddresses = Array.isArray(rawSettings?.footerAddresses) && rawSettings.footerAddresses.length > 0
+    ? rawSettings.footerAddresses
+    : null;
+
+  if (!resolvedAddresses && rawSettings?.footerAddressLine3?.includes('<!--JSON:')) {
+    try {
+      const match = rawSettings.footerAddressLine3.match(/<!--JSON:(.*?)-->/);
+      if (match && match[1]) {
+        const parsed = JSON.parse(match[1]);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          resolvedAddresses = parsed;
+        }
+      }
+    } catch (e) {}
+  }
+
   const siteSettings = rawSettings ? {
     ...defaultSettings,
     ...Object.fromEntries(
-      Object.entries(rawSettings).filter(([, v]) => {
+      Object.entries(rawSettings).filter(([k, v]) => {
+        if (k === 'footerAddresses') return false; // Handled explicitly below
         if (Array.isArray(v)) return v.length > 0;
         return v !== undefined && v !== null && v !== '';
       })
-    )
+    ),
+    footerAddresses: resolvedAddresses || defaultSettings.footerAddresses,
   } : defaultSettings;
 
   return (

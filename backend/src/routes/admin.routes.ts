@@ -868,22 +868,15 @@ router.get('/site-settings', optionalAuth, async (req: Request, res: Response) =
     if (!settings) {
       settings = DEFAULT_SETTINGS;
     } else {
-      const merged: any = { ...DEFAULT_SETTINGS };
-      for (const key of Object.keys(merged)) {
-        const storedVal = (settings as any)[key];
-        if (Array.isArray(merged[key])) {
-          if (Array.isArray(storedVal) && storedVal.length > 0) {
-            merged[key] = storedVal;
-          }
-        } else {
-          if (storedVal !== undefined && storedVal !== null && storedVal !== '') {
-            merged[key] = storedVal;
-          }
+      // Start with all properties stored in the DB document so custom/new fields like footerAddresses are never dropped
+      const merged: any = { ...settings };
+      for (const [key, defaultVal] of Object.entries(DEFAULT_SETTINGS)) {
+        if (merged[key] === undefined || merged[key] === null) {
+          merged[key] = defaultVal;
+        } else if (Array.isArray(defaultVal) && Array.isArray(merged[key]) && merged[key].length === 0) {
+          merged[key] = defaultVal;
         }
       }
-      if ((settings as any)._id) merged._id = (settings as any)._id;
-      if ((settings as any).createdAt) merged.createdAt = (settings as any).createdAt;
-      if ((settings as any).updatedAt) merged.updatedAt = (settings as any).updatedAt;
       settings = merged;
     }
     return res.json(settings);

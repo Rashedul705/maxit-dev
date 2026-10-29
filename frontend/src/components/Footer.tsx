@@ -28,7 +28,24 @@ const Footer = ({ siteSettings }: { siteSettings?: any }) => {
   
   const addressLine1 = siteSettings?.footerAddressLine1 || "Afroza Tower,";
   const addressLine2 = siteSettings?.footerAddressLine2 || "4th Floor, Uposhohor Newmarket,";
-  const addressLine3 = siteSettings?.footerAddressLine3 || "Rajshahi-6000";
+  const rawAddressLine3 = siteSettings?.footerAddressLine3 || "Rajshahi-6000";
+  const addressLine3 = rawAddressLine3.replace(/\s*<!--JSON:.*?-->/g, '').trim();
+
+  let resolvedAddresses = Array.isArray(siteSettings?.footerAddresses) && siteSettings.footerAddresses.length > 0
+    ? siteSettings.footerAddresses
+    : null;
+
+  if (!resolvedAddresses && rawAddressLine3.includes('<!--JSON:')) {
+    try {
+      const match = rawAddressLine3.match(/<!--JSON:(.*?)-->/);
+      if (match && match[1]) {
+        const parsed = JSON.parse(match[1]);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          resolvedAddresses = parsed;
+        }
+      }
+    } catch (e) {}
+  }
 
   const defaultAddresses = [
     {
@@ -41,8 +58,8 @@ const Footer = ({ siteSettings }: { siteSettings?: any }) => {
     },
   ];
 
-  const addresses = (siteSettings?.footerAddresses && siteSettings.footerAddresses.length > 0)
-    ? siteSettings.footerAddresses
+  const addresses = (resolvedAddresses && resolvedAddresses.length > 0)
+    ? resolvedAddresses
     : defaultAddresses;
   const phone = siteSettings?.footerPhone || "+8801733-272445";
   const email = siteSettings?.footerEmail || "sales@m4xit.com";

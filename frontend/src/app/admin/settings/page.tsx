@@ -40,15 +40,30 @@ export default function SiteSettingsManagement() {
       const res = await fetch('/api/admin/site-settings');
       if (res.ok) {
         const fetched = await res.json();
+        let initialAddresses = Array.isArray(fetched.footerAddresses) && fetched.footerAddresses.length > 0
+          ? fetched.footerAddresses
+          : null;
+
+        if (!initialAddresses && fetched.footerAddressLine3?.includes('<!--JSON:')) {
+          try {
+            const match = fetched.footerAddressLine3.match(/<!--JSON:(.*?)-->/);
+            if (match && match[1]) {
+              initialAddresses = JSON.parse(match[1]);
+            }
+          } catch (e) {}
+        }
+
+        if (!initialAddresses || initialAddresses.length === 0) {
+          initialAddresses = [
+            { title: "Head Office", details: "Afroza Tower, 4th Floor,\nUposhohor Newmarket, Rajshahi-6000" },
+            { title: "LAB", details: "Innovation & Automation Lab, Rajshahi" }
+          ];
+        }
+
         setData({
           ...fetched,
           featuredServicePoints: fetched.featuredServicePoints || [],
-          footerAddresses: (fetched.footerAddresses && fetched.footerAddresses.length > 0)
-            ? fetched.footerAddresses
-            : [
-                { title: "Head Office", details: "Afroza Tower, 4th Floor,\nUposhohor Newmarket, Rajshahi-6000" },
-                { title: "LAB", details: "Innovation & Automation Lab, Rajshahi" }
-              ]
+          footerAddresses: initialAddresses
         });
       }
     } catch (err) {
@@ -66,17 +81,32 @@ export default function SiteSettingsManagement() {
     setMessage({ type: "", text: "" });
     
     try {
+      const toSave = { ...data };
+      if (toSave.footerAddresses && toSave.footerAddresses.length > 0) {
+        const headOffice = toSave.footerAddresses[0];
+        const lines = headOffice?.details ? headOffice.details.split('\n').map((l: string) => l.trim()).filter(Boolean) : [];
+        if (lines.length > 0) {
+          (toSave as any).footerAddressLine1 = lines[0];
+          (toSave as any).footerAddressLine2 = lines[1] || '';
+          const line3Base = lines.slice(2).join(', ') || 'Rajshahi-6000';
+          (toSave as any).footerAddressLine3 = `${line3Base}\n<!--JSON:${JSON.stringify(toSave.footerAddresses)}-->`;
+        } else {
+          (toSave as any).footerAddressLine3 = `Rajshahi-6000\n<!--JSON:${JSON.stringify(toSave.footerAddresses)}-->`;
+        }
+      }
+
       const res = await fetch('/api/admin/site-settings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
+        body: JSON.stringify(toSave)
       });
       
       if (res.ok) {
         setMessage({ type: "success", text: "Site settings updated successfully!" });
         setTimeout(() => setMessage({ type: "", text: "" }), 3000);
       } else {
-        setMessage({ type: "error", text: "Failed to update site settings" });
+        const errData = await res.json().catch(() => ({}));
+        setMessage({ type: "error", text: errData.error || "Failed to update site settings" });
       }
     } catch (err) {
       console.error(err);

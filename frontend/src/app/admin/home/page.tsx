@@ -44,17 +44,32 @@ export default function HomeAdmin() {
       setHomeData(homeJson);
       setDefaultHomeData(homeJson); // Storing initial fetch as default for simplicity, or we can fetch a specific /default route
       
-      if (settingsJson && (!settingsJson.footerAddresses || settingsJson.footerAddresses.length === 0)) {
-        settingsJson.footerAddresses = [
-          {
-            title: 'Head Office',
-            details: [settingsJson.footerAddressLine1 || 'Afroza Tower,', settingsJson.footerAddressLine2 || '4th Floor, Uposhohor Newmarket,', settingsJson.footerAddressLine3 || 'Rajshahi-6000'].filter(Boolean).join('\n')
-          },
-          {
-            title: 'LAB',
-            details: 'Innovation & Automation Lab, Rajshahi'
-          }
-        ];
+      if (settingsJson) {
+        let initialAddresses = settingsJson.footerAddresses;
+        if ((!initialAddresses || initialAddresses.length === 0) && settingsJson.footerAddressLine3?.includes('<!--JSON:')) {
+          try {
+            const match = settingsJson.footerAddressLine3.match(/<!--JSON:(.*?)-->/);
+            if (match && match[1]) {
+              initialAddresses = JSON.parse(match[1]);
+            }
+          } catch (e) {}
+        }
+        if (!initialAddresses || initialAddresses.length === 0) {
+          initialAddresses = [
+            {
+              title: 'Head Office',
+              details: [settingsJson.footerAddressLine1 || 'Afroza Tower,', settingsJson.footerAddressLine2 || '4th Floor, Uposhohor Newmarket,', (settingsJson.footerAddressLine3 || 'Rajshahi-6000').replace(/\s*<!--JSON:.*?-->/g, '').trim()].filter(Boolean).join('\n')
+            },
+            {
+              title: 'LAB',
+              details: 'Innovation & Automation Lab, Rajshahi'
+            }
+          ];
+        }
+        settingsJson.footerAddresses = initialAddresses;
+        if (settingsJson.footerAddressLine3) {
+          settingsJson.footerAddressLine3 = settingsJson.footerAddressLine3.replace(/\s*<!--JSON:.*?-->/g, '').trim();
+        }
       }
       
       setSiteSettings(settingsJson);
@@ -69,7 +84,21 @@ export default function HomeAdmin() {
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      await Promise.all([
+      const toSaveSettings = { ...siteSettings };
+      if (toSaveSettings.footerAddresses && toSaveSettings.footerAddresses.length > 0) {
+        const headOffice = toSaveSettings.footerAddresses[0];
+        const lines = headOffice?.details ? headOffice.details.split('\n').map((l: string) => l.trim()).filter(Boolean) : [];
+        if (lines.length > 0) {
+          toSaveSettings.footerAddressLine1 = lines[0];
+          toSaveSettings.footerAddressLine2 = lines[1] || '';
+          const line3Base = lines.slice(2).join(', ') || 'Rajshahi-6000';
+          toSaveSettings.footerAddressLine3 = `${line3Base}\n<!--JSON:${JSON.stringify(toSaveSettings.footerAddresses)}-->`;
+        } else {
+          toSaveSettings.footerAddressLine3 = `Rajshahi-6000\n<!--JSON:${JSON.stringify(toSaveSettings.footerAddresses)}-->`;
+        }
+      }
+
+      const [resHome, resSettings] = await Promise.all([
         fetch('/api/admin/home', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -78,9 +107,12 @@ export default function HomeAdmin() {
         fetch('/api/admin/site-settings', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(siteSettings)
+          body: JSON.stringify(toSaveSettings)
         })
       ]);
+      if (!resHome.ok || !resSettings.ok) {
+        throw new Error('Failed to save settings or home data');
+      }
       alert('Saved successfully! The live homepage has been updated.');
     } catch (error) {
       alert('Error saving data');
@@ -159,7 +191,7 @@ export default function HomeAdmin() {
   };
 
   const updateSetting = (field: string, value: any) => {
-    setSiteSettings({ ...siteSettings, [field]: value });
+    setSiteSettings((prev: any) => ({ ...prev, [field]: value }));
   };
 
   const handleDragStart = (e: React.DragEvent, idx: number) => {
