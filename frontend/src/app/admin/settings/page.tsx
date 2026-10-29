@@ -21,6 +21,7 @@ type SiteSettings = {
   featuredServiceTitle: string;
   featuredServiceDescription: string;
   featuredServicePoints: FeaturedPoint[];
+  footerAddresses?: { title: string; details: string; order?: number }[];
 };
 
 export default function SiteSettingsManagement() {
@@ -41,7 +42,13 @@ export default function SiteSettingsManagement() {
         const fetched = await res.json();
         setData({
           ...fetched,
-          featuredServicePoints: fetched.featuredServicePoints || []
+          featuredServicePoints: fetched.featuredServicePoints || [],
+          footerAddresses: (fetched.footerAddresses && fetched.footerAddresses.length > 0)
+            ? fetched.footerAddresses
+            : [
+                { title: "Head Office", details: "Afroza Tower, 4th Floor,\nUposhohor Newmarket, Rajshahi-6000" },
+                { title: "LAB", details: "Innovation & Automation Lab, Rajshahi" }
+              ]
         });
       }
     } catch (err) {
@@ -210,6 +217,87 @@ export default function SiteSettingsManagement() {
                           setData({ ...data, featuredServicePoints: newPoints });
                         }}
                         className="w-full px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* FOOTER ADDRESSES */}
+          <div className="space-y-6 pt-6 border-t border-gray-100">
+            <div className="flex items-center justify-between border-b border-gray-100 pb-4">
+              <div>
+                <h3 className="text-xl font-bold text-gray-900">Footer Multiple Addresses</h3>
+                <p className="text-sm text-gray-500">Manage multiple location addresses displayed in the website footer (e.g. Head Office, LAB, Regional Offices).</p>
+              </div>
+              <button 
+                type="button" 
+                onClick={() => {
+                  const current = data.footerAddresses || [
+                    { title: "Head Office", details: "Afroza Tower, 4th Floor,\nUposhohor Newmarket, Rajshahi-6000" },
+                    { title: "LAB", details: "Innovation & Automation Lab, Rajshahi" }
+                  ];
+                  setData({ ...data, footerAddresses: [...current, { title: "New Location", details: "" }] });
+                }}
+                className="flex items-center text-sm font-medium text-accent hover:text-accent/80 cursor-pointer"
+              >
+                <Plus className="w-4 h-4 mr-1" /> Add Address
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {(data.footerAddresses || [
+                { title: "Head Office", details: "Afroza Tower, 4th Floor,\nUposhohor Newmarket, Rajshahi-6000" },
+                { title: "LAB", details: "Innovation & Automation Lab, Rajshahi" }
+              ]).map((addr, i) => (
+                <div key={i} className="bg-gray-50 p-4 rounded-xl border border-gray-200 relative group">
+                  <button 
+                    type="button" 
+                    onClick={() => {
+                      const current = [...(data.footerAddresses || [
+                        { title: "Head Office", details: "Afroza Tower, 4th Floor,\nUposhohor Newmarket, Rajshahi-6000" },
+                        { title: "LAB", details: "Innovation & Automation Lab, Rajshahi" }
+                      ])];
+                      current.splice(i, 1);
+                      setData({ ...data, footerAddresses: current });
+                    }}
+                    className="absolute -top-2 -right-2 bg-red-100 text-red-600 p-1.5 rounded-full hover:bg-red-200 opacity-0 group-hover:opacity-100 transition-opacity z-10 cursor-pointer"
+                    title="Delete Address"
+                  >
+                    <Trash2 className="w-3 h-3" />
+                  </button>
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-xs font-medium text-gray-500 mb-1">Location Title (e.g. Head Office, LAB)</label>
+                      <input
+                        type="text" required value={addr.title}
+                        onChange={(e) => {
+                          const current = [...(data.footerAddresses || [
+                            { title: "Head Office", details: "Afroza Tower, 4th Floor,\nUposhohor Newmarket, Rajshahi-6000" },
+                            { title: "LAB", details: "Innovation & Automation Lab, Rajshahi" }
+                          ])];
+                          current[i] = { ...current[i], title: e.target.value };
+                          setData({ ...data, footerAddresses: current });
+                        }}
+                        className="w-full px-3 py-1.5 text-sm font-bold border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 bg-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-500 mb-1">Address Details (newlines supported)</label>
+                      <textarea
+                        rows={3}
+                        required value={addr.details}
+                        onChange={(e) => {
+                          const current = [...(data.footerAddresses || [
+                            { title: "Head Office", details: "Afroza Tower, 4th Floor,\nUposhohor Newmarket, Rajshahi-6000" },
+                            { title: "LAB", details: "Innovation & Automation Lab, Rajshahi" }
+                          ])];
+                          current[i] = { ...current[i], details: e.target.value };
+                          setData({ ...data, footerAddresses: current });
+                        }}
+                        className="w-full px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 bg-white"
                       />
                     </div>
                   </div>

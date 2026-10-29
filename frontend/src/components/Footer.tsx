@@ -26,9 +26,24 @@ const Footer = ({ siteSettings }: { siteSettings?: any }) => {
   const logoUrl = siteSettings?.footerLogo || "/logo.png";
   const description = siteSettings?.footerDescription || "Your partner for sustainable energy, advanced agro-tech, and intelligent automation solutions. Empowering a greener tomorrow.";
   
-  const addressLine1 = siteSettings?.footerAddressLine1 || "2nd Floor, Afroza Tower,";
-  const addressLine2 = siteSettings?.footerAddressLine2 || "Uposhohor Newmarket,";
+  const addressLine1 = siteSettings?.footerAddressLine1 || "Afroza Tower,";
+  const addressLine2 = siteSettings?.footerAddressLine2 || "4th Floor, Uposhohor Newmarket,";
   const addressLine3 = siteSettings?.footerAddressLine3 || "Rajshahi-6000";
+
+  const defaultAddresses = [
+    {
+      title: "Head Office",
+      details: [addressLine1, addressLine2, addressLine3].filter(Boolean).join("\n"),
+    },
+    {
+      title: "LAB",
+      details: "Innovation & Automation Lab, Rajshahi",
+    },
+  ];
+
+  const addresses = (siteSettings?.footerAddresses && siteSettings.footerAddresses.length > 0)
+    ? siteSettings.footerAddresses
+    : defaultAddresses;
   const phone = siteSettings?.footerPhone || "+8801733-272445";
   const email = siteSettings?.footerEmail || "sales@m4xit.com";
   
@@ -158,16 +173,23 @@ const Footer = ({ siteSettings }: { siteSettings?: any }) => {
                 </div>
                 <a href={`tel:${phone.replace(/\s+/g, '')}`} className="text-slate-400 text-sm group-hover:text-white transition-colors font-medium">{phone}</a>
               </li>
-              <li className="flex flex-col md:flex-row items-center md:items-start justify-center md:justify-start gap-2.5 md:gap-3 group cursor-pointer text-center md:text-left">
-                <div className="p-2 rounded-lg bg-slate-800/80 border border-slate-700/60 group-hover:bg-slate-700 transition-colors flex-shrink-0">
-                  <MapPin size={16} className="text-slate-300 group-hover:text-white" />
-                </div>
-                <span className="text-slate-400 text-sm leading-relaxed group-hover:text-white transition-colors font-medium text-center md:text-left">
-                  {addressLine1}<br />
-                  {addressLine2}<br />
-                  {addressLine3}
-                </span>
-              </li>
+              {addresses.map((addr: any, idx: number) => (
+                <li key={idx} className="flex flex-col md:flex-row items-center md:items-start justify-center md:justify-start gap-2.5 md:gap-3 group text-center md:text-left">
+                  <div className="p-2 rounded-lg bg-slate-800/80 border border-slate-700/60 group-hover:bg-slate-700 transition-colors flex-shrink-0 mt-0.5">
+                    <MapPin size={16} className="text-slate-300 group-hover:text-white" />
+                  </div>
+                  <div className="text-slate-400 text-sm leading-relaxed group-hover:text-white transition-colors font-medium text-center md:text-left">
+                    {addr.title && (
+                      <span className="block font-bold text-white text-xs uppercase tracking-wider mb-0.5">
+                        {addr.title}
+                      </span>
+                    )}
+                    <span className="whitespace-pre-line text-slate-400 group-hover:text-slate-200 transition-colors">
+                      {addr.details}
+                    </span>
+                  </div>
+                </li>
+              ))}
             </ul>
           </div>
         </div>

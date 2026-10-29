@@ -131,9 +131,10 @@ router.post('/', requireAuth, handleMulterUpload, async (req: Request, res: Resp
       });
     }
 
-    // Try ImgBB first if API key is provided
+    // Save to local uploads directory by default (persistent & fast).
+    // Use ImgBB only if explicitly enabled via USE_IMGBB=true
     const apiKey = process.env.IMGBB_API_KEY;
-    if (apiKey) {
+    if (process.env.USE_IMGBB === 'true' && apiKey) {
       try {
         const base64Image = req.file.buffer.toString('base64');
         const imgbbFormData = new URLSearchParams();

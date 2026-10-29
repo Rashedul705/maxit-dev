@@ -62,6 +62,18 @@ export default async function RootLayout({
     navbarContactButtonText: "Get Started",
     navbarContactButtonLink: "/contact",
     footerLogo: "/logo.png",
+    footerAddresses: [
+      {
+        title: "Head Office",
+        details: "Afroza Tower, 4th Floor,\nUposhohor Newmarket, Rajshahi-6000",
+        order: 0
+      },
+      {
+        title: "LAB",
+        details: "Innovation & Automation Lab, Rajshahi",
+        order: 1
+      }
+    ]
   };
   const siteSettings = rawSettings ? {
     ...defaultSettings,

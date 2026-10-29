@@ -846,7 +846,19 @@ const DEFAULT_SETTINGS = {
   footerPhone: "+8801733-272445",
   footerAddressLine1: "2nd Floor, Afroza Tower,",
   footerAddressLine2: "Uposhohor Newmarket,",
-  footerAddressLine3: "Rajshahi-6000"
+  footerAddressLine3: "Rajshahi-6000",
+  footerAddresses: [
+    {
+      title: "Head Office",
+      details: "Afroza Tower, 4th Floor,\nUposhohor Newmarket, Rajshahi-6000",
+      order: 0
+    },
+    {
+      title: "LAB",
+      details: "Innovation & Automation Lab, Rajshahi",
+      order: 1
+    }
+  ]
 };
 
 router.get('/site-settings', optionalAuth, async (req: Request, res: Response) => {

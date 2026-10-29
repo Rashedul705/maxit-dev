@@ -46,7 +46,14 @@ const SiteSettingsSchema = new mongoose.Schema(
     footerPhone: { type: String, default: "+8801733-272445" },
     footerAddressLine1: { type: String, default: "2nd Floor, Afroza Tower," },
     footerAddressLine2: { type: String, default: "Uposhohor Newmarket," },
-    footerAddressLine3: { type: String, default: "Rajshahi-6000" }
+    footerAddressLine3: { type: String, default: "Rajshahi-6000" },
+    footerAddresses: [
+      {
+        title: { type: String, default: "Head Office" },
+        details: { type: String, default: "2nd Floor, Afroza Tower, Uposhohor Newmarket, Rajshahi-6000" },
+        order: { type: Number, default: 0 }
+      }
+    ]
   },
   { timestamps: true, strict: false }
 );

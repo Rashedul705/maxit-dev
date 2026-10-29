@@ -44,6 +44,19 @@ export default function HomeAdmin() {
       setHomeData(homeJson);
       setDefaultHomeData(homeJson); // Storing initial fetch as default for simplicity, or we can fetch a specific /default route
       
+      if (settingsJson && (!settingsJson.footerAddresses || settingsJson.footerAddresses.length === 0)) {
+        settingsJson.footerAddresses = [
+          {
+            title: 'Head Office',
+            details: [settingsJson.footerAddressLine1 || 'Afroza Tower,', settingsJson.footerAddressLine2 || '4th Floor, Uposhohor Newmarket,', settingsJson.footerAddressLine3 || 'Rajshahi-6000'].filter(Boolean).join('\n')
+          },
+          {
+            title: 'LAB',
+            details: 'Innovation & Automation Lab, Rajshahi'
+          }
+        ];
+      }
+      
       setSiteSettings(settingsJson);
       setDefaultSiteSettings(settingsJson);
       setIsLoading(false);
@@ -808,13 +821,95 @@ export default function HomeAdmin() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t">
                 {/* Contact overrides */}
-                <div className="space-y-3">
+                <div className="space-y-4">
                   <h3 className="font-semibold text-lg">Contact Info</h3>
-                  <div><label className="block text-xs text-gray-500">Email</label><input type="text" value={siteSettings.footerEmail || ''} onChange={(e) => updateSetting('footerEmail', e.target.value)} className="w-full border p-2 rounded text-sm" /></div>
-                  <div><label className="block text-xs text-gray-500">Phone</label><input type="text" value={siteSettings.footerPhone || ''} onChange={(e) => updateSetting('footerPhone', e.target.value)} className="w-full border p-2 rounded text-sm" /></div>
-                  <div><label className="block text-xs text-gray-500">Address Line 1</label><input type="text" value={siteSettings.footerAddressLine1 || ''} onChange={(e) => updateSetting('footerAddressLine1', e.target.value)} className="w-full border p-2 rounded text-sm" /></div>
-                  <div><label className="block text-xs text-gray-500">Address Line 2</label><input type="text" value={siteSettings.footerAddressLine2 || ''} onChange={(e) => updateSetting('footerAddressLine2', e.target.value)} className="w-full border p-2 rounded text-sm" /></div>
-                  <div><label className="block text-xs text-gray-500">Address Line 3</label><input type="text" value={siteSettings.footerAddressLine3 || ''} onChange={(e) => updateSetting('footerAddressLine3', e.target.value)} className="w-full border p-2 rounded text-sm" /></div>
+                  <div><label className="block text-xs text-gray-500 font-medium">Email</label><input type="text" value={siteSettings.footerEmail || ''} onChange={(e) => updateSetting('footerEmail', e.target.value)} className="w-full border p-2 rounded text-sm" /></div>
+                  <div><label className="block text-xs text-gray-500 font-medium">Phone</label><input type="text" value={siteSettings.footerPhone || ''} onChange={(e) => updateSetting('footerPhone', e.target.value)} className="w-full border p-2 rounded text-sm" /></div>
+                  
+                  {/* Multiple Addresses Management */}
+                  <div className="pt-2 border-t space-y-3">
+                    <div className="flex items-center justify-between">
+                      <label className="block text-sm font-semibold text-gray-800">Footer Addresses (e.g. Head Office, LAB)</label>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const current = (siteSettings.footerAddresses && siteSettings.footerAddresses.length > 0)
+                            ? [...siteSettings.footerAddresses]
+                            : [
+                                { title: 'Head Office', details: [siteSettings.footerAddressLine1 || 'Afroza Tower,', siteSettings.footerAddressLine2 || '4th Floor, Uposhohor Newmarket,', siteSettings.footerAddressLine3 || 'Rajshahi-6000'].filter(Boolean).join('\n') },
+                                { title: 'LAB', details: 'Innovation & Automation Lab, Rajshahi' }
+                              ];
+                          updateSetting('footerAddresses', [...current, { title: 'New Location', details: '' }]);
+                        }}
+                        className="text-xs font-semibold text-primary flex items-center hover:underline cursor-pointer"
+                      >
+                        <Plus size={14} className="mr-1" /> Add Address
+                      </button>
+                    </div>
+
+                    <div className="space-y-3">
+                      {((siteSettings.footerAddresses && siteSettings.footerAddresses.length > 0)
+                        ? siteSettings.footerAddresses
+                        : [
+                            { title: 'Head Office', details: [siteSettings.footerAddressLine1 || 'Afroza Tower,', siteSettings.footerAddressLine2 || '4th Floor, Uposhohor Newmarket,', siteSettings.footerAddressLine3 || 'Rajshahi-6000'].filter(Boolean).join('\n') },
+                            { title: 'LAB', details: 'Innovation & Automation Lab, Rajshahi' }
+                          ]
+                      ).map((addr: any, idx: number) => (
+                        <div key={idx} className="p-3 bg-gray-50 border border-gray-200 rounded-xl space-y-2 relative group">
+                          <div className="flex items-center justify-between gap-2">
+                            <input
+                              type="text"
+                              placeholder="Title (e.g. Head Office, LAB)"
+                              value={addr.title || ''}
+                              onChange={(e) => {
+                                const current = [...((siteSettings.footerAddresses && siteSettings.footerAddresses.length > 0)
+                                  ? siteSettings.footerAddresses
+                                  : [
+                                      { title: 'Head Office', details: [siteSettings.footerAddressLine1 || 'Afroza Tower,', siteSettings.footerAddressLine2 || '4th Floor, Uposhohor Newmarket,', siteSettings.footerAddressLine3 || 'Rajshahi-6000'].filter(Boolean).join('\n') },
+                                      { title: 'LAB', details: 'Innovation & Automation Lab, Rajshahi' }
+                                    ])];
+                                current[idx] = { ...current[idx], title: e.target.value };
+                                updateSetting('footerAddresses', current);
+                              }}
+                              className="font-bold text-sm border p-2 rounded-lg flex-1 bg-white"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const current = [...((siteSettings.footerAddresses && siteSettings.footerAddresses.length > 0)
+                                  ? siteSettings.footerAddresses
+                                  : [
+                                      { title: 'Head Office', details: [siteSettings.footerAddressLine1 || 'Afroza Tower,', siteSettings.footerAddressLine2 || '4th Floor, Uposhohor Newmarket,', siteSettings.footerAddressLine3 || 'Rajshahi-6000'].filter(Boolean).join('\n') },
+                                      { title: 'LAB', details: 'Innovation & Automation Lab, Rajshahi' }
+                                    ])];
+                                updateSetting('footerAddresses', current.filter((_: any, i: number) => i !== idx));
+                              }}
+                              className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
+                              title="Delete Address"
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
+                          <textarea
+                            rows={3}
+                            placeholder="Address lines / details"
+                            value={addr.details || ''}
+                            onChange={(e) => {
+                              const current = [...((siteSettings.footerAddresses && siteSettings.footerAddresses.length > 0)
+                                ? siteSettings.footerAddresses
+                                : [
+                                    { title: 'Head Office', details: [siteSettings.footerAddressLine1 || 'Afroza Tower,', siteSettings.footerAddressLine2 || '4th Floor, Uposhohor Newmarket,', siteSettings.footerAddressLine3 || 'Rajshahi-6000'].filter(Boolean).join('\n') },
+                                    { title: 'LAB', details: 'Innovation & Automation Lab, Rajshahi' }
+                                  ])];
+                              current[idx] = { ...current[idx], details: e.target.value };
+                              updateSetting('footerAddresses', current);
+                            }}
+                            className="w-full border p-2 rounded-lg text-sm bg-white"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
 
                 {/* Quick Links & Social */}
