@@ -179,44 +179,23 @@ export default async function Contact() {
 
                     {/* Locations (Head Office & LAB Office) */}
                     {offices.map((office: any, idx: number) => (
-                      <a 
+                      <div 
                         key={idx} 
-                        href={googleMapsUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-start group hover:bg-white/10 p-3 -mx-3 rounded-2xl transition-all duration-200"
-                        title="View location on Google Maps"
+                        className="flex items-start p-3 -mx-3 rounded-2xl"
                       >
-                        <div className="flex-shrink-0 w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center mr-6 border border-white/20 group-hover:bg-white/20 transition-colors shadow-lg">
-                          <MapPin className="w-7 h-7 text-white group-hover:scale-110 transition-transform" />
+                        <div className="flex-shrink-0 w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center mr-6 border border-white/20 shadow-lg">
+                          <MapPin className="w-7 h-7 text-white" />
                         </div>
                         <div className="flex-grow">
-                          <div className="flex items-center gap-2">
-                            <h3 className="text-lg font-semibold mb-1 text-white tracking-wide">
-                              {office.title || "Our Location"}
-                            </h3>
-                            <ExternalLink className="w-3.5 h-3.5 text-white/60 opacity-0 group-hover:opacity-100 transition-opacity" />
-                          </div>
-                          <p className="text-white/80 leading-relaxed font-medium whitespace-pre-line group-hover:text-white transition-colors">
+                          <h3 className="text-lg font-semibold mb-1 text-white tracking-wide">
+                            {office.title || "Our Location"}
+                          </h3>
+                          <p className="text-white/80 leading-relaxed font-medium whitespace-pre-line">
                             {office.details}
                           </p>
                         </div>
-                      </a>
+                      </div>
                     ))}
-
-                    {/* Google Maps Action Button */}
-                    <div className="pt-2">
-                      <a
-                        href={googleMapsUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full inline-flex items-center justify-center gap-2.5 px-5 py-3.5 bg-white/15 hover:bg-white/25 text-white font-bold text-sm rounded-xl border border-white/25 shadow-md hover:shadow-lg transition-all duration-200 group"
-                      >
-                        <MapPin className="w-5 h-5 text-accent transition-transform group-hover:scale-110" />
-                        <span>View Location on Google Maps</span>
-                        <ExternalLink className="w-4 h-4 text-white/80 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                      </a>
-                    </div>
                   </div>
                 </div>
                 
