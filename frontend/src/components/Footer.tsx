@@ -193,63 +193,60 @@ const Footer = ({ siteSettings }: { siteSettings?: any }) => {
                 <a href={`tel:${phone.replace(/\s+/g, '')}`} className="text-slate-400 text-sm group-hover:text-white transition-colors font-medium">{phone}</a>
               </li>
               {addresses.map((addr: any, idx: number) => (
-                <li key={idx} className="flex flex-col md:flex-row items-center md:items-start justify-center md:justify-start gap-2.5 md:gap-3 group text-center md:text-left w-full">
-                  <a
-                    href={googleMapsUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex flex-col md:flex-row items-center md:items-start justify-center md:justify-start gap-2.5 md:gap-3 group text-center md:text-left hover:text-white transition-colors"
-                    title="View this location on Google Maps"
-                  >
-                    <div className="p-2 rounded-lg bg-slate-800/80 border border-slate-700/60 group-hover:bg-slate-700 transition-colors flex-shrink-0 mt-0.5">
-                      <MapPin size={16} className="text-slate-300 group-hover:text-blue-400 transition-colors" />
-                    </div>
-                    <div className="text-slate-400 text-sm leading-relaxed group-hover:text-white transition-colors font-medium text-center md:text-left">
-                      {addr.title && (
-                        <span className="block font-bold text-white text-xs uppercase tracking-wider mb-0.5">
-                          {addr.title}
-                        </span>
-                      )}
-                      <span className="whitespace-pre-line text-slate-400 group-hover:text-slate-200 transition-colors">
-                        {addr.details}
+                <li key={idx} className="flex flex-col md:flex-row items-center md:items-start justify-center md:justify-start gap-2.5 md:gap-3 text-center md:text-left w-full">
+                  <div className="p-2 rounded-lg bg-slate-800/80 border border-slate-700/60 flex-shrink-0 mt-0.5">
+                    <MapPin size={16} className="text-slate-300" />
+                  </div>
+                  <div className="text-slate-400 text-sm leading-relaxed font-medium text-center md:text-left">
+                    {addr.title && (
+                      <span className="block font-bold text-white text-xs uppercase tracking-wider mb-0.5">
+                        {addr.title}
                       </span>
-                    </div>
-                  </a>
+                    )}
+                    <span className="whitespace-pre-line text-slate-400">
+                      {addr.details}
+                    </span>
+                  </div>
                 </li>
               ))}
-              <li className="pt-2 w-full flex flex-col items-center md:items-start gap-3">
-                <a
-                  href={googleMapsUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 hover:text-blue-300 text-xs font-semibold border border-blue-500/30 transition-all duration-200 group"
-                  title="Open location in Google Maps"
-                >
-                  <MapPin size={13} className="text-blue-400 group-hover:scale-110 transition-transform" />
-                  <span>Google Maps Location</span>
-                  <ExternalLink size={12} className="opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
-                </a>
-
-                {/* Embedded Google Maps */}
-                <div className="w-full h-44 rounded-xl overflow-hidden border border-slate-700/80 shadow-md bg-slate-900/60 relative">
-                  <iframe
-                    src={googleMapsEmbedUrl}
-                    width="100%"
-                    height="100%"
-                    style={{ border: 0 }}
-                    allowFullScreen={true}
-                    loading="lazy"
-                    referrerPolicy="strict-origin-when-cross-origin"
-                    title="Max iT Solution Google Maps Location"
-                    className="w-full h-full"
-                  />
-                </div>
-              </li>
             </ul>
           </div>
         </div>
 
-        <div className="border-t border-slate-800 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-slate-500 text-center md:text-left gap-4 md:gap-0">
+        {/* Google Map Embedded Location - Full Width like Maxit Shop */}
+        <div className="mt-12 pt-8 border-t border-slate-800">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+            <div className="flex items-center gap-2">
+              <MapPin className="w-4 h-4 text-accent" />
+              <span className="text-xs font-bold text-white uppercase tracking-wider">Store &amp; Office Location</span>
+              <span className="text-slate-400 text-xs hidden sm:inline">— Afroza Tower, Uposhohor Newmarket, Rajshahi</span>
+            </div>
+            <a
+              href={googleMapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#0468D3] hover:text-blue-400 hover:underline text-xs font-semibold inline-flex items-center gap-1 self-start sm:self-auto"
+            >
+              <span>Open in Google Maps</span>
+              <span className="text-[10px]">↗</span>
+            </a>
+          </div>
+          <div className="w-full h-48 sm:h-64 rounded-xl overflow-hidden border border-slate-800 shadow-inner bg-[#101C33]">
+            <iframe
+              src={googleMapsEmbedUrl}
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen={true}
+              loading="lazy"
+              referrerPolicy="strict-origin-when-cross-origin"
+              title="Max iT Solution Google Maps Location"
+              className="w-full h-full"
+            />
+          </div>
+        </div>
+
+        <div className="border-t border-slate-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-slate-500 text-center md:text-left gap-4 md:gap-0">
           <p>{copyrightText}</p>
           <div className="flex space-x-6 justify-center">
             <Link href={privacyPolicyLink} className="hover:text-slate-300 transition-colors font-medium">Privacy Policy</Link>
