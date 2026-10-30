@@ -213,37 +213,17 @@ const Footer = ({ siteSettings }: { siteSettings?: any }) => {
           </div>
         </div>
 
-        {/* Google Map Embedded Location - Full Width like Maxit Shop */}
-        <div className="mt-12 pt-8 border-t border-slate-800">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
-            <div className="flex items-center gap-2">
-              <MapPin className="w-4 h-4 text-accent" />
-              <span className="text-xs font-bold text-white uppercase tracking-wider">Store &amp; Office Location</span>
-              <span className="text-slate-400 text-xs hidden sm:inline">— Afroza Tower, Uposhohor Newmarket, Rajshahi</span>
-            </div>
-            <a
-              href={googleMapsUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#0468D3] hover:text-blue-400 hover:underline text-xs font-semibold inline-flex items-center gap-1 self-start sm:self-auto"
-            >
-              <span>Open in Google Maps</span>
-              <span className="text-[10px]">↗</span>
-            </a>
-          </div>
-          <div className="w-full h-48 sm:h-64 rounded-xl overflow-hidden border border-slate-800 shadow-inner bg-[#101C33]">
-            <iframe
-              src={googleMapsEmbedUrl}
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              allowFullScreen={true}
-              loading="lazy"
-              referrerPolicy="strict-origin-when-cross-origin"
-              title="Max iT Solution Google Maps Location"
-              className="w-full h-full"
-            />
-          </div>
+        {/* Google Map Embedded Location - Full Width Default Embed */}
+        <div className="w-full mt-12 pt-8 border-t border-slate-800">
+          <iframe
+            src={googleMapsEmbedUrl}
+            width="100%"
+            height="450"
+            style={{ border: 0 }}
+            allowFullScreen={true}
+            loading="lazy"
+            referrerPolicy="strict-origin-when-cross-origin"
+          />
         </div>
 
         <div className="border-t border-slate-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-slate-500 text-center md:text-left gap-4 md:gap-0">
