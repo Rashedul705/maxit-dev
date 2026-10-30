@@ -55,8 +55,8 @@ export default function SiteSettingsManagement() {
 
         if (!initialAddresses || initialAddresses.length === 0) {
           initialAddresses = [
-            { title: "Head Office", details: "Afroza Tower, 4th Floor,\nUposhohor Newmarket, Rajshahi-6000" },
-            { title: "LAB", details: "Innovation & Automation Lab, Rajshahi" }
+            { title: "Head Office", details: "Afroza Tower, 4th Floor, Uposhohor Newmarket, Rajshahi" },
+            { title: "LAB Office", details: "Afroza Tower, 2nd Floor, Uposhohor Newmarket, Rajshahi" }
           ];
         }
 
@@ -287,8 +287,8 @@ export default function SiteSettingsManagement() {
                     type="button" 
                     onClick={() => {
                       const current = [...(data.footerAddresses || [
-                        { title: "Head Office", details: "Afroza Tower, 4th Floor,\nUposhohor Newmarket, Rajshahi-6000" },
-                        { title: "LAB", details: "Innovation & Automation Lab, Rajshahi" }
+                        { title: "Head Office", details: "Afroza Tower, 4th Floor, Uposhohor Newmarket, Rajshahi" },
+                        { title: "LAB Office", details: "Afroza Tower, 2nd Floor, Uposhohor Newmarket, Rajshahi" }
                       ])];
                       current.splice(i, 1);
                       setData({ ...data, footerAddresses: current });
@@ -305,8 +305,8 @@ export default function SiteSettingsManagement() {
                         type="text" required value={addr.title}
                         onChange={(e) => {
                           const current = [...(data.footerAddresses || [
-                            { title: "Head Office", details: "Afroza Tower, 4th Floor,\nUposhohor Newmarket, Rajshahi-6000" },
-                            { title: "LAB", details: "Innovation & Automation Lab, Rajshahi" }
+                            { title: "Head Office", details: "Afroza Tower, 4th Floor, Uposhohor Newmarket, Rajshahi" },
+                            { title: "LAB Office", details: "Afroza Tower, 2nd Floor, Uposhohor Newmarket, Rajshahi" }
                           ])];
                           current[i] = { ...current[i], title: e.target.value };
                           setData({ ...data, footerAddresses: current });
@@ -321,8 +321,8 @@ export default function SiteSettingsManagement() {
                         required value={addr.details}
                         onChange={(e) => {
                           const current = [...(data.footerAddresses || [
-                            { title: "Head Office", details: "Afroza Tower, 4th Floor,\nUposhohor Newmarket, Rajshahi-6000" },
-                            { title: "LAB", details: "Innovation & Automation Lab, Rajshahi" }
+                            { title: "Head Office", details: "Afroza Tower, 4th Floor, Uposhohor Newmarket, Rajshahi" },
+                            { title: "LAB Office", details: "Afroza Tower, 2nd Floor, Uposhohor Newmarket, Rajshahi" }
                           ])];
                           current[i] = { ...current[i], details: e.target.value };
                           setData({ ...data, footerAddresses: current });

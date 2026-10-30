@@ -401,7 +401,7 @@ const Index = async () => {
                       <img 
                         src={member.photoUrl || member.image || "/images/placeholder.jpg"} 
                         alt={member.name}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover object-top"
                       />
                     </div>
                     

@@ -31,8 +31,8 @@ export default async function About() {
           <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] pointer-events-none -translate-y-1/2 translate-x-1/3"></div>
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div className="text-center mb-16">
-              <h1 className="text-4xl md:text-6xl font-bold font-heading text-primary mb-6 tracking-tight">
+            <div className="text-left mb-16">
+              <h1 className="text-4xl md:text-6xl font-bold font-heading text-primary mb-6 tracking-tight text-left">
                 {aboutData.aboutHeaderTitle?.split('Max iT').length > 1 ? (
                   <>
                     {aboutData.aboutHeaderTitle.split('Max iT')[0]}
@@ -44,11 +44,11 @@ export default async function About() {
                 )}
               </h1>
               {aboutData.aboutHeaderSubtitle && (
-                <p className="text-2xl text-primary/80 font-medium mb-6">
+                <p className="text-2xl text-primary/80 font-medium mb-6 text-left">
                   {aboutData.aboutHeaderSubtitle}
                 </p>
               )}
-              <p className="text-xl text-gray-700 max-w-3xl mx-auto font-medium leading-relaxed">
+              <p className="text-xl text-gray-700 max-w-3xl font-medium leading-relaxed text-left">
                 {aboutData.journey}
               </p>
             </div>
@@ -89,9 +89,9 @@ export default async function About() {
         {/* 3. Value Proposition / What Sets Us Apart */}
         <section className="py-24 bg-white relative">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold font-heading text-primary mb-6">{aboutData.whatSetsUsApartTitle || "What Sets Us Apart"}</h2>
-              <p className="text-xl text-gray-700 max-w-2xl mx-auto font-medium">
+            <div className="text-left mb-16">
+              <h2 className="text-4xl md:text-5xl font-bold font-heading text-primary mb-6 text-left">{aboutData.whatSetsUsApartTitle || "What Sets Us Apart"}</h2>
+              <p className="text-xl text-gray-700 max-w-2xl font-medium text-left">
                 {aboutData.whatSetsUsApartSubtitle || "Why forward-thinking companies choose Max iT as their trusted technology partner."}
               </p>
             </div>
@@ -156,9 +156,9 @@ export default async function About() {
         {/* 5. Project Gallery */}
         <section className="py-24 bg-white overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold font-heading text-primary mb-6">{aboutData.projectGalleryTitle || "Our Projects"}</h2>
-              <p className="text-xl text-gray-700 max-w-2xl mx-auto font-medium">
+            <div className="text-left mb-16">
+              <h2 className="text-4xl md:text-5xl font-bold font-heading text-primary mb-6 text-left">{aboutData.projectGalleryTitle || "Our Projects"}</h2>
+              <p className="text-xl text-gray-700 max-w-2xl font-medium text-left">
                 {aboutData.projectGallerySubtitle || "A glimpse into our operational excellence and the technology that drives us."}
               </p>
             </div>
@@ -168,19 +168,19 @@ export default async function About() {
         </section>
 
         {/* 6. Call to Action (CTA) */}
-        <section className="relative py-24 bg-primary overflow-hidden text-center text-white">
+        <section className="relative py-24 bg-primary overflow-hidden text-white">
           <div className="absolute inset-0 opacity-10">
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white rounded-full blur-[120px] pointer-events-none transform -translate-y-1/2 translate-x-1/2"></div>
             <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-accent rounded-full blur-[100px] pointer-events-none transform translate-y-1/2 -translate-x-1/2"></div>
           </div>
           
-          <div className="max-w-4xl mx-auto px-4 relative z-10">
-            <h2 className="text-4xl md:text-6xl font-bold font-heading mb-6 tracking-tight">{aboutData.ctaTitle || "Ready to Transform Your Future?"}</h2>
-            <p className="text-xl text-white/80 font-medium mb-12 max-w-2xl mx-auto">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-left">
+            <h2 className="text-4xl md:text-6xl font-bold font-heading mb-6 tracking-tight text-left">{aboutData.ctaTitle || "Ready to Transform Your Future?"}</h2>
+            <p className="text-xl text-white/80 font-medium mb-12 max-w-2xl text-left">
               {aboutData.ctaSubtitle || "Whether you need scalable solar energy, industrial automation, or enterprise networking, our team is ready to build your solution."}
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+            <div className="flex flex-col sm:flex-row gap-6 justify-start">
               <Link 
                 href="/services" 
                 className="inline-flex items-center justify-center px-8 py-4 bg-white text-primary font-bold rounded-2xl hover:bg-gray-50 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-1 duration-300 text-lg"

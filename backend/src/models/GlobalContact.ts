@@ -4,7 +4,7 @@ const GlobalContactSchema = new mongoose.Schema(
   {
     addressLine1: {
       type: String,
-      default: '2nd Floor, Afroza Tower,',
+      default: 'Afroza Tower, 4th Floor,',
     },
     addressLine2: {
       type: String,

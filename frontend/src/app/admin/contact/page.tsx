@@ -214,10 +214,19 @@ export default function ContactManagement() {
           </div>
 
           <div className="space-y-4 pt-4 border-t border-gray-100">
-            <h3 className="text-xl font-bold text-gray-900 border-b border-gray-100 pb-2">Office Address</h3>
+            <div className="flex items-center justify-between border-b border-gray-100 pb-2">
+              <h3 className="text-xl font-bold text-gray-900">Office Address</h3>
+              <a href="/admin/settings" className="text-xs font-semibold text-primary hover:underline">
+                Manage Head Office &amp; LAB Office in Settings &rarr;
+              </a>
+            </div>
+            
+            <div className="bg-blue-50/80 border border-blue-100 text-blue-900 px-4 py-3 rounded-xl text-xs leading-relaxed">
+              <strong>Tip:</strong> The public Contact page and Footer show both <strong>Head Office</strong> and <strong>LAB Office</strong> locations dynamically configured under <a href="/admin/settings" className="underline font-bold hover:text-primary">Admin &gt; Settings &gt; Office Locations</a>.
+            </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Address Line 1 (e.g. 2nd Floor, Afroza Tower,)</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Address Line 1 (e.g. Afroza Tower, 4th Floor,)</label>
               <input
                 type="text"
                 required

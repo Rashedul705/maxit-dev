@@ -110,7 +110,7 @@ export default async function Team() {
                       <img 
                         src={ceo.photoUrl || ceo.image} 
                         alt={ceo.name} 
-                        className="w-full h-full object-cover" 
+                        className="w-full h-full object-cover object-top" 
                       />
                     ) : (
                       <div className="text-gray-400 font-bold text-6xl">{ceo.name?.charAt(0)}</div>
@@ -195,7 +195,7 @@ export default async function Team() {
                             <img
                               src={member.photoUrl || member.image}
                               alt={member.name}
-                              className="w-full h-full object-cover filter grayscale-[20%] group-hover:grayscale-0 transform group-hover:scale-110 transition-all duration-700 ease-in-out"
+                              className="w-full h-full object-cover object-top filter grayscale-[20%] group-hover:grayscale-0 transform group-hover:scale-105 origin-top transition-all duration-700 ease-in-out"
                             />
                           ) : (
                             <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400 font-bold text-4xl">

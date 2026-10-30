@@ -43,9 +43,36 @@ export default async function Contact() {
   const headerSubtitle = settings?.contactHeaderSubtitle || "Ready to start your next project or need technical assistance? Our team of experts is here to help.";
   const infoTitle = settings?.contactInfoSectionTitle || "Contact Information";
   
-  const addressLine1 = contact?.addressLine1 || "2nd Floor, Afroza Tower,";
-  const addressLine2 = contact?.addressLine2 || "Uposhohor Newmarket,";
-  const addressLine3 = contact?.addressLine3 || "Rajshahi-6000";
+  // Office locations (Head Office & LAB Office)
+  const rawAddressLine3 = settings?.footerAddressLine3 || contact?.addressLine3 || "";
+  let resolvedAddresses: any[] | null = Array.isArray(settings?.footerAddresses) && settings.footerAddresses.length > 0
+    ? settings.footerAddresses
+    : null;
+
+  if (!resolvedAddresses && rawAddressLine3.includes('<!--JSON:')) {
+    try {
+      const match = rawAddressLine3.match(/<!--JSON:(.*?)-->/);
+      if (match && match[1]) {
+        const parsed = JSON.parse(match[1]);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          resolvedAddresses = parsed;
+        }
+      }
+    } catch (e) {}
+  }
+
+  const defaultOffices = [
+    {
+      title: "Head Office",
+      details: "Afroza Tower, 4th Floor, Uposhohor Newmarket, Rajshahi",
+    },
+    {
+      title: "LAB Office",
+      details: "Afroza Tower, 2nd Floor, Uposhohor Newmarket, Rajshahi",
+    },
+  ];
+
+  const offices = (resolvedAddresses && resolvedAddresses.length > 0) ? resolvedAddresses : defaultOffices;
   const phone = contact?.phoneNumber || "+88 01733-272445";
   const email = contact?.email || "sales@m4xit.com";
 
@@ -148,16 +175,22 @@ export default async function Contact() {
                       </div>
                     </div>
 
-                    {/* Location (at the end of Contact Information) */}
-                    <div className="flex items-start group">
-                      <div className="flex-shrink-0 w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center mr-6 border border-white/20 group-hover:bg-white/20 transition-colors shadow-lg">
-                        <MapPin className="w-7 h-7 text-white" />
+                    {/* Locations (Head Office & LAB Office) */}
+                    {offices.map((office: any, idx: number) => (
+                      <div key={idx} className="flex items-start group">
+                        <div className="flex-shrink-0 w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center mr-6 border border-white/20 group-hover:bg-white/20 transition-colors shadow-lg">
+                          <MapPin className="w-7 h-7 text-white" />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-semibold mb-1 text-white tracking-wide">
+                            {office.title || "Our Location"}
+                          </h3>
+                          <p className="text-white/80 leading-relaxed font-medium whitespace-pre-line">
+                            {office.details}
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="text-lg font-semibold mb-1 text-white tracking-wide">Our Location</h3>
-                        <p className="text-white/80 leading-relaxed font-medium">{addressLine1}<br /> {addressLine2} <br /> {addressLine3}</p>
-                      </div>
-                    </div>
+                    ))}
                   </div>
                 </div>
                 

@@ -754,7 +754,7 @@ router.get('/contact', optionalAuth, async (req: Request, res: Response) => {
     let contact = await (GlobalContact.findOne as any)().lean();
     if (!contact) {
       contact = {
-        addressLine1: '2nd Floor, Afroza Tower,',
+        addressLine1: 'Afroza Tower, 4th Floor,',
         addressLine2: 'Uposhohor Newmarket,',
         addressLine3: 'Rajshahi-6000',
         phoneNumber: '+88 01733-272445',
@@ -844,18 +844,18 @@ const DEFAULT_SETTINGS = {
   termsOfServiceLink: "/terms",
   footerEmail: "sales@m4xit.com",
   footerPhone: "+8801733-272445",
-  footerAddressLine1: "2nd Floor, Afroza Tower,",
+  footerAddressLine1: "Afroza Tower, 4th Floor,",
   footerAddressLine2: "Uposhohor Newmarket,",
   footerAddressLine3: "Rajshahi-6000",
   footerAddresses: [
     {
       title: "Head Office",
-      details: "Afroza Tower, 4th Floor,\nUposhohor Newmarket, Rajshahi-6000",
+      details: "Afroza Tower, 4th Floor, Uposhohor Newmarket, Rajshahi",
       order: 0
     },
     {
-      title: "LAB",
-      details: "Innovation & Automation Lab, Rajshahi",
+      title: "LAB Office",
+      details: "Afroza Tower, 2nd Floor, Uposhohor Newmarket, Rajshahi",
       order: 1
     }
   ]

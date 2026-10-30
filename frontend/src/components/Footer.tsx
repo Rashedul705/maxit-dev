@@ -50,11 +50,11 @@ const Footer = ({ siteSettings }: { siteSettings?: any }) => {
   const defaultAddresses = [
     {
       title: "Head Office",
-      details: [addressLine1, addressLine2, addressLine3].filter(Boolean).join("\n"),
+      details: [addressLine1, addressLine2, addressLine3].filter(Boolean).join("\n") || "Afroza Tower, 4th Floor,\nUposhohor Newmarket, Rajshahi",
     },
     {
-      title: "LAB",
-      details: "Innovation & Automation Lab, Rajshahi",
+      title: "LAB Office",
+      details: "Afroza Tower, 2nd Floor,\nUposhohor Newmarket, Rajshahi",
     },
   ];
 
