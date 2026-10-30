@@ -44,7 +44,7 @@ const GlobalContactSchema = new mongoose.Schema(
     },
     googleMapsEmbedUrl: {
       type: String,
-      default: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1816.9782315667!2d88.5978931!3d24.3776999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14644734df7254d%3A0x9ca140a46bae1fa1!2sMax%20iT%20Solution!5e0!3m2!1sen!2sbd!4v1710000000000!5m2!1sen!2sbd',
+      default: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3634.103439609135!2d88.59531817559223!3d24.377704764404523!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14644734df7254d%3A0x9ca140a46bae1fa1!2sMax%20iT%20Solution!5e0!3m2!1sen!2sbd!4v1793392757385!5m2!1sen!2sbd',
     }
   },
   { timestamps: true }

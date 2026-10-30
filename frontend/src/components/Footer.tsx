@@ -64,6 +64,7 @@ const Footer = ({ siteSettings }: { siteSettings?: any }) => {
   const phone = siteSettings?.footerPhone || "+8801733-272445";
   const email = siteSettings?.footerEmail || "sales@m4xit.com";
   const googleMapsUrl = siteSettings?.footerGoogleMapsUrl || siteSettings?.googleMapsUrl || "https://maps.app.goo.gl/2N1mLA8RwpcaohFs6";
+  const googleMapsEmbedUrl = siteSettings?.footerGoogleMapsEmbedUrl || siteSettings?.googleMapsEmbedUrl || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3634.103439609135!2d88.59531817559223!3d24.377704764404523!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14644734df7254d%3A0x9ca140a46bae1fa1!2sMax%20iT%20Solution!5e0!3m2!1sen!2sbd!4v1793392757385!5m2!1sen!2sbd";
   
   const copyrightText = siteSettings?.copyrightText || `© ${currentYear} Max iT Solution. All rights reserved.`;
   const privacyPolicyLink = siteSettings?.privacyPolicyLink || "/privacy";
@@ -216,7 +217,7 @@ const Footer = ({ siteSettings }: { siteSettings?: any }) => {
                   </a>
                 </li>
               ))}
-              <li className="pt-2 w-full flex justify-center md:justify-start">
+              <li className="pt-2 w-full flex flex-col items-center md:items-start gap-3">
                 <a
                   href={googleMapsUrl}
                   target="_blank"
@@ -228,6 +229,21 @@ const Footer = ({ siteSettings }: { siteSettings?: any }) => {
                   <span>Google Maps Location</span>
                   <ExternalLink size={12} className="opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
                 </a>
+
+                {/* Embedded Google Maps */}
+                <div className="w-full h-44 rounded-xl overflow-hidden border border-slate-700/80 shadow-md bg-slate-900/60 relative">
+                  <iframe
+                    src={googleMapsEmbedUrl}
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    allowFullScreen={true}
+                    loading="lazy"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    title="Max iT Solution Google Maps Location"
+                    className="w-full h-full"
+                  />
+                </div>
               </li>
             </ul>
           </div>
