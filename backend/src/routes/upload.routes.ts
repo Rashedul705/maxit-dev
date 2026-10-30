@@ -3,7 +3,9 @@ import multer from 'multer';
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
+import mongoose from 'mongoose';
 import { requireAuth } from '../middleware/auth.middleware.js';
+import Media from '../models/Media.js';
 
 const router = Router();
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
@@ -80,21 +82,18 @@ function validateImageMagicBytes(buffer: Buffer): { ext: string; mime: string } 
   return null;
 }
 
-function saveLocalUpload(file: Express.Multer.File, ext: string): string {
-  const uploadsDir = getUploadsDirectory();
-  if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir, { recursive: true });
+function saveLocalUpload(file: Express.Multer.File, filename: string): void {
+  try {
+    const uploadsDir = getUploadsDirectory();
+    if (!fs.existsSync(uploadsDir)) {
+      fs.mkdirSync(uploadsDir, { recursive: true });
+    }
+    const safeFilename = path.basename(filename);
+    const targetPath = path.join(uploadsDir, safeFilename);
+    fs.writeFileSync(targetPath, file.buffer);
+  } catch (err: any) {
+    console.warn('[Upload Cache] Could not write local cache file:', err?.message);
   }
-
-  // Generate completely random filename: timestamp + 16 random hex bytes + safe ext
-  const randomId = crypto.randomBytes(16).toString('hex');
-  const filename = `${Date.now()}-${randomId}${ext}`;
-  // Prevent any path traversal
-  const safeFilename = path.basename(filename);
-  const targetPath = path.join(uploadsDir, safeFilename);
-
-  fs.writeFileSync(targetPath, file.buffer);
-  return `/uploads/${safeFilename}`;
 }
 
 // Multer error handling wrapper middleware
@@ -118,21 +117,18 @@ router.post('/', requireAuth, handleMulterUpload, async (req: Request, res: Resp
       return res.status(400).json({ error: 'No image provided' });
     }
 
-    // Check file size again
     if (req.file.buffer.length > MAX_FILE_SIZE) {
       return res.status(400).json({ error: 'File size exceeds 5MB limit.' });
     }
 
-    // Verify real mime type and extension using magic bytes
     const verified = validateImageMagicBytes(req.file.buffer);
     if (!verified) {
       return res.status(400).json({
-        error: 'Invalid file type. Only PNG, JPG, JPEG, WEBP, and GIF images (up to 5MB) are allowed. SVG and executable files are rejected.',
+        error: 'Invalid file type. Only PNG, JPG, JPEG, WEBP, and GIF images (up to 5MB) are allowed.',
       });
     }
 
-    // Save to local uploads directory by default (persistent & fast).
-    // Use ImgBB only if explicitly enabled via USE_IMGBB=true
+    // Optional ImgBB upload only if explicitly enabled
     const apiKey = process.env.IMGBB_API_KEY;
     if (process.env.USE_IMGBB === 'true' && apiKey) {
       try {
@@ -143,26 +139,75 @@ router.post('/', requireAuth, handleMulterUpload, async (req: Request, res: Resp
         const imgbbResponse = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
           method: 'POST',
           body: imgbbFormData,
-          signal: AbortSignal.timeout(4000),
+          signal: AbortSignal.timeout(3000),
         });
 
         const data = await imgbbResponse.json();
         if (data.success && data.data?.url) {
           return res.json({ url: data.data.url });
-        } else {
-          console.warn('[Upload Warning] ImgBB rejected upload, falling back to local storage:', data?.error?.message || data);
         }
       } catch (imgbbErr: any) {
-        console.warn('[Upload Warning] ImgBB network request failed, falling back to local storage:', imgbbErr?.message);
+        console.warn('[Upload Warning] ImgBB unavailable, persisting directly to MongoDB cloud storage:', imgbbErr?.message);
       }
     }
 
-    // Fallback: save to local uploads directory (mounted persistent volume)
-    const localUrl = saveLocalUpload(req.file, verified.ext);
-    return res.json({ url: localUrl });
+    // Generate unique filename
+    const randomId = crypto.randomBytes(8).toString('hex');
+    const filename = `${Date.now()}-${randomId}${verified.ext}`;
+
+    // 1. Primary: Save permanently into MongoDB Atlas Media collection
+    // This guarantees the image is preserved across all environments, Vercel, and container redeployments
+    const mediaDoc = await Media.create({
+      filename,
+      contentType: verified.mime,
+      size: req.file.buffer.length,
+      data: req.file.buffer,
+    });
+
+    // 2. Secondary: Save local copy on disk as fast server cache
+    saveLocalUpload(req.file, filename);
+
+    // Return the universal cloud media URL
+    return res.json({ 
+      url: `/api/media/${mediaDoc._id}`,
+      id: mediaDoc._id,
+      filename: filename
+    });
   } catch (error) {
     console.error('Upload error:', error);
     return res.status(500).json({ error: 'Internal server error during upload.' });
+  }
+});
+
+// GET /api/upload/media/:id (and routed to /api/media/:id in server.ts)
+router.get('/media/:id', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    let media = null;
+
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      media = await Media.findById(id);
+    }
+    if (!media) {
+      media = await Media.findOne({ filename: id });
+    }
+
+    if (!media) {
+      return res.status(404).json({ error: 'Media not found' });
+    }
+
+    res.setHeader('Content-Type', media.contentType || 'image/jpeg');
+    res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    res.setHeader('ETag', `"${media._id}"`);
+
+    if (req.headers['if-none-match'] === `"${media._id}"`) {
+      return res.status(304).end();
+    }
+
+    return res.send(media.data);
+  } catch (err) {
+    console.error('Media retrieval error:', err);
+    return res.status(500).json({ error: 'Failed to retrieve media' });
   }
 });
 

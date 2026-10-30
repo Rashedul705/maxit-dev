@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
 import path from 'path';
+import mongoose from 'mongoose';
 
 // Load environment variables
 dotenv.config();
@@ -28,6 +29,7 @@ import uploadRoutes from './routes/upload.routes.js';
 import fs from 'fs';
 import { getUploadsDirectory } from './routes/upload.routes.js';
 import { renderStatusPage } from './views/statusPage.js';
+import Media from './models/Media.js';
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -41,6 +43,7 @@ app.set('trust proxy', isNaN(trustProxyHops) ? 2 : trustProxyHops);
 // 2. Helmet for HTTP security headers
 app.use(helmet({
   crossOriginResourcePolicy: { policy: 'cross-origin' },
+  contentSecurityPolicy: false,
 }));
 
 // 3. CORS: Allow FRONTEND_URL with credentials (supports www and apex domain)
@@ -152,6 +155,66 @@ app.use('/api/contact', contactLimiter, contactRoutes);
 app.use('/api', inboxRoutes); // Mounts /api/admin/inbox and /api/inbox/sync
 app.use('/api/admin', adminRoutes); // Mounts /api/admin/* (services, projects, team, etc.)
 app.use('/api/upload', uploadRoutes);
+
+// Media retrieval by ID or filename directly from MongoDB Atlas Media collection
+app.get('/api/media/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    let media = null;
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      media = await Media.findById(id);
+    }
+    if (!media) {
+      media = await Media.findOne({ filename: id });
+    }
+
+    if (!media) {
+      return res.status(404).json({ error: 'Media not found' });
+    }
+
+    res.setHeader('Content-Type', media.contentType || 'image/jpeg');
+    res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    res.setHeader('ETag', `"${media._id}"`);
+
+    if (req.headers['if-none-match'] === `"${media._id}"`) {
+      return res.status(304).end();
+    }
+
+    return res.send(media.data);
+  } catch (err) {
+    console.error('Media retrieval error:', err);
+    return res.status(500).json({ error: 'Failed to retrieve media' });
+  }
+});
+
+// Static uploads serving with fallback to MongoDB Media collection if not on local disk
+app.get('/uploads/:filename', async (req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  const safeFilename = path.basename(req.params.filename);
+  const filePath = path.join(uploadsDir, safeFilename);
+  if (fs.existsSync(filePath)) {
+    return res.sendFile(filePath);
+  }
+
+  try {
+    const media = await Media.findOne({ filename: safeFilename });
+    if (media) {
+      res.setHeader('Content-Type', media.contentType || 'image/jpeg');
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+      res.setHeader('ETag', `"${media._id}"`);
+
+      if (req.headers['if-none-match'] === `"${media._id}"`) {
+        return res.status(304).end();
+      }
+
+      return res.send(media.data);
+    }
+  } catch (err) {
+    console.warn('[Uploads Fallback Error]:', err);
+  }
+
+  next();
+});
 
 // Static uploads serving with X-Content-Type-Options: nosniff
 app.use(
