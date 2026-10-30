@@ -1,4 +1,5 @@
 import { Quote } from 'lucide-react';
+import { getSafeImageUrl } from '@/lib/utils';
 
 interface TestimonialCardProps {
   name: string;
@@ -38,7 +39,7 @@ const TestimonialCard = ({ name, company, testimonial, rating, image }: Testimon
       
       <div className="flex items-center space-x-4 relative z-10 pt-6 border-t border-white/10 mt-auto">
         <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-white/20 group-hover:border-white/50 transition-colors duration-300 shadow-lg">
-          <img src={image} alt={name} className="w-full h-full object-cover" />
+          <img src={getSafeImageUrl(image)} alt={name} className="w-full h-full object-cover" />
         </div>
         <div>
           <div className="font-bold font-heading text-white text-lg">{name}</div>

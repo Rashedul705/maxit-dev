@@ -190,12 +190,12 @@ export default async function Team() {
                         <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                         
                         {/* Image Wrapper */}
-                        <div className="relative w-48 h-48 mx-auto mt-8 overflow-hidden rounded-full border-4 border-gray-100 shadow-sm group-hover:border-accent/30 transition-colors duration-500 z-10 flex items-center justify-center bg-gray-50">
+                        <div className="team-avatar relative w-48 h-48 mx-auto mt-8 overflow-hidden rounded-full border-4 border-gray-100 shadow-sm group-hover:border-accent/30 transition-colors duration-500 z-10 flex items-center justify-center bg-gray-50">
                           {member.photoUrl || member.image ? (
                             <img
                               src={member.photoUrl || member.image}
                               alt={member.name}
-                              className="w-full h-full object-cover object-top filter grayscale-[20%] group-hover:grayscale-0 transform group-hover:scale-105 origin-top transition-all duration-700 ease-in-out"
+                              className="team-avatar-img w-full h-full object-cover filter grayscale-[20%] group-hover:grayscale-0 transition-all duration-700 ease-in-out"
                             />
                           ) : (
                             <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400 font-bold text-4xl">

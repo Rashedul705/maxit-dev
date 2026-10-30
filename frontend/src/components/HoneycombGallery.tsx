@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { X } from 'lucide-react';
+import { getSafeImageUrl } from '@/lib/utils';
 
 export default function HoneycombGallery({ projects }: { projects: any[] }) {
   const [selectedProject, setSelectedProject] = useState<any>(null);
@@ -33,7 +34,7 @@ export default function HoneycombGallery({ projects }: { projects: any[] }) {
                 onClick={() => setSelectedProject(project)}
               >
                 <img 
-                  src={project.imageUrl || "/placeholder.jpg"} 
+                  src={getSafeImageUrl(project.imageUrl) || "/placeholder.jpg"} 
                   alt={project.title} 
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                 />
@@ -63,7 +64,7 @@ export default function HoneycombGallery({ projects }: { projects: any[] }) {
           
           <div className="max-w-5xl w-full flex flex-col items-center animate-in zoom-in-95 duration-300">
             <img 
-              src={selectedProject.imageUrl} 
+              src={getSafeImageUrl(selectedProject.imageUrl)} 
               alt={selectedProject.title}
               className="max-h-[70vh] w-auto object-contain rounded-lg shadow-2xl mb-8"
             />

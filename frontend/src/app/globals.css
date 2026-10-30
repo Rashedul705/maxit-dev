@@ -111,6 +111,31 @@
   }
 }
 
+/* Circular Team Avatar framing to prevent head/hair cropping */
+.team-avatar {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px;
+  box-sizing: border-box;
+}
+
+.team-avatar img,
+img.team-avatar-img {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 15%;
+  transform: none !important;
+  display: block;
+}
+
 @media print {
   /* Hide Navbar, Footer, and the Download button */
   header, nav, footer, a[href="/MaxIT_Company_Profile.pdf"] {

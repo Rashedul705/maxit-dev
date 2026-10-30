@@ -2,6 +2,7 @@
 
 import CountUp from "@/components/ui/CountUp";
 import { useState, useEffect } from 'react';
+import { getSafeImageUrl } from '@/lib/utils';
 
 const defaultImages = [
   '/images/hero-bg.jpg',
@@ -72,7 +73,7 @@ const Hero = ({ content, siteSettings }: HeroProps) => {
             <div
               className="w-full h-full bg-cover bg-center origin-center"
               style={{ 
-                backgroundImage: `url('${img}')`,
+                backgroundImage: `url('${getSafeImageUrl(img)}')`,
                 transform: index === currentImageIndex ? 'scale(1.1)' : 'scale(1)',
                 transition: index === currentImageIndex ? 'transform 20s linear' : 'transform 15s linear'
               }}

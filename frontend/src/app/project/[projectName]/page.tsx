@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Calendar, User, Tag, CheckCircle2, MapPin, Building, ChevronRight, Zap, Clock, Battery } from 'lucide-react';
 import { fetchFromBackend } from '@/lib/api';
+import { getSafeImageUrl } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -48,7 +49,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
       <div className="w-full h-[50vh] md:h-[70vh] relative">
         <div className="absolute inset-0 bg-black/50 z-10"></div>
         <img 
-          src={project.imageUrl} 
+          src={getSafeImageUrl(project.imageUrl)} 
           alt={project.title} 
           className="w-full h-full object-cover"
         />
@@ -255,7 +256,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                   className={`${isLarge ? 'md:col-span-2 md:row-span-2' : ''} relative h-64 md:h-auto rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group`}
                 >
                   <img 
-                    src={img} 
+                    src={getSafeImageUrl(img)} 
                     alt={`${project.title} Gallery Image ${idx + 1}`} 
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
                   />

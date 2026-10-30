@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Building2 } from 'lucide-react';
+import { getSafeImageUrl } from '@/lib/utils';
 
 type Partner = {
   id: string;
@@ -193,7 +194,7 @@ const Partners = ({ isGrid = false, content }: { isGrid?: boolean, content?: any
                 >
                   <span className="icon">
                     {partner.logo ? (
-                      <img src={partner.logo} alt={partner.name} className="max-w-full max-h-full object-contain" />
+                      <img src={getSafeImageUrl(partner.logo)} alt={partner.name} className="max-w-full max-h-full object-contain" />
                     ) : (
                       <Building2 className="w-8 h-8 text-gray-400" />
                     )}
@@ -223,7 +224,7 @@ const Partners = ({ isGrid = false, content }: { isGrid?: boolean, content?: any
               >
                 <span className="icon">
                   {partner.logo ? (
-                    <img src={partner.logo} alt={partner.name} className="max-w-full max-h-full object-contain" />
+                    <img src={getSafeImageUrl(partner.logo)} alt={partner.name} className="max-w-full max-h-full object-contain" />
                   ) : (
                     <Building2 className="w-8 h-8 text-gray-400" />
                   )}

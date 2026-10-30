@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { fetchFromBackend } from '@/lib/api';
+import { getSafeImageUrl } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -52,7 +53,7 @@ export default async function ProjectsPage() {
                 <div className="relative h-64 overflow-hidden">
                   <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors z-10"></div>
                   <img 
-                    src={project.imageUrl} 
+                    src={getSafeImageUrl(project.imageUrl)} 
                     alt={project.title}
                     className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                   />

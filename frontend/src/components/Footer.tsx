@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Mail, Phone, Github, Linkedin, Facebook, MapPin, ArrowRight } from 'lucide-react';
+import { Mail, Phone, Github, Linkedin, Facebook, MapPin, ArrowRight, ExternalLink } from 'lucide-react';
 
 function WhatsAppIcon({ size = 18, className = "" }: { size?: number, className?: string }) {
   return (
@@ -63,6 +63,7 @@ const Footer = ({ siteSettings }: { siteSettings?: any }) => {
     : defaultAddresses;
   const phone = siteSettings?.footerPhone || "+8801733-272445";
   const email = siteSettings?.footerEmail || "sales@m4xit.com";
+  const googleMapsUrl = siteSettings?.footerGoogleMapsUrl || siteSettings?.googleMapsUrl || "https://maps.app.goo.gl/2N1mLA8RwpcaohFs6";
   
   const copyrightText = siteSettings?.copyrightText || `© ${currentYear} Max iT Solution. All rights reserved.`;
   const privacyPolicyLink = siteSettings?.privacyPolicyLink || "/privacy";
@@ -191,22 +192,43 @@ const Footer = ({ siteSettings }: { siteSettings?: any }) => {
                 <a href={`tel:${phone.replace(/\s+/g, '')}`} className="text-slate-400 text-sm group-hover:text-white transition-colors font-medium">{phone}</a>
               </li>
               {addresses.map((addr: any, idx: number) => (
-                <li key={idx} className="flex flex-col md:flex-row items-center md:items-start justify-center md:justify-start gap-2.5 md:gap-3 group text-center md:text-left">
-                  <div className="p-2 rounded-lg bg-slate-800/80 border border-slate-700/60 group-hover:bg-slate-700 transition-colors flex-shrink-0 mt-0.5">
-                    <MapPin size={16} className="text-slate-300 group-hover:text-white" />
-                  </div>
-                  <div className="text-slate-400 text-sm leading-relaxed group-hover:text-white transition-colors font-medium text-center md:text-left">
-                    {addr.title && (
-                      <span className="block font-bold text-white text-xs uppercase tracking-wider mb-0.5">
-                        {addr.title}
+                <li key={idx} className="flex flex-col md:flex-row items-center md:items-start justify-center md:justify-start gap-2.5 md:gap-3 group text-center md:text-left w-full">
+                  <a
+                    href={googleMapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex flex-col md:flex-row items-center md:items-start justify-center md:justify-start gap-2.5 md:gap-3 group text-center md:text-left hover:text-white transition-colors"
+                    title="View this location on Google Maps"
+                  >
+                    <div className="p-2 rounded-lg bg-slate-800/80 border border-slate-700/60 group-hover:bg-slate-700 transition-colors flex-shrink-0 mt-0.5">
+                      <MapPin size={16} className="text-slate-300 group-hover:text-blue-400 transition-colors" />
+                    </div>
+                    <div className="text-slate-400 text-sm leading-relaxed group-hover:text-white transition-colors font-medium text-center md:text-left">
+                      {addr.title && (
+                        <span className="block font-bold text-white text-xs uppercase tracking-wider mb-0.5">
+                          {addr.title}
+                        </span>
+                      )}
+                      <span className="whitespace-pre-line text-slate-400 group-hover:text-slate-200 transition-colors">
+                        {addr.details}
                       </span>
-                    )}
-                    <span className="whitespace-pre-line text-slate-400 group-hover:text-slate-200 transition-colors">
-                      {addr.details}
-                    </span>
-                  </div>
+                    </div>
+                  </a>
                 </li>
               ))}
+              <li className="pt-2 w-full flex justify-center md:justify-start">
+                <a
+                  href={googleMapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 hover:text-blue-300 text-xs font-semibold border border-blue-500/30 transition-all duration-200 group"
+                  title="Open location in Google Maps"
+                >
+                  <MapPin size={13} className="text-blue-400 group-hover:scale-110 transition-transform" />
+                  <span>Google Maps Location</span>
+                  <ExternalLink size={12} className="opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                </a>
+              </li>
             </ul>
           </div>
         </div>

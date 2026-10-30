@@ -21,6 +21,7 @@ type SiteSettings = {
   featuredServiceTitle: string;
   featuredServiceDescription: string;
   featuredServicePoints: FeaturedPoint[];
+  googleMapsUrl?: string;
   footerAddresses?: { title: string; details: string; order?: number }[];
 };
 
@@ -333,6 +334,17 @@ export default function SiteSettingsManagement() {
                   </div>
                 </div>
               ))}
+            </div>
+
+            <div className="pt-4">
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Google Maps Location URL (Footer &amp; Contact)</label>
+              <input
+                type="text"
+                value={data.googleMapsUrl || ""}
+                onChange={(e) => setData({ ...data, googleMapsUrl: e.target.value })}
+                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 bg-white"
+                placeholder="https://maps.app.goo.gl/..."
+              />
             </div>
           </div>
 

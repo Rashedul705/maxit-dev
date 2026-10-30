@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import { CheckCircle2 } from 'lucide-react';
+import { getSafeImageUrl } from '@/lib/utils';
 
 interface ServiceCardProps {
   icon: ReactNode;
@@ -16,7 +17,7 @@ const ServiceCard = ({ icon, title, description, features, image }: ServiceCardP
       <div className="relative h-64 w-full overflow-hidden bg-gray-100">
         <div className="absolute inset-0 bg-primary/20 group-hover:bg-transparent transition-colors duration-500 z-10" />
         <img 
-          src={image} 
+          src={getSafeImageUrl(image)} 
           alt={title}
           className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out"
         />

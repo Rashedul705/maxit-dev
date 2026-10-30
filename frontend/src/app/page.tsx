@@ -6,6 +6,7 @@ import { Settings, ArrowRight, Sun, Sprout, Zap, Leaf, Cpu, Headphones, Trending
 import Link from "next/link";
 import Partners from '../components/Partners';
 import { fetchFromBackend } from '@/lib/api';
+import { getSafeImageUrl } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -308,7 +309,7 @@ const Index = async () => {
           <div className="flex flex-col lg:flex-row gap-16 items-center">
             <div className="w-full lg:w-1/2 relative">
               <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl">
-                <img src={homeData?.aboutPreview?.image || "/images/slides/agro_solar_slide_1789677870674.jpg"} alt="About Max iT" className="w-full h-full object-cover" />
+                <img src={getSafeImageUrl(homeData?.aboutPreview?.image) || "/images/slides/agro_solar_slide_1789677870674.jpg"} alt="About Max iT" className="w-full h-full object-cover" />
               </div>
               <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-accent/10 rounded-full blur-[40px] -z-10"></div>
             </div>
@@ -397,11 +398,11 @@ const Index = async () => {
               {teamMembers.map((member: any) => {
                 return (
                   <div key={member._id} className="bg-[#17223b] rounded-2xl p-10 border border-[#263456] flex flex-col items-center text-center shadow-lg transition-transform hover:-translate-y-1 duration-300">
-                    <div className="w-32 h-32 mb-6 rounded-full border-4 border-blue-500/80 bg-[#0d162a] overflow-hidden shadow-inner">
+                    <div className="team-avatar w-32 h-32 mb-6 rounded-full border-4 border-blue-500/80 bg-[#0d162a] overflow-hidden shadow-inner">
                       <img 
                         src={member.photoUrl || member.image || "/images/placeholder.jpg"} 
                         alt={member.name}
-                        className="w-full h-full object-cover object-top"
+                        className="team-avatar-img w-full h-full object-cover"
                       />
                     </div>
                     

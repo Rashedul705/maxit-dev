@@ -143,6 +143,7 @@ router.post('/', requireAuth, handleMulterUpload, async (req: Request, res: Resp
         const imgbbResponse = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
           method: 'POST',
           body: imgbbFormData,
+          signal: AbortSignal.timeout(4000),
         });
 
         const data = await imgbbResponse.json();

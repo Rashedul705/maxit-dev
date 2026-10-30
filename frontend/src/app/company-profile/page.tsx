@@ -9,6 +9,7 @@ import {
 import Partners from '@/components/Partners';
 
 import { fetchFromBackend } from '@/lib/api';
+import { getSafeImageUrl } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -266,7 +267,7 @@ export default async function CompanyProfile() {
                   <div className="h-48 overflow-hidden relative">
                     <div className="absolute inset-0 bg-primary/20 mix-blend-multiply z-10 group-hover:bg-transparent transition-colors duration-500"></div>
                     {service.imageUrl && (
-                      <img src={service.imageUrl} alt={service.title} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
+                      <img src={getSafeImageUrl(service.imageUrl)} alt={service.title} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
                     )}
                     <div className="absolute bottom-4 left-4 z-20 w-12 h-12 bg-white rounded-xl flex items-center justify-center text-primary shadow-lg group-hover:bg-primary group-hover:text-white transition-colors duration-300">
                       {iconMap[service.iconCategory] || <Settings className="w-6 h-6" />}
@@ -401,7 +402,7 @@ export default async function CompanyProfile() {
               return (
               <div key={project._id} className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col sm:flex-row group">
                 <div className="w-full sm:w-2/5 h-64 sm:h-auto overflow-hidden relative">
-                  <img src={project.imageUrl} alt={project.title} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" />
+                  <img src={getSafeImageUrl(project.imageUrl)} alt={project.title} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" />
                   <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-primary text-xs font-bold px-3 py-1 rounded-full shadow-sm">
                     {project.category}
                   </div>
@@ -613,12 +614,12 @@ export default async function CompanyProfile() {
                       <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                       
                       {/* Image Wrapper */}
-                      <div className="relative w-48 h-48 mx-auto mt-8 overflow-hidden rounded-full border-4 border-gray-100 shadow-sm group-hover:border-accent/30 transition-colors duration-500 z-10 flex items-center justify-center bg-gray-50">
+                      <div className="team-avatar relative w-48 h-48 mx-auto mt-8 overflow-hidden rounded-full border-4 border-gray-100 shadow-sm group-hover:border-accent/30 transition-colors duration-500 z-10 flex items-center justify-center bg-gray-50">
                         {member.photoUrl || member.image ? (
                           <img
                             src={member.photoUrl || member.image}
                             alt={member.name}
-                            className="w-full h-full object-cover object-top filter grayscale-[20%] group-hover:grayscale-0 transform group-hover:scale-105 origin-top transition-all duration-700 ease-in-out"
+                            className="team-avatar-img w-full h-full object-cover filter grayscale-[20%] group-hover:grayscale-0 transition-all duration-700 ease-in-out"
                           />
                         ) : (
                           <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400 font-bold text-4xl">

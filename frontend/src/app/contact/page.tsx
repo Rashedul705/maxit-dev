@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin, ExternalLink } from "lucide-react";
 import ContactForm from "@/components/ContactForm";
 import { fetchFromBackend } from "@/lib/api";
 
@@ -75,6 +75,8 @@ export default async function Contact() {
   const offices = (resolvedAddresses && resolvedAddresses.length > 0) ? resolvedAddresses : defaultOffices;
   const phone = contact?.phoneNumber || "+88 01733-272445";
   const email = contact?.email || "sales@m4xit.com";
+  const googleMapsUrl = settings?.googleMapsUrl || contact?.googleMapsUrl || "https://maps.app.goo.gl/2N1mLA8RwpcaohFs6";
+  const googleMapsEmbedUrl = settings?.googleMapsEmbedUrl || contact?.googleMapsEmbedUrl || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1816.9782315667!2d88.5978931!3d24.3776999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14644734df7254d%3A0x9ca140a46bae1fa1!2sMax%20iT%20Solution!5e0!3m2!1sen!2sbd!4v1710000000000!5m2!1sen!2sbd";
 
   // WhatsApp setup
   const rawWhatsapp = contact?.whatsappNumber || "01733272445";
@@ -177,20 +179,44 @@ export default async function Contact() {
 
                     {/* Locations (Head Office & LAB Office) */}
                     {offices.map((office: any, idx: number) => (
-                      <div key={idx} className="flex items-start group">
+                      <a 
+                        key={idx} 
+                        href={googleMapsUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-start group hover:bg-white/10 p-3 -mx-3 rounded-2xl transition-all duration-200"
+                        title="View location on Google Maps"
+                      >
                         <div className="flex-shrink-0 w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center mr-6 border border-white/20 group-hover:bg-white/20 transition-colors shadow-lg">
-                          <MapPin className="w-7 h-7 text-white" />
+                          <MapPin className="w-7 h-7 text-white group-hover:scale-110 transition-transform" />
                         </div>
-                        <div>
-                          <h3 className="text-lg font-semibold mb-1 text-white tracking-wide">
-                            {office.title || "Our Location"}
-                          </h3>
-                          <p className="text-white/80 leading-relaxed font-medium whitespace-pre-line">
+                        <div className="flex-grow">
+                          <div className="flex items-center gap-2">
+                            <h3 className="text-lg font-semibold mb-1 text-white tracking-wide">
+                              {office.title || "Our Location"}
+                            </h3>
+                            <ExternalLink className="w-3.5 h-3.5 text-white/60 opacity-0 group-hover:opacity-100 transition-opacity" />
+                          </div>
+                          <p className="text-white/80 leading-relaxed font-medium whitespace-pre-line group-hover:text-white transition-colors">
                             {office.details}
                           </p>
                         </div>
-                      </div>
+                      </a>
                     ))}
+
+                    {/* Google Maps Action Button */}
+                    <div className="pt-2">
+                      <a
+                        href={googleMapsUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full inline-flex items-center justify-center gap-2.5 px-5 py-3.5 bg-white/15 hover:bg-white/25 text-white font-bold text-sm rounded-xl border border-white/25 shadow-md hover:shadow-lg transition-all duration-200 group"
+                      >
+                        <MapPin className="w-5 h-5 text-accent transition-transform group-hover:scale-110" />
+                        <span>View Location on Google Maps</span>
+                        <ExternalLink className="w-4 h-4 text-white/80 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                      </a>
+                    </div>
                   </div>
                 </div>
                 
@@ -205,6 +231,42 @@ export default async function Contact() {
                 <ContactForm />
               </div>
 
+            </div>
+
+            {/* Embedded Google Map Section */}
+            <div className="mt-16 bg-white rounded-[2rem] shadow-xl overflow-hidden border border-gray-100">
+              <div className="p-6 md:p-8 bg-gray-50/80 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                <div>
+                  <span className="text-xs font-bold text-accent tracking-widest uppercase mb-1 block">Live Location</span>
+                  <h3 className="text-2xl md:text-3xl font-bold font-heading text-primary">Find Us on Google Maps</h3>
+                  <p className="text-sm md:text-base text-gray-600 mt-1">
+                    Afroza Tower, Uposhohor Newmarket, Rajshahi (Head Office: 4th Floor | LAB Office: 2nd Floor)
+                  </p>
+                </div>
+                <a
+                  href={googleMapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-sm shadow-md hover:shadow-lg transition-all self-start sm:self-auto group shrink-0"
+                >
+                  <MapPin className="w-4 h-4 text-white group-hover:scale-110 transition-transform" />
+                  <span>Open Navigation</span>
+                  <ExternalLink className="w-4 h-4 text-white/80 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                </a>
+              </div>
+              <div className="w-full h-[420px] md:h-[480px] bg-gray-100 relative">
+                <iframe
+                  src={googleMapsEmbedUrl}
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen={true}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Max iT Solution Google Maps Location"
+                  className="w-full h-full"
+                />
+              </div>
             </div>
           </div>
         </section>

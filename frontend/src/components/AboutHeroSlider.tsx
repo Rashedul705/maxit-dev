@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { getSafeImageUrl } from '@/lib/utils';
 
 export default function AboutHeroSlider({ slides }: { slides: any[] }) {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -33,7 +34,7 @@ export default function AboutHeroSlider({ slides }: { slides: any[] }) {
           key={index} 
           className={`absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? 'opacity-100' : 'opacity-0'}`}
         >
-          <img src={slide.image} alt={slide.title} className="w-full h-full object-cover" />
+          <img src={getSafeImageUrl(slide.image)} alt={slide.title} className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0B1120]/80 via-transparent to-transparent"></div>
           <div className="absolute bottom-8 left-8 text-white">
             <p className="text-3xl font-bold font-heading mb-2">{slide.title}</p>

@@ -3,6 +3,7 @@ import {
   Sun, ArrowRight, Cpu, Activity, Settings, Cctv, Target, Droplets, Sprout, Leaf, Wifi, RadioTower, Lightbulb, Home, Building2, Factory, GraduationCap, Landmark, Zap, CheckCircle2, Image as ImageIcon 
 } from 'lucide-react';
 import { fetchFromBackend } from '@/lib/api';
+import { getSafeImageUrl } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -80,7 +81,7 @@ export default async function Services() {
                     <div className="h-48 overflow-hidden relative border-b border-gray-100 rounded-t-2xl">
                       <div className="absolute inset-0 bg-primary/20 mix-blend-multiply z-10 group-hover:bg-transparent transition-colors duration-500"></div>
                       {service.imageUrl ? (
-                        <img src={service.imageUrl} alt={service.title} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
+                        <img src={getSafeImageUrl(service.imageUrl)} alt={service.title} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
                       ) : (
                         <div className="w-full h-full bg-gray-100 flex flex-col items-center justify-center text-gray-300">
                           <ImageIcon className="w-12 h-12 opacity-50 mb-2" />
@@ -92,7 +93,7 @@ export default async function Services() {
                     {/* Icon overlay on the edge of the image */}
                     <div className="absolute top-40 left-8 z-20 w-16 h-16 bg-white rounded-xl flex items-center justify-center text-primary shadow-lg group-hover:bg-primary group-hover:text-white transition-colors duration-300 overflow-hidden border border-gray-100">
                       {service.iconUrl ? (
-                        <img src={service.iconUrl} alt="Icon" className="w-10 h-10 object-contain" />
+                        <img src={getSafeImageUrl(service.iconUrl)} alt="Icon" className="w-10 h-10 object-contain" />
                       ) : (
                         service.iconCategory && iconMap[service.iconCategory] ? iconMap[service.iconCategory] : <ImageIcon className="w-8 h-8 opacity-50" />
                       )}
