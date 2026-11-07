@@ -8,7 +8,7 @@ import Partners from '../components/Partners';
 import { fetchFromBackend } from '@/lib/api';
 import { getSafeImageUrl } from '@/lib/utils';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 async function getTestimonials() {
   const docs = await fetchFromBackend<any[]>('/api/admin/testimonials');
@@ -92,14 +92,27 @@ async function getTeamData() {
 }
 
 const Index = async () => {
-  const testimonials = await getTestimonials();
-  const reasonsData = await getReasons();
-  const homeData = await getHomeData();
-  const aboutData = await getAboutData();
-  const profileData = await getCompanyProfileData();
-  const teamMembers = await getTeamData();
-  const siteSettings = await getSiteSettings();
-  let services = await getServicesData();
+  const [
+    testimonials,
+    reasonsData,
+    homeData,
+    aboutData,
+    profileData,
+    teamMembers,
+    siteSettings,
+    servicesData,
+  ] = await Promise.all([
+    getTestimonials(),
+    getReasons(),
+    getHomeData(),
+    getAboutData(),
+    getCompanyProfileData(),
+    getTeamData(),
+    getSiteSettings(),
+    getServicesData(),
+  ]);
+
+  let services = servicesData || [];
 
   // The sections will use homeData if present, falling back to old hardcoded stuff if undefined
   

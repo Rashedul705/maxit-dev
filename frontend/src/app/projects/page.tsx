@@ -3,7 +3,7 @@ import { ArrowRight } from 'lucide-react';
 import { fetchFromBackend } from '@/lib/api';
 import { getSafeImageUrl } from '@/lib/utils';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 async function getProjectsData() {
   const docs = await fetchFromBackend<any[]>('/api/admin/projects');

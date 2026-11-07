@@ -1,6 +1,6 @@
 import { fetchFromBackend } from "@/lib/api";
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 async function getPrivacyPolicy() {
   const doc = await fetchFromBackend<any>('/api/admin/legal');

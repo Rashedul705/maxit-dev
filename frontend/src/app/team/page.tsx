@@ -1,7 +1,7 @@
 import { Mail, Linkedin, MessageCircle } from 'lucide-react';
 import { fetchFromBackend } from '@/lib/api';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 async function getTeamData() {
   try {

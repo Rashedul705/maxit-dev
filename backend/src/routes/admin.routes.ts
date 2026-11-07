@@ -688,8 +688,8 @@ router.get('/home', optionalAuth, async (req: Request, res: Response) => {
     }
     return res.json(content);
   } catch (error) {
-    console.error('Error fetching home content:', error);
-    return res.status(500).json({ error: 'Failed to fetch content' });
+    console.warn('Database offline during /home fetch, returning DEFAULT_HOME');
+    return res.json(DEFAULT_HOME);
   }
 });
 
@@ -725,8 +725,12 @@ router.get('/about', optionalAuth, async (req: Request, res: Response) => {
     }
     return res.json(about);
   } catch (error) {
-    console.error('Error fetching about content:', error);
-    return res.status(500).json({ error: 'Failed to fetch about content' });
+    console.warn('Database offline during /about fetch, returning fallback');
+    return res.json({
+      journey: "Founded with a passion for innovation, Max iT Solution began with a simple goal: to make industrial-grade engineering and sustainable energy accessible.",
+      mission: "To empower businesses, industries, and communities by delivering robust, scalable, and sustainable technology solutions.",
+      vision: "To be the region's most trusted engineering and technology partner, driving the transition towards smart automation.",
+    });
   }
 });
 
@@ -767,8 +771,18 @@ router.get('/contact', optionalAuth, async (req: Request, res: Response) => {
     }
     return res.json(contact);
   } catch (error) {
-    console.error('Error fetching global contact:', error);
-    return res.status(500).json({ error: 'Failed to fetch global contact' });
+    console.warn('Database offline during /contact fetch, returning fallback');
+    return res.json({
+      addressLine1: 'Afroza Tower, 4th Floor,',
+      addressLine2: 'Uposhohor Newmarket,',
+      addressLine3: 'Rajshahi-6000',
+      phoneNumber: '+88 01733-272445',
+      whatsappNumber: '01733272445',
+      email: 'sales@m4xit.com',
+      facebookUrl: '#',
+      linkedinUrl: '#',
+      githubUrl: '#'
+    });
   }
 });
 
@@ -881,8 +895,8 @@ router.get('/site-settings', optionalAuth, async (req: Request, res: Response) =
     }
     return res.json(settings);
   } catch (error) {
-    console.error('Error fetching site settings:', error);
-    return res.status(500).json({ error: 'Failed to fetch settings' });
+    console.warn('Database offline during /site-settings fetch, returning DEFAULT_SETTINGS fallback');
+    return res.json(DEFAULT_SETTINGS);
   }
 });
 

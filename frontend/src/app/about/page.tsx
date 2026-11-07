@@ -6,7 +6,7 @@ import { fetchFromBackend } from '@/lib/api';
 import AboutHeroSlider from '@/components/AboutHeroSlider';
 import HoneycombGallery from '@/components/HoneycombGallery';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 async function getAboutData() {
   const defaultAbout = {

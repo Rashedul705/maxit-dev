@@ -153,7 +153,20 @@ app.use('/api/setup-admin', authRoutes); // Compatibility for /api/setup-admin
 
 app.use('/api/contact', contactLimiter, contactRoutes);
 app.use('/api', inboxRoutes); // Mounts /api/admin/inbox and /api/inbox/sync
-app.use('/api/admin', adminRoutes); // Mounts /api/admin/* (services, projects, team, etc.)
+
+// Cache public GET requests to admin endpoints for 60s with stale-while-revalidate
+app.use(
+  '/api/admin',
+  (req, res, next) => {
+    if (req.method === 'GET' && !req.headers.authorization && !(req as any).cookies?.admin_token) {
+      res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
+    } else {
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+    }
+    next();
+  },
+  adminRoutes
+);
 app.use('/api/upload', uploadRoutes);
 
 // Media retrieval by ID or filename directly from MongoDB Atlas Media collection
@@ -242,10 +255,14 @@ async function start() {
       console.log(`[Uploads] Serving uploads from: ${uploadsDir}`);
     });
 
-    // Connect to database
-    dbConnect().catch((err: any) => {
-      console.error('[MongoDB] Initial connection error (will retry):', err?.message || err);
-    });
+    // Connect to database with auto-retry
+    const connectWithRetry = () => {
+      dbConnect().catch((err: any) => {
+        console.error('[MongoDB] Initial connection error (retrying in 5s):', err?.message || err);
+        setTimeout(connectWithRetry, 5000);
+      });
+    };
+    connectWithRetry();
     
     // Start background IMAP reply listener (respects IMAP_SYNC_ENABLED)
     startImapScheduler();

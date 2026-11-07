@@ -2,7 +2,7 @@ import { Mail, Phone, MapPin, ExternalLink } from "lucide-react";
 import ContactForm from "@/components/ContactForm";
 import { fetchFromBackend } from "@/lib/api";
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 function WhatsAppIcon({ className = "w-5 h-5" }: { className?: string }) {
   return (

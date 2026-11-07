@@ -4,7 +4,118 @@ import { ArrowLeft, Calendar, User, Tag, CheckCircle2, MapPin, Building, Chevron
 import { fetchFromBackend } from '@/lib/api';
 import { getSafeImageUrl } from '@/lib/utils';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
+
+const DEFAULT_PROJECTS = [
+  {
+    _id: "default-1",
+    title: 'Eco-Smart Villa Automation',
+    shortDescription: 'Complete home automation with integrated solar power management.',
+    description: 'For this modern luxury villa, we implemented a comprehensive smart home solution that seamlessly integrates with a newly installed 10kW solar power system. The project features automated lighting, climate control, and security systems, all managed through custom-designed wall-mounted touch panels and a mobile app.',
+    category: 'Smart Home & Solar',
+    client: 'Private Residence',
+    date: 'August 2026',
+    technologies: ['KNX Automation', 'SolarEdge Inverters', 'Tesla Powerwall', 'Custom App'],
+    imageUrl: '/images/projects/smart_home.jpg',
+    slug: 'eco-smart-villa-automation'
+  },
+  {
+    _id: "default-2",
+    title: 'Automated Hydroponic Greenhouse',
+    shortDescription: 'High-tech greenhouse with automated climate and irrigation control.',
+    description: 'This commercial agro-tech project involved designing and installing a fully automated control system for a 5,000 sq ft hydroponic greenhouse. Our system monitors temperature, humidity, CO2 levels, and nutrient concentrations in real-time.',
+    category: 'Agro Tech',
+    client: 'FreshHarvest Farms',
+    date: 'May 2026',
+    technologies: ['IoT Sensors', 'Automated Irrigation', 'LED Grow Lights', 'Cloud Analytics'],
+    imageUrl: '/images/projects/agro_tech.jpg',
+    slug: 'automated-hydroponic-greenhouse'
+  },
+  {
+    _id: "default-3",
+    title: 'Urban Solar Roof Integration',
+    shortDescription: 'Sleek, highly efficient solar roof installation for a modern home.',
+    description: 'We designed and installed a custom, aesthetically pleasing solar energy system for a newly constructed modern home. The 15kW system utilizes premium, low-profile black solar panels that blend seamlessly with the home\'s architecture.',
+    category: 'Solar Energy',
+    client: 'The Anderson Family',
+    date: 'February 2026',
+    technologies: ['Premium Black Solar Panels', 'Smart Energy Gateway', 'Microinverters'],
+    imageUrl: '/images/projects/solar_home.jpg',
+    slug: 'urban-solar-roof-integration'
+  },
+  {
+    _id: "default-4",
+    title: 'Commercial Solar Farm',
+    shortDescription: 'Large-scale solar energy plant for a manufacturing facility.',
+    description: 'Installed a 500kW solar farm on the roof and unused land of a large manufacturing facility. This project provides clean energy to offset up to 70% of the factory\'s power consumption.',
+    category: 'Solar Energy',
+    client: 'Industrial Corp Ltd.',
+    date: 'July 2026',
+    technologies: ['Commercial Solar Panels', 'Smart Grid Integration', 'Battery Storage'],
+    imageUrl: '/images/projects/solar_home.jpg',
+    slug: 'commercial-solar-farm'
+  },
+  {
+    _id: "default-5",
+    title: 'Smart Office Automation',
+    shortDescription: 'Intelligent climate and lighting control for corporate offices.',
+    description: 'Transformed a traditional 10,000 sq ft office space into a smart, energy-efficient workplace. By integrating IoT sensors, automated window blinds, and intelligent HVAC systems, the office now dynamically adjusts to occupancy and natural sunlight.',
+    category: 'Smart Home & Solar',
+    client: 'TechHub Solutions',
+    date: 'June 2026',
+    technologies: ['IoT Sensors', 'HVAC Automation', 'Smart Lighting'],
+    imageUrl: '/images/projects/smart_home.jpg',
+    slug: 'smart-office-automation'
+  },
+  {
+    _id: "default-6",
+    title: 'Automated Poultry Farm',
+    shortDescription: 'Climate control and automated feeding for a modern poultry farm.',
+    description: 'Designed and installed a complete automation system for a commercial poultry farm. The system includes automated temperature and ventilation control, synchronized feeding and watering schedules, and real-time health monitoring.',
+    category: 'Agro Tech',
+    client: 'Sunrise Poultry',
+    date: 'April 2026',
+    technologies: ['Climate Sensors', 'Automated Feeders', 'Ventilation Control'],
+    imageUrl: '/images/projects/agro_tech.jpg',
+    slug: 'automated-poultry-farm'
+  },
+  {
+    _id: "default-7",
+    title: 'Residential Solar + Battery',
+    shortDescription: 'Hybrid solar and battery system for complete grid independence.',
+    description: 'Fitted a suburban home with a robust 8kW solar system coupled with dual high-capacity battery units. This setup allows the home to run entirely off-grid during the summer months and provides reliable backup power during storms.',
+    category: 'Solar Energy',
+    client: 'The Miller Residence',
+    date: 'January 2026',
+    technologies: ['Hybrid Inverter', 'Lithium-ion Batteries', 'Solar Panels'],
+    imageUrl: '/images/projects/solar_home.jpg',
+    slug: 'residential-solar-battery'
+  },
+  {
+    _id: "default-8",
+    title: 'Luxury Apartment IoT',
+    shortDescription: 'Seamless voice and app-controlled automation for a penthouse.',
+    description: 'Upgraded a luxury penthouse with a unified smart home ecosystem. The homeowners can control entertainment, lighting, climate, and security using voice commands or centralized wall tablets.',
+    category: 'Smart Home & Solar',
+    client: 'Private Client',
+    date: 'December 2025',
+    technologies: ['Voice Control', 'Home Assistant', 'Smart Security'],
+    imageUrl: '/images/projects/smart_home.jpg',
+    slug: 'luxury-apartment-iot'
+  },
+  {
+    _id: "default-9",
+    title: 'Precision Irrigation System',
+    shortDescription: 'Smart water management for open-field agriculture.',
+    description: 'Deployed a smart irrigation system across a 50-acre vegetable farm. Using soil moisture sensors and local weather data, the system automatically determines exactly when and how much water to distribute to different zones.',
+    category: 'Agro Tech',
+    client: 'Green Acres Farm',
+    date: 'November 2025',
+    technologies: ['Soil Moisture Sensors', 'Automated Valves', 'Weather API'],
+    imageUrl: '/images/projects/agro_tech.jpg',
+    slug: 'precision-irrigation-system'
+  }
+];
 
 export default async function ProjectDetailPage({ params }: { params: Promise<{ projectName: string }> }) {
   const { projectName } = await params;
@@ -15,7 +126,8 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
   let project = null;
   let nextProject = null;
   try {
-    const allProjects = (await fetchFromBackend<any[]>('/api/admin/projects')) || [];
+    const backendProjects = (await fetchFromBackend<any[]>('/api/admin/projects')) || [];
+    const allProjects = backendProjects.length > 0 ? backendProjects : DEFAULT_PROJECTS;
     
     const found = allProjects.find((p: any) => 
       (p.slug && p.slug === decodedName) || slugify(p.title) === decodedName || p.title === decodedName

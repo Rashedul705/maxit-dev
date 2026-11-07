@@ -11,7 +11,7 @@ import Partners from '@/components/Partners';
 import { fetchFromBackend } from '@/lib/api';
 import { getSafeImageUrl } from '@/lib/utils';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 async function getTeamData() {
   try {

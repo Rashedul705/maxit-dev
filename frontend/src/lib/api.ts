@@ -6,9 +6,13 @@ export function isFallbackDataEnabled(): boolean {
   if (process.env.FALLBACK_DATA_ENABLED !== undefined) {
     return process.env.FALLBACK_DATA_ENABLED === 'true' || process.env.FALLBACK_DATA_ENABLED === '1';
   }
-  // Default: false in production, true in development
-  return process.env.NODE_ENV !== 'production';
+  // Default to true so production never crashes on temporary backend network hiccups
+  return true;
 }
+
+// In-memory cache for SSR to serve last-known good data if backend is temporarily slow/down
+const memoryCache = new Map<string, { data: any; timestamp: number }>();
+const CACHE_TTL_MS = 60 * 1000; // 60 seconds
 
 export async function fetchFromBackend<T = any>(endpoint: string, options?: RequestInit): Promise<T | null> {
   const baseUrl = getBackendUrl();
@@ -18,35 +22,37 @@ export async function fetchFromBackend<T = any>(endpoint: string, options?: Requ
   try {
     const res = await fetch(url, {
       ...options,
-      cache: 'no-store',
-      signal: options?.signal || AbortSignal.timeout(3000),
+      // Enable Next.js ISR (Incremental Static Regeneration) cache
+      next: { revalidate: 60, ...(options as any)?.next },
+      signal: options?.signal || AbortSignal.timeout(2000),
     });
 
     if (!res.ok) {
       const statusText = res.statusText || 'Error';
-      if (!isFallbackDataEnabled()) {
-        const errorMsg = `[Backend Error] Request to ${url} failed with HTTP ${res.status} (${statusText}). Fallback data is disabled (FALLBACK_DATA_ENABLED=false).`;
-        console.error(`[CRITICAL] ${errorMsg}`);
-        throw new Error(errorMsg);
+      console.warn(`[Backend Warning] Request to ${url} returned HTTP ${res.status} (${statusText}).`);
+      
+      // Serve from memory cache if available
+      const cached = memoryCache.get(cleanEndpoint);
+      if (cached && cached.data) {
+        return cached.data as T;
       }
-
-      console.error(
-        `[SERVER-ERROR] [Backend Fallback Engaged] Request to ${url} failed with HTTP ${res.status} (${statusText}). Returning fallback data because FALLBACK_DATA_ENABLED is enabled.`
-      );
       return null;
     }
 
-    return (await res.json()) as T;
+    const data = (await res.json()) as T;
+    if (data) {
+      memoryCache.set(cleanEndpoint, { data, timestamp: Date.now() });
+    }
+    return data;
   } catch (error: any) {
-    if (!isFallbackDataEnabled()) {
-      const errorMsg = `[Backend Error] Exception during request to ${url}: ${error?.message || error}. Fallback data is disabled (FALLBACK_DATA_ENABLED=false).`;
-      console.error(`[CRITICAL] ${errorMsg}`);
-      throw new Error(errorMsg);
+    console.warn(`[Backend Warning] Request to ${url} failed: ${error?.message || error}. Using fallback.`);
+    
+    // Serve from memory cache if available
+    const cached = memoryCache.get(cleanEndpoint);
+    if (cached && cached.data) {
+      return cached.data as T;
     }
 
-    console.error(
-      `[SERVER-ERROR] [Backend Fallback Engaged] Exception during request to ${url}: ${error?.message || error}. Returning fallback data because FALLBACK_DATA_ENABLED is enabled.`
-    );
     return null;
   }
 }
