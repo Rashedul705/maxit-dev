@@ -13,7 +13,8 @@ const Header = ({ siteSettings }: { siteSettings?: any }) => {
   const isActive = (path: string) => pathname === path;
 
   const checkIsExternal = (link: string, openInNewTab?: boolean) => {
-    if (openInNewTab) return true;
+    if (openInNewTab === true) return true;
+    if (openInNewTab === false) return false;
     if (!link || link === '#') return false;
     return link.startsWith('http://') || link.startsWith('https://');
   };
@@ -43,6 +44,7 @@ const Header = ({ siteSettings }: { siteSettings?: any }) => {
   const logoUrl = siteSettings?.headerLogo || "/logo.png";
   const contactBtnLink = siteSettings?.navbarContactButtonLink || "/contact";
   const contactBtnText = siteSettings?.navbarContactButtonText || "Get Started";
+  const isCtaExternal = checkIsExternal(contactBtnLink, siteSettings?.navbarContactButtonOpenInNewTab);
 
   if (pathname.startsWith('/admin')) return null;
 
@@ -97,9 +99,12 @@ const Header = ({ siteSettings }: { siteSettings?: any }) => {
           <div className="hidden md:flex">
             <Link 
               href={contactBtnLink} 
-              className="px-6 py-2.5 text-sm font-medium text-white bg-primary hover:bg-primary/90 shadow-sm rounded-md transition-all duration-300"
+              target={isCtaExternal ? '_blank' : undefined}
+              rel={isCtaExternal ? 'noopener noreferrer' : undefined}
+              className="px-6 py-2.5 text-sm font-medium text-white bg-primary hover:bg-primary/90 shadow-sm rounded-md transition-all duration-300 inline-flex items-center gap-1.5"
             >
-              {contactBtnText}
+              <span>{contactBtnText}</span>
+              {isCtaExternal && <ExternalLink size={13} className="opacity-80" />}
             </Link>
           </div>
 
@@ -147,10 +152,13 @@ const Header = ({ siteSettings }: { siteSettings?: any }) => {
             <div className="pt-4 mt-2 border-t">
               <Link 
                 href={contactBtnLink} 
-                className="flex justify-center w-full px-6 py-3 text-sm font-medium text-white bg-primary hover:bg-primary/90 rounded-md transition-colors"
+                target={isCtaExternal ? '_blank' : undefined}
+                rel={isCtaExternal ? 'noopener noreferrer' : undefined}
+                className="flex items-center justify-center gap-1.5 w-full px-6 py-3 text-sm font-medium text-white bg-primary hover:bg-primary/90 rounded-md transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                {contactBtnText}
+                <span>{contactBtnText}</span>
+                {isCtaExternal && <ExternalLink size={14} className="opacity-80" />}
               </Link>
             </div>
           </nav>

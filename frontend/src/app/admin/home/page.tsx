@@ -70,6 +70,12 @@ export default function HomeAdmin() {
         if (settingsJson.footerAddressLine3) {
           settingsJson.footerAddressLine3 = settingsJson.footerAddressLine3.replace(/\s*<!--JSON:.*?-->/g, '').trim();
         }
+        if (Array.isArray(settingsJson.navItems)) {
+          settingsJson.navItems = settingsJson.navItems.map((item: any, i: number) => ({
+            ...item,
+            _uid: item._id || item.id || `nav_${Date.now()}_${i}_${Math.random().toString(36).substring(2, 7)}`
+          }));
+        }
       }
       
       setSiteSettings(settingsJson);
@@ -85,6 +91,9 @@ export default function HomeAdmin() {
     setIsSaving(true);
     try {
       const toSaveSettings = { ...siteSettings };
+      if (Array.isArray(toSaveSettings.navItems)) {
+        toSaveSettings.navItems = toSaveSettings.navItems.map(({ _uid, ...item }: any) => item);
+      }
       if (toSaveSettings.footerAddresses && toSaveSettings.footerAddresses.length > 0) {
         const headOffice = toSaveSettings.footerAddresses[0];
         const lines = headOffice?.details ? headOffice.details.split('\n').map((l: string) => l.trim()).filter(Boolean) : [];
@@ -279,14 +288,37 @@ export default function HomeAdmin() {
                 <h3 className="font-semibold text-sm text-blue-800 flex items-center gap-2">
                   🔘 CTA Button (Header Right Side)
                 </h3>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
                   <div>
                     <label className="block text-xs text-gray-600 mb-1">Button Text</label>
-                    <input type="text" value={siteSettings.navbarContactButtonText || 'Get Started'} onChange={(e) => updateSetting('navbarContactButtonText', e.target.value)} className="w-full border p-2 rounded" placeholder="e.g. Get Started" />
+                    <input 
+                      type="text" 
+                      value={siteSettings.navbarContactButtonText || 'Get Started'} 
+                      onChange={(e) => updateSetting('navbarContactButtonText', e.target.value)} 
+                      className="w-full border p-2 rounded text-sm bg-white" 
+                      placeholder="e.g. Get Started" 
+                    />
                   </div>
                   <div>
                     <label className="block text-xs text-gray-600 mb-1">Button Link</label>
-                    <input type="text" value={siteSettings.navbarContactButtonLink || ''} onChange={(e) => updateSetting('navbarContactButtonLink', e.target.value)} className="w-full border p-2 rounded" placeholder="e.g. /contact" />
+                    <input 
+                      type="text" 
+                      value={siteSettings.navbarContactButtonLink || ''} 
+                      onChange={(e) => updateSetting('navbarContactButtonLink', e.target.value)} 
+                      className="w-full border p-2 rounded text-sm bg-white" 
+                      placeholder="e.g. /contact or https://..." 
+                    />
+                  </div>
+                  <div>
+                    <label className="flex items-center gap-2 text-xs text-gray-700 cursor-pointer bg-white border p-2 rounded h-[38px] hover:bg-gray-50 select-none">
+                      <input
+                        type="checkbox"
+                        checked={siteSettings.navbarContactButtonOpenInNewTab === true || (siteSettings.navbarContactButtonOpenInNewTab !== false && (siteSettings.navbarContactButtonLink?.startsWith('http://') || siteSettings.navbarContactButtonLink?.startsWith('https://')))}
+                        onChange={(e) => updateSetting('navbarContactButtonOpenInNewTab', e.target.checked)}
+                        className="rounded text-primary focus:ring-primary w-4 h-4 cursor-pointer"
+                      />
+                      <span className="font-medium">Open in New Tab</span>
+                    </label>
                   </div>
                 </div>
               </div>
@@ -294,100 +326,147 @@ export default function HomeAdmin() {
               {/* Navigation Menu Items */}
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
-                  <label className="block text-sm font-medium">Navigation Menu Items</label>
-                  <span className="text-xs text-gray-400">{siteSettings?.navItems?.length || 0} items</span>
-                </div>
-                {siteSettings?.navItems?.map((item: any, idx: number) => (
-                  <div key={idx} className="flex flex-col sm:flex-row gap-2 items-start sm:items-center bg-gray-50 p-3 rounded-lg border">
-                    <span className="text-xs text-gray-400 font-mono w-6 text-center">{idx + 1}</span>
-                    <input 
-                      type="text" 
-                      value={item.label} 
-                      onChange={(e) => {
-                        const newArr = [...(siteSettings?.navItems || [])];
-                        newArr[idx] = { ...newArr[idx], label: e.target.value };
-                        updateSetting('navItems', newArr);
-                      }} 
-                      className="w-full sm:w-1/3 border p-2 rounded text-sm bg-white" 
-                      placeholder="Label (e.g. Shop)" 
-                    />
-                    <input 
-                      type="text" 
-                      value={item.link} 
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        const isExt = val.startsWith('http://') || val.startsWith('https://');
-                        const newArr = [...(siteSettings?.navItems || [])];
-                        newArr[idx] = { 
-                          ...newArr[idx], 
-                          link: val,
-                          openInNewTab: item.openInNewTab !== undefined ? item.openInNewTab : isExt
-                        };
-                        updateSetting('navItems', newArr);
-                      }} 
-                      className="flex-1 border p-2 rounded text-sm bg-white" 
-                      placeholder="Link (e.g. /shop or https://...)" 
-                    />
-                    
-                    {/* Open in New Tab Toggle */}
-                    <label className="flex items-center gap-1.5 text-xs text-gray-600 cursor-pointer whitespace-nowrap bg-white border px-2.5 py-2 rounded shadow-xs hover:bg-gray-50">
-                      <input
-                        type="checkbox"
-                        checked={item.openInNewTab !== undefined ? item.openInNewTab : (item.link?.startsWith('http://') || item.link?.startsWith('https://'))}
-                        onChange={(e) => {
-                          const newArr = [...(siteSettings?.navItems || [])];
-                          newArr[idx] = { ...newArr[idx], openInNewTab: e.target.checked };
-                          updateSetting('navItems', newArr);
-                        }}
-                        className="rounded text-primary focus:ring-primary w-3.5 h-3.5 cursor-pointer"
-                      />
-                      <span>New Tab</span>
-                    </label>
-
-                    {/* Move Up */}
-                    <button
-                      disabled={idx === 0}
-                      onClick={() => {
-                        const newArr = [...(siteSettings?.navItems || [])];
-                        [newArr[idx - 1], newArr[idx]] = [newArr[idx], newArr[idx - 1]];
-                        newArr.forEach((item: any, i: number) => item.order = i);
-                        updateSetting('navItems', newArr);
-                      }}
-                      className="p-1.5 text-gray-400 hover:text-gray-700 disabled:opacity-30"
-                      title="Move Up"
-                    ><ChevronUp size={16} /></button>
-                    {/* Move Down */}
-                    <button
-                      disabled={idx === (siteSettings?.navItems?.length || 0) - 1}
-                      onClick={() => {
-                        const newArr = [...(siteSettings?.navItems || [])];
-                        [newArr[idx], newArr[idx + 1]] = [newArr[idx + 1], newArr[idx]];
-                        newArr.forEach((item: any, i: number) => item.order = i);
-                        updateSetting('navItems', newArr);
-                      }}
-                      className="p-1.5 text-gray-400 hover:text-gray-700 disabled:opacity-30"
-                      title="Move Down"
-                    ><ChevronDown size={16} /></button>
-                    {/* Delete */}
-                    <button onClick={() => {
-                      const newArr = siteSettings?.navItems?.filter((_:any, i:number) => i !== idx);
-                      newArr.forEach((item: any, i: number) => item.order = i);
-                      updateSetting('navItems', newArr);
-                    }} className="p-1.5 text-red-400 hover:text-red-600" title="Delete"><Trash2 size={16} /></button>
+                  <div>
+                    <label className="block text-sm font-medium">Navigation Menu Items</label>
+                    <p className="text-xs text-gray-500">Order, rename, link, or toggle new tab for header navigation links.</p>
                   </div>
-                ))}
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pt-1">
+                  <span className="text-xs text-gray-500 font-medium bg-gray-100 px-2 py-1 rounded">
+                    {siteSettings?.navItems?.length || 0} items
+                  </span>
+                </div>
+                {siteSettings?.navItems?.map((item: any, idx: number) => {
+                  const itemKey = item._uid || item._id || `nav_idx_${idx}`;
+                  const isChecked = item.openInNewTab === true || (item.openInNewTab !== false && (item.link?.startsWith('http://') || item.link?.startsWith('https://')));
+
+                  return (
+                    <div key={itemKey} className="flex flex-col sm:flex-row gap-2 items-start sm:items-center bg-gray-50 p-3 rounded-lg border hover:border-gray-300 transition-colors">
+                      <span className="text-xs text-gray-400 font-mono w-6 text-center">{idx + 1}</span>
+                      <input 
+                        type="text" 
+                        value={item.label || ''} 
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setSiteSettings((prev: any) => {
+                            const newArr = [...(prev.navItems || [])];
+                            newArr[idx] = { ...newArr[idx], label: val };
+                            return { ...prev, navItems: newArr };
+                          });
+                        }} 
+                        className="w-full sm:w-1/3 border p-2 rounded text-sm bg-white" 
+                        placeholder="Label (e.g. Shop)" 
+                      />
+                      <input 
+                        type="text" 
+                        value={item.link || ''} 
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          const isExt = val.startsWith('http://') || val.startsWith('https://');
+                          setSiteSettings((prev: any) => {
+                            const newArr = [...(prev.navItems || [])];
+                            newArr[idx] = { 
+                              ...newArr[idx], 
+                              link: val,
+                              openInNewTab: newArr[idx].openInNewTab !== undefined ? newArr[idx].openInNewTab : isExt
+                            };
+                            return { ...prev, navItems: newArr };
+                          });
+                        }} 
+                        className="flex-1 border p-2 rounded text-sm bg-white font-mono text-xs" 
+                        placeholder="Link (e.g. /shop or https://...)" 
+                      />
+                      
+                      {/* Open in New Tab Toggle */}
+                      <label className="flex items-center gap-1.5 text-xs text-gray-700 cursor-pointer whitespace-nowrap bg-white border px-2.5 py-2 rounded shadow-xs hover:bg-gray-50 select-none">
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={(e) => {
+                            const checked = e.target.checked;
+                            setSiteSettings((prev: any) => {
+                              const newArr = [...(prev.navItems || [])];
+                              newArr[idx] = { ...newArr[idx], openInNewTab: checked };
+                              return { ...prev, navItems: newArr };
+                            });
+                          }}
+                          className="rounded text-primary focus:ring-primary w-3.5 h-3.5 cursor-pointer"
+                        />
+                        <span>New Tab</span>
+                      </label>
+
+                      {/* Move Up */}
+                      <button
+                        type="button"
+                        disabled={idx === 0}
+                        onClick={() => {
+                          setSiteSettings((prev: any) => {
+                            const newArr = [...(prev.navItems || [])];
+                            if (idx <= 0) return prev;
+                            const [moved] = newArr.splice(idx, 1);
+                            newArr.splice(idx - 1, 0, moved);
+                            newArr.forEach((it: any, i: number) => it.order = i);
+                            return { ...prev, navItems: newArr };
+                          });
+                        }}
+                        className="p-1.5 text-gray-500 hover:text-gray-800 disabled:opacity-20 cursor-pointer"
+                        title="Move Up"
+                      ><ChevronUp size={16} /></button>
+
+                      {/* Move Down */}
+                      <button
+                        type="button"
+                        disabled={idx === (siteSettings?.navItems?.length || 0) - 1}
+                        onClick={() => {
+                          setSiteSettings((prev: any) => {
+                            const newArr = [...(prev.navItems || [])];
+                            if (idx >= newArr.length - 1) return prev;
+                            const [moved] = newArr.splice(idx, 1);
+                            newArr.splice(idx + 1, 0, moved);
+                            newArr.forEach((it: any, i: number) => it.order = i);
+                            return { ...prev, navItems: newArr };
+                          });
+                        }}
+                        className="p-1.5 text-gray-500 hover:text-gray-800 disabled:opacity-20 cursor-pointer"
+                        title="Move Down"
+                      ><ChevronDown size={16} /></button>
+
+                      {/* Delete */}
+                      <button 
+                        type="button"
+                        onClick={() => {
+                          setSiteSettings((prev: any) => {
+                            const newArr = (prev.navItems || []).filter((_: any, i: number) => i !== idx);
+                            newArr.forEach((it: any, i: number) => it.order = i);
+                            return { ...prev, navItems: newArr };
+                          });
+                        }} 
+                        className="p-1.5 text-red-500 hover:text-red-700 hover:bg-red-50 rounded transition-colors cursor-pointer" 
+                        title="Delete item"
+                      ><Trash2 size={16} /></button>
+                    </div>
+                  );
+                })}
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pt-2 border-t mt-3">
                   <button 
-                    onClick={() => updateSetting('navItems', [
-                      ...(siteSettings.navItems||[]), 
-                      { label: 'Shop', link: '#', openInNewTab: false, order: siteSettings.navItems?.length||0 }
-                    ])} 
-                    className="text-sm text-primary flex items-center hover:underline font-medium"
+                    type="button"
+                    onClick={() => {
+                      setSiteSettings((prev: any) => {
+                        const current = prev.navItems || [];
+                        const newItem = {
+                          _uid: `nav_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+                          label: 'New Link',
+                          link: '/new-page',
+                          openInNewTab: false,
+                          order: current.length
+                        };
+                        return { ...prev, navItems: [...current, newItem] };
+                      });
+                    }} 
+                    className="text-sm text-primary flex items-center hover:underline font-medium cursor-pointer"
                   >
                     <Plus size={16} className="mr-1" /> Add Nav Item
                   </button>
                   <p className="text-xs text-gray-500">
-                    💡 Supports both internal routes (e.g. <code>/shop</code>) and external links (e.g. <code>https://store.example.com</code>).
+                    💡 Supports internal routes (e.g. <code>/services</code>) and external links (e.g. <code>https://store.example.com</code>).
                   </p>
                 </div>
               </div>

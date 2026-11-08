@@ -61,6 +61,7 @@ export default async function RootLayout({
     ],
     navbarContactButtonText: "Get Started",
     navbarContactButtonLink: "/contact",
+    navbarContactButtonOpenInNewTab: false,
     footerLogo: "/logo.png",
     footerAddresses: [
       {

@@ -842,6 +842,7 @@ const DEFAULT_SETTINGS = {
   ],
   navbarContactButtonText: "Get Started",
   navbarContactButtonLink: "/contact",
+  navbarContactButtonOpenInNewTab: false,
   footerLogo: "/logo.png",
   footerDescription: "Your partner for sustainable energy, advanced agro-tech, and intelligent automation solutions. Empowering a greener tomorrow.",
   socialLinks: [
