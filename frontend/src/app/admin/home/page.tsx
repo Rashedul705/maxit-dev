@@ -102,22 +102,33 @@ export default function HomeAdmin() {
         fetch('/api/admin/home', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
           body: JSON.stringify(homeData)
         }),
         fetch('/api/admin/site-settings', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
           body: JSON.stringify(toSaveSettings)
         })
       ]);
-      if (!resHome.ok || !resSettings.ok) {
-        throw new Error('Failed to save settings or home data');
+
+      if (!resHome.ok) {
+        const errJson = await resHome.json().catch(() => ({}));
+        throw new Error(errJson.error || `Failed to save home content (HTTP ${resHome.status})`);
       }
+      if (!resSettings.ok) {
+        const errJson = await resSettings.json().catch(() => ({}));
+        throw new Error(errJson.error || `Failed to save site settings (HTTP ${resSettings.status})`);
+      }
+
       alert('Saved successfully! The live homepage has been updated.');
-    } catch (error) {
-      alert('Error saving data');
+    } catch (error: any) {
+      console.error('[Admin Save Error]', error);
+      alert(error?.message || 'Error saving data');
+    } finally {
+      setIsSaving(false);
     }
-    setIsSaving(false);
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, callback: (url: string) => void) => {
@@ -322,7 +333,7 @@ export default function HomeAdmin() {
                     <label className="flex items-center gap-1.5 text-xs text-gray-600 cursor-pointer whitespace-nowrap bg-white border px-2.5 py-2 rounded shadow-xs hover:bg-gray-50">
                       <input
                         type="checkbox"
-                        checked={item.openInNewTab || item.link?.startsWith('http://') || item.link?.startsWith('https://')}
+                        checked={item.openInNewTab !== undefined ? item.openInNewTab : (item.link?.startsWith('http://') || item.link?.startsWith('https://'))}
                         onChange={(e) => {
                           const newArr = [...(siteSettings?.navItems || [])];
                           newArr[idx] = { ...newArr[idx], openInNewTab: e.target.checked };

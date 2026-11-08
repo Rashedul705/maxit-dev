@@ -99,6 +99,7 @@ export default function SiteSettingsManagement() {
       const res = await fetch('/api/admin/site-settings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(toSave)
       });
       

@@ -16,7 +16,7 @@ if (!process.env.JWT_SECRET) {
   process.exit(1);
 }
 
-import dbConnect, { getDbState } from './db.js';
+import dbConnect, { getDbState, getLastDbError } from './db.js';
 import { startImapScheduler, stopImapScheduler } from './services/imapScheduler.service.js';
 
 // Route modules
@@ -106,6 +106,7 @@ const healthHandler = (req: express.Request, res: express.Response) => {
   res.status(isHealthy ? 200 : 503).json({
     status: isHealthy ? 'ok' : 'degraded',
     db: dbState,
+    dbError: isHealthy ? null : getLastDbError(),
     uptime: Math.floor(process.uptime()),
     timestamp: new Date().toISOString(),
   });
@@ -125,6 +126,7 @@ app.get('/', (req, res) => {
       environment: process.env.NODE_ENV || 'production',
       port: PORT,
       dbStatus: dbState,
+      dbError: getLastDbError(),
       dbSystem: 'MongoDB Atlas',
       emailSyncStatus: 'Active',
       syncIntervalSeconds: Number(process.env.SYNC_INTERVAL_SECONDS || 15),

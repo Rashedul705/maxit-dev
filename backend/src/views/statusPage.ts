@@ -3,6 +3,7 @@ export interface ServerStatusData {
   environment: string;
   port: number | string;
   dbStatus: 'connected' | 'connecting' | 'disconnecting' | 'disconnected';
+  dbError?: string | null;
   dbSystem: string;
   emailSyncStatus: string;
   syncIntervalSeconds: number;
@@ -321,7 +322,7 @@ export function renderStatusPage(data: ServerStatusData): string {
 
         <div class="meta-group">
           <div class="meta-label">Connection</div>
-          <div class="meta-value" id="dbStatusText">${isDbOk ? 'Stable' : 'Offline'}</div>
+          <div class="meta-value" id="dbStatusText">${isDbOk ? 'Stable' : (data.dbError ? `Offline (${data.dbError.slice(0, 40)}...)` : 'Offline')}</div>
         </div>
 
         <div class="meta-group">

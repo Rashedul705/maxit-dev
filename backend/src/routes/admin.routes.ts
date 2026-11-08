@@ -697,15 +697,18 @@ router.post('/home', requireAuth, async (req: Request, res: Response) => {
   try {
     await dbConnect();
     const { _id, __v, createdAt, updatedAt, ...updateData } = req.body;
+    const filter = _id ? { _id } : {};
     const content = await (HomeContent.findOneAndUpdate as any)(
-      {},
+      filter,
       { $set: updateData },
-      { new: true, upsert: true, returnDocument: 'after' }
+      { upsert: true, returnDocument: 'after' }
     );
     return res.json(content);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error saving home content:', error);
-    return res.status(500).json({ error: 'Failed to save content' });
+    return res.status(500).json({ 
+      error: error?.message ? `Failed to save content: ${error.message}` : 'Failed to save content' 
+    });
   }
 });
 
@@ -904,15 +907,18 @@ router.post('/site-settings', requireAuth, async (req: Request, res: Response) =
   try {
     await dbConnect();
     const { _id, __v, createdAt, updatedAt, ...updateData } = req.body;
+    const filter = _id ? { _id } : {};
     const settings = await (SiteSettings.findOneAndUpdate as any)(
-      {},
+      filter,
       { $set: updateData },
-      { new: true, upsert: true, returnDocument: 'after' }
+      { upsert: true, returnDocument: 'after' }
     );
     return res.json(settings);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error saving site settings:', error);
-    return res.status(500).json({ error: 'Failed to save settings' });
+    return res.status(500).json({ 
+      error: error?.message ? `Failed to save settings: ${error.message}` : 'Failed to save settings' 
+    });
   }
 });
 
