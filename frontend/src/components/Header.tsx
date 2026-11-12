@@ -31,10 +31,10 @@ const Header = ({ siteSettings }: { siteSettings?: any }) => {
     { label: 'Home', link: '/' },
     { label: 'Services', link: '/services' },
     { label: 'Projects', link: '/projects' },
-    { label: 'Shop', link: '#' },
     { label: 'Team', link: '/team' },
     { label: 'About', link: '/about' },
     { label: 'Contact', link: '/contact' },
+    { label: 'Shop', link: 'https://maxitecom.maxapi.esp32.site', openInNewTab: true },
   ];
 
   const navItems = siteSettings?.navItems?.length > 0 

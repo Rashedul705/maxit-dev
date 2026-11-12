@@ -213,18 +213,7 @@ const Footer = ({ siteSettings }: { siteSettings?: any }) => {
           </div>
         </div>
 
-        {/* Google Map Embedded Location - Full Width Default Embed */}
-        <div className="w-full mt-12 pt-8 border-t border-slate-800">
-          <iframe
-            src={googleMapsEmbedUrl}
-            width="100%"
-            height="450"
-            style={{ border: 0 }}
-            allowFullScreen={true}
-            loading="lazy"
-            referrerPolicy="strict-origin-when-cross-origin"
-          />
-        </div>
+        {/* Google Map removed from footer to only show on contact page */}
 
         <div className="border-t border-slate-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-slate-500 text-center md:text-left gap-4 md:gap-0">
           <p>{copyrightText}</p>

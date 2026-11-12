@@ -835,10 +835,10 @@ const DEFAULT_SETTINGS = {
     { label: "Home", link: "/", order: 0 },
     { label: "Services", link: "/services", order: 1 },
     { label: "Projects", link: "/projects", order: 2 },
-    { label: "Shop", link: "#", order: 3 },
-    { label: "Team", link: "/team", order: 4 },
-    { label: "About", link: "/about", order: 5 },
-    { label: "Contact", link: "/contact", order: 6 }
+    { label: "Team", link: "/team", order: 3 },
+    { label: "About", link: "/about", order: 4 },
+    { label: "Contact", link: "/contact", order: 5 },
+    { label: "Shop", link: "https://maxitecom.maxapi.esp32.site", openInNewTab: true, order: 6 }
   ],
   navbarContactButtonText: "Get Started",
   navbarContactButtonLink: "/contact",
